@@ -1,0 +1,17 @@
+---
+title: arrow.instances.writert.semigroupK - arrow-instances-data
+---
+
+[arrow-instances-data](../index.html) / [arrow.instances.writert.semigroupK](./index.html)
+
+## Package arrow.instances.writert.semigroupK
+
+### Extensions for External Classes
+
+| [arrow.Kind](arrow.-kind/index.html) |  |
+| [arrow.data.WriterT](arrow.data.-writer-t/index.html) |  |
+
+### Functions
+
+| [algebra](algebra.html) | `fun <F, W, A> algebra(SS: SemigroupK<`[`F`](algebra.html#F)`>): Semigroup<Kind<Kind<Kind<ForWriterT, `[`F`](algebra.html#F)`>, `[`W`](algebra.html#W)`>, `[`A`](algebra.html#A)`>>` |
+

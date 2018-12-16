@@ -3,7 +3,7 @@ package arrow.ank
 import arrow.Kind
 import arrow.core.Option
 import arrow.core.Tuple2
-import arrow.data.Nel
+import arrow.core.Nel
 import arrow.typeclasses.MonadThrow
 import org.intellij.markdown.ast.ASTNode
 import java.nio.file.Path

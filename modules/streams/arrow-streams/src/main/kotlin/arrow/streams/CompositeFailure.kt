@@ -1,7 +1,7 @@
 package arrow.streams
 
 import arrow.core.*
-import arrow.data.Nel
+import arrow.core.Nel
 import arrow.data.NonEmptyList
 
 /** Represents multiple (>1) exceptions were thrown. */

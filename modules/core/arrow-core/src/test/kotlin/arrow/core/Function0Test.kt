@@ -1,8 +1,6 @@
 package arrow.core
 
 import arrow.Kind
-import arrow.core.*
-import arrow.instances.extensions
 import arrow.instances.function0.comonad.comonad
 import arrow.instances.function0.monad.monad
 import arrow.test.UnitSpec

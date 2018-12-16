@@ -8,7 +8,7 @@ import arrow.data.*
 import arrow.deprecation.ExtensionsDSLDeprecated
 import arrow.extension
 import arrow.typeclasses.*
-import arrow.data.combineK as sequenceCombineK
+import arrow.core.combineK as sequenceCombineK
 
 @extension
 interface SequenceKSemigroupInstance<A> : Semigroup<SequenceK<A>> {

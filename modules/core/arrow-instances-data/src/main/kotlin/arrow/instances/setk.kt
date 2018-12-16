@@ -6,7 +6,7 @@ import arrow.data.*
 import arrow.deprecation.ExtensionsDSLDeprecated
 import arrow.extension
 import arrow.typeclasses.*
-import arrow.data.combineK as setCombineK
+import arrow.core.combineK as setCombineK
 import kotlin.collections.plus as setPlus
 
 @extension

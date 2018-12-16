@@ -1,9 +1,7 @@
-package arrow.data
+package arrow.core
 
 import arrow.Kind
-import arrow.core.*
 import arrow.higherkind
-import arrow.typeclasses.Applicative
 
 typealias Nel<A> = NonEmptyList<A>
 
@@ -42,15 +40,7 @@ class NonEmptyList<out A> private constructor(
   fun <B> foldLeft(b: B, f: (B, A) -> B): B = this.fix().tail.fold(f(b, this.fix().head), f)
 
   fun <B> foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
-    all.k().foldRight(lb, f)
-
-  fun <G, B> traverse(AG: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, NonEmptyList<B>> = with(AG) {
-    f(fix().head).map2Eval(Eval.always {
-      tail.k().traverse(AG, f)
-    }) {
-      NonEmptyList(it.a, it.b.fix())
-    }.value()
-  }
+    all.foldRight(lb, f)
 
   fun <B> coflatMap(f: (NonEmptyListOf<A>) -> B): NonEmptyList<B> {
     val buf = mutableListOf<B>()
@@ -121,8 +111,5 @@ class NonEmptyList<out A> private constructor(
 }
 
 fun <A> A.nel(): NonEmptyList<A> = NonEmptyList.of(this)
-
-fun <A, G> NonEmptyListOf<Kind<G, A>>.sequence(GA: Applicative<G>): Kind<G, NonEmptyList<A>> =
-  fix().traverse(GA, ::identity)
 
 fun <A> NonEmptyListOf<A>.combineK(y: NonEmptyListOf<A>): NonEmptyList<A> = fix().plus(y.fix())

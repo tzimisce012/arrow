@@ -7,7 +7,6 @@ import arrow.deprecation.ExtensionsDSLDeprecated
 import arrow.extension
 import arrow.instances.listk.foldable.foldLeft
 import arrow.typeclasses.*
-import java.util.*
 import arrow.data.combineK as listCombineK
 import kotlin.collections.plus as listPlus
 
@@ -42,19 +41,19 @@ interface ListKShowInstance<A> : Show<ListKOf<A>> {
 
 @extension
 interface ListKFunctorInstance : Functor<ForListK> {
-  override fun <A, B> Kind<ForListK, A>.map(f: (A) -> B): ListK<B> =
+  override fun <A, B> ListKOf<A>.map(f: (A) -> B): ListK<B> =
     fix().map(f)
 }
 
 @extension
 interface ListKApplicativeInstance : Applicative<ForListK> {
-  override fun <A, B> Kind<ForListK, A>.ap(ff: Kind<ForListK, (A) -> B>): ListK<B> =
+  override fun <A, B> ListKOf<A>.ap(ff: ListKOf<(A) -> B>): ListK<B> =
     fix().ap(ff)
 
-  override fun <A, B> Kind<ForListK, A>.map(f: (A) -> B): ListK<B> =
+  override fun <A, B> ListKOf<A>.map(f: (A) -> B): ListK<B> =
     fix().map(f)
 
-  override fun <A, B, Z> Kind<ForListK, A>.map2(fb: Kind<ForListK, B>, f: (Tuple2<A, B>) -> Z): ListK<Z> =
+  override fun <A, B, Z> ListKOf<A>.map2(fb: ListKOf<B>, f: (Tuple2<A, B>) -> Z): ListK<Z> =
     fix().map2(fb, f)
 
   override fun <A> just(a: A): ListK<A> =
@@ -63,19 +62,19 @@ interface ListKApplicativeInstance : Applicative<ForListK> {
 
 @extension
 interface ListKMonadInstance : Monad<ForListK> {
-  override fun <A, B> Kind<ForListK, A>.ap(ff: Kind<ForListK, (A) -> B>): ListK<B> =
+  override fun <A, B> ListKOf<A>.ap(ff: ListKOf<(A) -> B>): ListK<B> =
     fix().ap(ff)
 
-  override fun <A, B> Kind<ForListK, A>.flatMap(f: (A) -> Kind<ForListK, B>): ListK<B> =
+  override fun <A, B> ListKOf<A>.flatMap(f: (A) -> ListKOf<B>): ListK<B> =
     fix().flatMap(f)
 
   override fun <A, B> tailRecM(a: A, f: kotlin.Function1<A, ListKOf<Either<A, B>>>): ListK<B> =
     ListK.tailRecM(a, f)
 
-  override fun <A, B> Kind<ForListK, A>.map(f: (A) -> B): ListK<B> =
+  override fun <A, B> ListKOf<A>.map(f: (A) -> B): ListK<B> =
     fix().map(f)
 
-  override fun <A, B, Z> Kind<ForListK, A>.map2(fb: Kind<ForListK, B>, f: (Tuple2<A, B>) -> Z): ListK<Z> =
+  override fun <A, B, Z> ListKOf<A>.map2(fb: ListKOf<B>, f: (Tuple2<A, B>) -> Z): ListK<Z> =
     fix().map2(fb, f)
 
   override fun <A> just(a: A): ListK<A> =
@@ -84,37 +83,37 @@ interface ListKMonadInstance : Monad<ForListK> {
 
 @extension
 interface ListKFoldableInstance : Foldable<ForListK> {
-  override fun <A, B> Kind<ForListK, A>.foldLeft(b: B, f: (B, A) -> B): B =
+  override fun <A, B> ListKOf<A>.foldLeft(b: B, f: (B, A) -> B): B =
     fix().foldLeft(b, f)
 
-  override fun <A, B> Kind<ForListK, A>.foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
+  override fun <A, B> ListKOf<A>.foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
     fix().foldRight(lb, f)
 
-  override fun <A> Kind<ForListK, A>.isEmpty(): kotlin.Boolean =
+  override fun <A> ListKOf<A>.isEmpty(): kotlin.Boolean =
     fix().isEmpty()
 }
 
 @extension
 interface ListKTraverseInstance : Traverse<ForListK> {
-  override fun <A, B> Kind<ForListK, A>.map(f: (A) -> B): ListK<B> =
+  override fun <A, B> ListKOf<A>.map(f: (A) -> B): ListK<B> =
     fix().map(f)
 
-  override fun <G, A, B> Kind<ForListK, A>.traverse(AP: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, ListK<B>> =
+  override fun <G, A, B> ListKOf<A>.traverse(AP: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, ListK<B>> =
     fix().traverse(AP, f)
 
-  override fun <A, B> Kind<ForListK, A>.foldLeft(b: B, f: (B, A) -> B): B =
+  override fun <A, B> ListKOf<A>.foldLeft(b: B, f: (B, A) -> B): B =
     fix().foldLeft(b, f)
 
-  override fun <A, B> Kind<ForListK, A>.foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
+  override fun <A, B> ListKOf<A>.foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
     fix().foldRight(lb, f)
 
-  override fun <A> Kind<ForListK, A>.isEmpty(): Boolean =
+  override fun <A> ListKOf<A>.isEmpty(): Boolean =
     fix().isEmpty()
 }
 
 @extension
 interface ListKSemigroupKInstance : SemigroupK<ForListK> {
-  override fun <A> Kind<ForListK, A>.combineK(y: Kind<ForListK, A>): ListK<A> =
+  override fun <A> ListKOf<A>.combineK(y: ListKOf<A>): ListK<A> =
     fix().listCombineK(y)
 }
 
@@ -123,7 +122,7 @@ interface ListKMonoidKInstance : MonoidK<ForListK> {
   override fun <A> empty(): ListK<A> =
     ListK.empty()
 
-  override fun <A> Kind<ForListK, A>.combineK(y: Kind<ForListK, A>): ListK<A> =
+  override fun <A> ListKOf<A>.combineK(y: ListKOf<A>): ListK<A> =
     fix().listCombineK(y)
 }
 
@@ -140,43 +139,10 @@ interface ListKHashInstance<A> : Hash<ListKOf<A>>, ListKEqInstance<A> {
 }
 
 object ListKContext : ListKMonadInstance, ListKTraverseInstance, ListKMonoidKInstance {
-  override fun <A, B> Kind<ForListK, A>.map(f: (A) -> B): ListK<B> =
+  override fun <A, B> ListKOf<A>.map(f: (A) -> B): ListK<B> =
     fix().map(f)
 }
 
 @Deprecated(ExtensionsDSLDeprecated)
 infix fun <A> ForListK.Companion.extensions(f: ListKContext.() -> A): A =
   f(ListKContext)
-
-//object test {
-//
-//  // dog names can be treated as unique IDs here
-//  data class Dog(val id: String, val owner: String)
-//
-//
-//  val dogsAreCute: List<Pair<Dog, Boolean>> = listOf(
-//    Dog("Kessi", "Marc") to true,
-//    Dog("Rocky", "Martin") to false,
-//    Dog("Molly", "Martin") to true
-//  )
-//
-//  // loaded by the backend, so can contain new data
-//  val newDogs: List<Dog> = listOf(
-//    Dog("Kessi", "Marc"),
-//    Dog("Rocky", "Marc"),
-//    Dog("Buddy", "Martin")
-//  )
-//
-//  // this should be the result: a union that preserves the extra Boolean, but replaces dogs by
-//  // their new updated data
-//  val expected = listOf(
-//    newDogs[0] to true,
-//    newDogs[1] to false
-//  )
-//
-//  @JvmStatic
-//  fun main(args: Array<String>) {
-//    val actual = dogsAreCute.zip(newDogs)
-//    println(actual)
-//  }
-//}

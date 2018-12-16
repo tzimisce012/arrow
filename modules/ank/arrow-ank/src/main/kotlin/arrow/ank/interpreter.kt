@@ -2,7 +2,7 @@ package arrow.ank
 
 import arrow.Kind
 import arrow.core.*
-import arrow.data.Nel
+import arrow.core.Nel
 import arrow.data.fix
 import arrow.effects.typeclasses.MonadDefer
 import arrow.instances.list.traverse.sequence

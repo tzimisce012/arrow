@@ -2,7 +2,7 @@ package arrow.ank
 
 import arrow.Kind
 import arrow.core.toT
-import arrow.data.Nel
+import arrow.core.Nel
 import java.nio.file.Path
 
 fun <F> ank(source: Path, target: Path, compilerArgs: List<String>, ankOps: AnkOps<F>): Kind<F, Int> = with(ankOps) {

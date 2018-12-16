@@ -12,7 +12,7 @@ import arrow.instances.SequenceKTraverseInstance
 import arrow.mtl.typeclasses.FunctorFilter
 import arrow.mtl.typeclasses.MonadCombine
 import arrow.mtl.typeclasses.MonadFilter
-import arrow.data.combineK as sequenceCombineK
+import arrow.core.combineK as sequenceCombineK
 
 @extension
 interface SequenceKMonadCombineInstance : MonadCombine<ForSequenceK> {

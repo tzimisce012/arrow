@@ -1,21 +1,13 @@
 package arrow.data
 
+import arrow.core.NonEmptyList
+import arrow.core.nel
 import arrow.instances.eq
 import arrow.instances.hash
-import arrow.instances.nonemptylist.applicative.applicative
-import arrow.instances.nonemptylist.comonad.comonad
-import arrow.instances.nonemptylist.eq.eq
-import arrow.instances.nonemptylist.hash.hash
-import arrow.instances.nonemptylist.monad.monad
-import arrow.instances.nonemptylist.semigroup.semigroup
-import arrow.instances.nonemptylist.semigroupK.semigroupK
-import arrow.instances.nonemptylist.show.show
-import arrow.instances.nonemptylist.traverse.traverse
 import arrow.test.UnitSpec
 import arrow.test.laws.*
 import arrow.typeclasses.Eq
 import io.kotlintest.KTestJUnitRunner
-import io.kotlintest.properties.forAll
 import org.junit.runner.RunWith
 
 @RunWith(KTestJUnitRunner::class)
@@ -32,7 +24,7 @@ class NonEmptyListTest : UnitSpec() {
         Eq.any()),
       ComonadLaws.laws(NonEmptyList.comonad(), { NonEmptyList.of(it) }, Eq.any()),
       TraverseLaws.laws(NonEmptyList.traverse(), NonEmptyList.applicative(), { n: Int -> NonEmptyList.of(n) }, Eq.any()),
-      SemigroupLaws.laws(NonEmptyList.semigroup(), Nel(1, 2, 3), Nel(3, 4, 5), Nel(6, 7, 8), NonEmptyList.eq(Int.eq())),
+      SemigroupLaws.laws(NonEmptyList.semigroup(), arrow.core.Nel(1, 2, 3), arrow.core.Nel(3, 4, 5), arrow.core.Nel(6, 7, 8), NonEmptyList.eq(Int.eq())),
       HashLaws.laws(NonEmptyList.hash(Int.hash()), EQ) { Nel.of(it) }
     )
   }

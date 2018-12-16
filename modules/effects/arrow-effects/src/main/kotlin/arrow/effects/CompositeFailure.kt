@@ -1,22 +1,35 @@
-package arrow.streams
+package arrow.effects
 
 import arrow.core.*
 import arrow.core.Nel
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 
-/** Represents multiple (>1) exceptions were thrown. */
+/**
+ * Represents multiple (>1) exceptions were thrown.
+ * */
 data class CompositeFailure(
   val head: Throwable,
   val tail: Nel<Throwable>
 ) : Throwable("Multiple exceptions were thrown (${1 + tail.size}), first $head: ${head.message}", head) {
 
-  /** Gets all causes (guaranteed to have at least 2 elements). */
+  /**
+   * Gets all causes (guaranteed to have at least 2 elements).
+   */
   val all: NonEmptyList<Throwable> = Nel(head, tail.all)
 
   companion object {
+
+    /**
+     * Constructor to create [CompositeFailure] from 2 [Throwable] and an optional rest of [Throwable]s.
+     */
     operator fun invoke(first: Throwable, second: Throwable, rest: List<Throwable> = emptyList()): CompositeFailure =
       CompositeFailure(first, Nel(second, rest))
 
+    /**
+     * Tries to create a [CompositeFailure] from a [List].
+     *
+     * @return [Some] in case there were (>1) exceptions, or [None] otherwise.
+     */
     fun fromList(error: List<Throwable>): Option<Throwable> = when {
       error.isEmpty() -> None
       error.size == 1 -> Some(error[0])
@@ -31,7 +44,7 @@ data class CompositeFailure(
      * - When both results succeeds then Right(()) is returned
      *
      */
-    fun fromResults(first: Either<Throwable, Unit>,
+    fun fromEither(first: Either<Throwable, Unit>,
                     second: Either<Throwable, Unit>): Either<Throwable, Unit> = when (first) {
       is Either.Right -> second
       is Either.Left -> when (second) {

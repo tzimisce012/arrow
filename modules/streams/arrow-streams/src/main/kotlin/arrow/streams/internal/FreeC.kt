@@ -3,7 +3,7 @@ package arrow.streams.internal
 import arrow.Kind
 import arrow.core.*
 import arrow.effects.typeclasses.ExitCase
-import arrow.streams.CompositeFailure
+import arrow.effects.CompositeFailure
 import arrow.streams.internal.FreeC.Result
 import arrow.typeclasses.MonadError
 

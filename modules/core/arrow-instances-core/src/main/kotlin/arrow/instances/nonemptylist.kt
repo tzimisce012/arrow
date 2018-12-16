@@ -126,8 +126,8 @@ interface NonEmptyListTraverseInstance : Traverse<ForNonEmptyList> {
     fix().map(f)
 
   override fun <G, A, B> NonEmptyListOf<A>.traverse(AP: Applicative<G>, f: (A) -> Kind<G, B>): Kind<G, NonEmptyList<B>> = with(AP) {
-    f(fix().head).map2Eval(Eval.always {
-      fix().tail.traverse(AP, f)
+    f(head()).map2Eval(Eval.always {
+      tail().traverse(AP, f)
     }) {
       NonEmptyList(it.a, it.b)
     }.value()

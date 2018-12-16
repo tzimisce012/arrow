@@ -5,6 +5,10 @@ import arrow.higherkind
 
 typealias Nel<A> = NonEmptyList<A>
 
+fun <A> NonEmptyListOf<A>.head(): A = fix().head
+fun <A> NonEmptyListOf<A>.tail(): List<A> = fix().tail
+fun <A> NonEmptyListOf<A>.all(): List<A> = fix().all
+
 /**
  * A List that can not be empty
  */
@@ -19,7 +23,7 @@ class NonEmptyList<out A> private constructor(
 
   val size: Int = all.size
 
-  fun contains(element: @UnsafeVariance A): Boolean = (head == element) || element in tail
+  fun contains(element: @UnsafeVariance A): Boolean =(head == element) || element in tail
 
   fun containsAll(elements: Collection<@UnsafeVariance A>): Boolean = elements.all(this::contains)
 
@@ -27,7 +31,7 @@ class NonEmptyList<out A> private constructor(
 
   fun <B> map(f: (A) -> B): NonEmptyList<B> = NonEmptyList(f(head), tail.map(f))
 
-  fun <B> flatMap(f: (A) -> NonEmptyListOf<B>): NonEmptyList<B> = f(head).fix() + tail.flatMap { f(it).fix().all }
+  fun <B> flatMap(f: (A) -> NonEmptyListOf<B>): NonEmptyList<B> = f(head).fix() + tail.flatMap { f(it).all() }
 
   fun <B> ap(ff: NonEmptyListOf<(A) -> B>): NonEmptyList<B> = ff.fix().flatMap { f -> map(f) }.fix()
 
@@ -37,7 +41,8 @@ class NonEmptyList<out A> private constructor(
 
   operator fun plus(a: @UnsafeVariance A): NonEmptyList<A> = NonEmptyList(all + a)
 
-  fun <B> foldLeft(b: B, f: (B, A) -> B): B = this.fix().tail.fold(f(b, this.fix().head), f)
+  fun <B> foldLeft(b: B, f: (B, A) -> B): B =
+    tail.fold(f(b, head), f)
 
   fun <B> foldRight(lb: Eval<B>, f: (A, Eval<B>) -> Eval<B>): Eval<B> =
     all.foldRight(lb, f)
@@ -52,10 +57,10 @@ class NonEmptyList<out A> private constructor(
         buf += f(NonEmptyList(list[0], tail))
         consume(tail)
       }
-    return NonEmptyList(f(this), consume(this.fix().tail))
+    return NonEmptyList(f(this), consume(tail))
   }
 
-  fun extract(): A = this.fix().head
+  fun extract(): A = head
 
   fun iterator(): Iterator<A> = all.iterator()
 

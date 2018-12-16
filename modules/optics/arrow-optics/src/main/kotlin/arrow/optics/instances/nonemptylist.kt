@@ -2,8 +2,8 @@ package arrow.optics.instances
 
 import arrow.Kind
 import arrow.core.*
-import arrow.data.*
 import arrow.extension
+import arrow.instances.nonemptylist.traverse.traverse
 import arrow.optics.Optional
 import arrow.optics.POptional
 import arrow.optics.Traversal

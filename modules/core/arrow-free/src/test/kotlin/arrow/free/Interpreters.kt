@@ -8,7 +8,7 @@ import arrow.core.FunctionK
 val cofreeOptionToNel: FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> = object : FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> {
   override fun <A> invoke(fa: Kind<CofreePartialOf<ForOption>, A>): Kind<ForNonEmptyList, A> =
     fa.fix().let { c ->
-      NonEmptyList.fromListUnsafe(listOf(c.head) + c.tailForced().fix().fold({ listOf<A>() }, { invoke(it).fix().all }))
+      NonEmptyList.fromListUnsafe(listOf(c.head) + c.tailForced().fix().fold({ listOf<A>() }, { invoke(it).all() }))
     }
 }
 
@@ -16,7 +16,7 @@ val cofreeListToNel: FunctionK<CofreePartialOf<ForListK>, ForNonEmptyList> = obj
   override fun <A> invoke(fa: Kind<CofreePartialOf<ForListK>, A>): Kind<ForNonEmptyList, A> =
     fa.fix().let { c: Cofree<ForListK, A> ->
       val all: List<Cofree<ForListK, A>> = c.tailForced().fix()
-      val tail: List<A> = all.foldRight(listOf<A>()) { v, acc -> acc + invoke(v).fix().all }
+      val tail: List<A> = all.foldRight(listOf<A>()) { v, acc -> acc + invoke(v).all() }
       val headL: List<A> = listOf(c.head)
       NonEmptyList.fromListUnsafe(headL + tail)
     }

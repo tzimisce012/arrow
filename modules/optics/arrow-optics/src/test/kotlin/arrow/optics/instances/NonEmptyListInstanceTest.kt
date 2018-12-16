@@ -2,7 +2,7 @@ package arrow.optics.instances
 
 import arrow.core.Option
 import arrow.data.ListK
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.instances.listk.eq.eq
 import arrow.instances.option.eq.eq
 import arrow.optics.instances.nonemptylist.each.each

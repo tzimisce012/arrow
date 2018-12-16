@@ -4,7 +4,7 @@ import arrow.Kind
 import arrow.core.Option
 import arrow.core.Try
 import arrow.data.ListK
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.data.k
 import arrow.effects.deferredk.async.async
 import arrow.instances.`try`.functor.functor

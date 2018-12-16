@@ -3,7 +3,7 @@ package arrow.optics.instances
 import arrow.core.Option
 import arrow.data.ListK
 import arrow.data.MapK
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.data.SequenceK
 import arrow.instances.eq
 import arrow.instances.listk.eq.eq

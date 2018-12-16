@@ -2,7 +2,7 @@ package arrow.optics
 
 import arrow.core.*
 import arrow.data.ListK
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.data.k
 import arrow.core.ListInstances
 

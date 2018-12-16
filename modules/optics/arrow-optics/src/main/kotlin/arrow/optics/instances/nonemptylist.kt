@@ -19,8 +19,9 @@ import arrow.typeclasses.Applicative
  * @return [Traversal] with source [NonEmptyList] and focus every [A] of the source.
  */
 fun <A> NonEmptyList.Companion.traversal(): Traversal<NonEmptyList<A>, A> = object : Traversal<NonEmptyList<A>, A> {
-  override fun <F> modifyF(FA: Applicative<F>, s: NonEmptyList<A>, f: (A) -> Kind<F, A>): Kind<F, NonEmptyList<A>> =
-    s.traverse(FA, f)
+  override fun <F> modifyF(FA: Applicative<F>, s: NonEmptyList<A>, f: (A) -> Kind<F, A>): Kind<F, NonEmptyList<A>> = FA.run {
+    s.traverse(FA, f).map { it.fix() }
+  }
 }
 
 /**
@@ -38,10 +39,12 @@ interface NonEmptyListEachInstance<A> : Each<NonEmptyList<A>, A> {
 @extension
 interface NonEmptyListFilterIndexInstance<A> : FilterIndex<NonEmptyList<A>, Int, A> {
   override fun filter(p: (Int) -> Boolean): Traversal<NonEmptyList<A>, A> = object : Traversal<NonEmptyList<A>, A> {
-    override fun <F> modifyF(FA: Applicative<F>, s: NonEmptyList<A>, f: (A) -> Kind<F, A>): Kind<F, NonEmptyList<A>> =
+    override fun <F> modifyF(FA: Applicative<F>, s: NonEmptyList<A>, f: (A) -> Kind<F, A>): Kind<F, NonEmptyList<A>> = FA.run {
       s.all.mapIndexed { index, a -> a toT index }
         .let(NonEmptyList.Companion::fromListUnsafe)
         .traverse(FA) { (a, j) -> if (p(j)) f(a) else FA.just(a) }
+        .map { it.fix() }
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 package arrow.free
 
 import arrow.core.*
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.data.fix
 import arrow.free.instances.FreeEq
 import arrow.free.instances.FreeMonadInstance

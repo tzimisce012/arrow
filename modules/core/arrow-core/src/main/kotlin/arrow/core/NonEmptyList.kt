@@ -23,7 +23,7 @@ class NonEmptyList<out A> private constructor(
 
   val size: Int = all.size
 
-  fun contains(element: @UnsafeVariance A): Boolean =(head == element) || element in tail
+  fun contains(element: @UnsafeVariance A): Boolean = (head == element) || element in tail
 
   fun containsAll(elements: Collection<@UnsafeVariance A>): Boolean = elements.all(this::contains)
 

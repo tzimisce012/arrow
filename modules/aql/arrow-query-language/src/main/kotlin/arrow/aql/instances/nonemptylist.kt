@@ -1,8 +1,8 @@
 package arrow.aql.instances
 
 import arrow.aql.*
-import arrow.data.ForNonEmptyList
-import arrow.data.NonEmptyList
+import arrow.core.ForNonEmptyList
+import arrow.core.NonEmptyList
 import arrow.extension
 import arrow.instances.nonemptylist.applicative.applicative
 import arrow.instances.nonemptylist.foldable.foldable

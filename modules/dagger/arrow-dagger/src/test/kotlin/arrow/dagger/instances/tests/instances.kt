@@ -20,7 +20,7 @@ import arrow.dagger.instances.StateTInstances
 import arrow.data.CoproductPartialOf
 import arrow.data.EitherTPartialOf
 import arrow.data.ForListK
-import arrow.data.ForNonEmptyList
+import arrow.core.ForNonEmptyList
 import arrow.data.ForSequenceK
 import arrow.data.ForSetK
 import arrow.data.KleisliPartialOf

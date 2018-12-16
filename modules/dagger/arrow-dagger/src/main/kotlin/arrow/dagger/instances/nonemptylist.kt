@@ -1,6 +1,6 @@
 package arrow.dagger.instances
 
-import arrow.data.*
+import arrow.core.*
 import arrow.instances.nonemptylist.applicative.applicative
 import arrow.instances.nonemptylist.bimonad.bimonad
 import arrow.instances.nonemptylist.comonad.comonad

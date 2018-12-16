@@ -2,7 +2,7 @@ package arrow.free
 
 import arrow.Kind
 import arrow.core.*
-import arrow.data.NonEmptyList
+import arrow.core.NonEmptyList
 import arrow.data.fix
 import arrow.free.instances.FreeApplicativeApplicativeInstance
 import arrow.free.instances.FreeApplicativeEq

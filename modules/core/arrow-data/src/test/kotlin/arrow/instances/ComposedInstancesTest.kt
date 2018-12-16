@@ -9,6 +9,11 @@ import arrow.instances.id.monad.monad
 import arrow.instances.listk.applicative.applicative
 import arrow.instances.listk.monoidK.monoidK
 import arrow.instances.listk.semigroupK.semigroupK
+import arrow.instances.nonemptylist.applicative.applicative
+import arrow.instances.nonemptylist.foldable.foldable
+import arrow.instances.nonemptylist.functor.functor
+import arrow.instances.nonemptylist.monad.monad
+import arrow.instances.nonemptylist.traverse.traverse
 import arrow.instances.option.applicative.applicative
 import arrow.instances.option.foldable.foldable
 import arrow.instances.option.functor.functor

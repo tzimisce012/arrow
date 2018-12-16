@@ -1,7 +1,7 @@
 package arrow.typeclasses
 
 import arrow.Kind
-import arrow.core.Tuple2
+import arrow.core.*
 import arrow.data.*
 import arrow.instances.monoid
 import arrow.instances.semigroup
@@ -19,7 +19,7 @@ class ReducibleTests : UnitSpec() {
       override fun FG(): Foldable<ForListK> = ListK.foldable()
 
       override fun <A> Kind<ForNonEmptyList, A>.split(): Tuple2<A, Kind<ForListK, A>> =
-        Tuple2(fix().head, ListK(fix().tail))
+        Tuple2(head(), ListK(tail()))
     }
 
     testLaws(ReducibleLaws.laws(

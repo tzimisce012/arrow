@@ -1,10 +1,7 @@
 package arrow.data
 
 import arrow.Kind
-import arrow.core.Either
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
+import arrow.core.*
 import arrow.effects.ForIO
 import arrow.effects.IO
 import arrow.effects.instances.io.applicativeError.attempt

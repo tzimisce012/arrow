@@ -1,6 +1,7 @@
 package arrow.optics
 
 import arrow.core.ListInstances
+import arrow.core.NonEmptyList
 import arrow.core.Option
 import arrow.data.*
 import arrow.instances.listk.monoid.monoid

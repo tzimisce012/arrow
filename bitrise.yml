@@ -18,4 +18,4 @@ workflows:
             #!/usr/bin/env bash
             set -ex
             ./gradlew build dokka :arrow-docs:runAnk
-            aws s3 sync modules/docs/arrow-docs/build/site s3://$S3_BUCKET/ank-site
+            aws s3 sync modules/docs/arrow-docs/build/site s3://$S3_BUCKET/ank-site > aws_sync_ank.log

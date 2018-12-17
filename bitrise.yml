@@ -14,3 +14,9 @@ workflows:
             #!/usr/bin/env bash
             set -ex
             ./gradlew build dokka :arrow-docs:runAnk
+            rvm use 2.5.3 --install --fuzzy
+            bundle install --gemfile modules/docs/arrow-docs/Gemfile --path vendor/bundle
+            export BUNDLE_GEMFILE=modules/docs/arrow-docs/Gemfile
+            bundle exec jekyll build -s ~/site -d ~/_site
+            pip install --user awscli
+            aws s3 sync ~/_site s3://$S3_BUCKET > aws_sync_site.log

@@ -6,11 +6,11 @@ trigger_map:
 - push_branch: master
   workflow: deploy
 - push_branch: "*"
-  workflow: build
+  workflow: pullrequest
 - pull_request_target_branch: "*"
-  workflow: build
+  workflow: pullrequest
 workflows:
-  build:
+  pullrequest:
     envs:
       - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
     steps:

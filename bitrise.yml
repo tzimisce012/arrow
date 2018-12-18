@@ -24,6 +24,8 @@ workflows:
   build-docs:
     envs:
     - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
+    after_run:
+    - build-ank
     steps:
     - script:
         title: Build dokka
@@ -35,6 +37,8 @@ workflows:
   build-ank:
     envs:
     - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
+    after_run:
+    - build-and-deploy-docs
     steps:
     - script:
         title: Build ank
@@ -47,11 +51,6 @@ workflows:
     envs:
     - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
     steps:
-    - script:
-        deps:
-          apt_get:
-          - name: awscli
-            bin_name: aws
     - script:
         deps:
           apt_get:

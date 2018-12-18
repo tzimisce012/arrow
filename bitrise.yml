@@ -21,28 +21,60 @@ workflows:
             #!/usr/bin/env bash
             set -ex
             ./gradlew dokka :arrow-docs:runAnk
-  deploy:
+  build-dokka:
     envs:
     - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
     steps:
     - script:
-        title: Build docs
+        deps:
+          apt_get:
+          - name: awscli
+            bin_name: aws
+        title: Build dokka
         inputs:
         - content: |-
             #!/usr/bin/env bash
             set -ex
-            ./gradlew dokka :arrow-docs:runAnk
+            ./gradlew dokka
+            aws s3 sync modules/docs/arrow-docs/docs/docs/apidocs s3://$S3_BUCKET/apidocs > aws_upload_dokka.log
+  build-ank:
+    envs:
+    - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
+    steps:
     - script:
-           deps:
-             apt_get:
-             - name: awscli
-               bin_name: aws
-           title: Deploy docs
-           inputs:
-           - content: |-
-               #!/usr/bin/env bash
-               set -ex
-               bundle install --gemfile modules/docs/arrow-docs/Gemfile --path vendor/bundle
-               export BUNDLE_GEMFILE=modules/docs/arrow-docs/Gemfile
-               bundle exec jekyll build -s modules/docs/arrow-docs/build/site -d modules/docs/arrow-docs/build/_site
-               aws s3 sync modules/docs/arrow-docs/build/_site s3://$S3_BUCKET > aws_sync_jekyll.log
+        deps:
+          apt_get:
+          - name: awscli
+            bin_name: aws
+        title: Build ank
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -ex
+            aws s3 sync s3://$S3_BUCKET/apidocs modules/docs/arrow-docs/docs/docs/apidocs > aws_download_dokka.log
+            ./gradlew :arrow-docs:runAnk
+            aws s3 sync modules/docs/arrow-docs/build/site s3://$S3_BUCKET/site > aws_upload_ank.log
+  build-and-deploy-docs:
+    envs:
+    - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
+    steps:
+    - script:
+        deps:
+          apt_get:
+          - name: awscli
+            bin_name: aws
+    - script:
+        deps:
+          apt_get:
+          - name: awscli
+            bin_name: aws
+        title: Build and deploy docs
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -ex
+            aws s3 sync s3://$S3_BUCKET/site modules/docs/arrow-docs/build/site > aws_sync_jekyll.log
+            bundle install --gemfile modules/docs/arrow-docs/Gemfile --path vendor/bundle
+            export BUNDLE_GEMFILE=modules/docs/arrow-docs/Gemfile
+            bundle exec jekyll build -s modules/docs/arrow-docs/build/site -d modules/docs/arrow-docs/build/_site
+            aws s3 sync modules/docs/arrow-docs/build/_site s3://$S3_BUCKET > aws_sync_jekyll.log

@@ -4,7 +4,7 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: other
 trigger_map:
 - push_branch: master
-  workflow: deploy
+  workflow: build-docs
 - push_branch: "*"
   workflow: build
 - pull_request_target_branch: "*"
@@ -21,7 +21,7 @@ workflows:
             #!/usr/bin/env bash
             set -ex
             ./gradlew dokka :arrow-docs:runAnk
-  build-dokka:
+  build-docs:
     envs:
     - _JAVA_OPTIONS: "-Xms512m -Xmx4g"
     steps:

@@ -6,7 +6,7 @@ trigger_map:
 - push_branch: master
   workflow: build-docs
 - push_branch: "*"
-  workflow: build-docs
+  workflow: build
 - pull_request_target_branch: "*"
   workflow: build
 workflows:

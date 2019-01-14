@@ -2,7 +2,6 @@
 // -----------------------------------------------
 // -----------------------------------------------
 
-<<<<<<< HEAD
 p, ul, td {
     code {
         background: #DBDFF2 ;
@@ -11,18 +10,6 @@ p, ul, td {
         font-size: 0.8125rem;
         @include border-radius (3px);
     }
-=======
-p, ul {
-  code {
-    background: #fff;
-    font-family: $code-font-family;
-    padding: 0 $base-point-grid;
-    font-size: 0.8125rem;
-    font-size: 0.8rem;
-    @include border-radius (3px);
-  }
->>>>>>> master
-}
 
 .CodeMirror {
   background: #fff !important;

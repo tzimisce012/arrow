@@ -2,7 +2,7 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.arrow-kt/arrow-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.arrow-kt/arrow-core)
 [![Build Status](https://travis-ci.org/arrow-kt/arrow.svg?branch=master)](https://travis-ci.org/arrow-kt/arrow/)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.51-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3-blue.svg)](https://kotlinlang.org/docs/reference/whatsnew13.html)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![codecov](https://codecov.io/gh/arrow-kt/arrow/branch/master/graph/badge.svg)](https://codecov.io/gh/arrow-kt/arrow)
 
@@ -14,7 +14,7 @@ For this, it includes the most popular data types, type classes and abstractions
 Use the list below to learn more about Λrrow's main features.
 
 - [Documentation](http://arrow-kt.io)
-- [Patterns](http://arrow-kt.io/docs/patterns/glossary/): tutorials and approaches to day-to-day challenges using FP 
+- [Patterns](http://arrow-kt.io/docs/patterns/glossary/): tutorials and approaches to day-to-day challenges using FP
 - [Libraries](http://arrow-kt.io/docs/quickstart/libraries/): all the libraries provided by Λrrow
 - [Type classes](http://arrow-kt.io/docs/typeclasses/intro/): defining behaviors for data
 - [Data types](http://arrow-kt.io/docs/datatypes/intro/): common abstractions
@@ -40,28 +40,60 @@ allprojects {
 }
 ```
 
+# Dependency breakdown starting in Arrow 0.9.0
+
+Starting in 0.9.0, Arrow follows the following convention for artifact publication.
+
+The arrow modules are Core, Effects, Optics, Recursion, etc.
+
+An Arrow module is composed of data types and type classes.
+Arrow modules are exported and published with the following semantics.
+
+If we take for example `arrow-core`. 
+
+Arrow core contains the basic arrow type classes and data types and it's composed of 3 main artifacts that may be used a la carte:
+
+Recomended for most use cases:
+
+- `arrow-core` (Depends on data and extensions modules and exports both)
+
+Trimmed down versions:
+
+- `arrow-core-data` (Only data types)
+- `arrow-core-extensions` (Only type class extensions)
+
+# Current stable version
+
 Add the dependencies into the project's `build.gradle`
 
 ```groovy
-def arrow_version = "0.7.2"
+def arrow_version = "0.8.2"
 dependencies {
-    compile "io.arrow-kt:arrow-core:$arrow_version"
+    compile "io.arrow-kt:arrow-core-data:$arrow_version"
     compile "io.arrow-kt:arrow-syntax:$arrow_version"
-    compile "io.arrow-kt:arrow-typeclasses:$arrow_version" 
-    compile "io.arrow-kt:arrow-data:$arrow_version" 
-    compile "io.arrow-kt:arrow-instances-core:$arrow_version"
-    compile "io.arrow-kt:arrow-instances-data:$arrow_version"
-    kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version" 
+    compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
+    compile "io.arrow-kt:arrow-extras:$arrow_version"
+    compile "io.arrow-kt:arrow-core-extensions:$arrow_version"
+    compile "io.arrow-kt:arrow-extras-extensions:$arrow_version"
+    kapt    "io.arrow-kt:arrow-meta:$arrow_version"
     
+    compile "io.arrow-kt:arrow-query-language:$arrow_version" //optional
     compile "io.arrow-kt:arrow-free:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-free-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-mtl:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-rx2:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-rx2-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-reactor:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-reactor-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-kotlinx-coroutines-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-optics:$arrow_version" //optional
     compile "io.arrow-kt:arrow-generic:$arrow_version" //optional
     compile "io.arrow-kt:arrow-recursion:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-extensions-recursion:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-integration-retrofit-adapter:$arrow_version" //optional
 }
 ```
 
@@ -76,10 +108,10 @@ Add the dependencies into the project's `build.gradle`
 apply plugin: 'kotlin-kapt' //optional
 apply from: rootProject.file('gradle/generated-kotlin-sources.gradle') //only for Android projects
 
-def arrow_version = "0.7.2"
+def arrow_version = "0.8.2"
 dependencies {
     ...
-    kapt    'io.arrow-kt:arrow-annotations-processor:$arrow_version' //optional
+    kapt    'io.arrow-kt:arrow-meta:$arrow_version' //optional
     ...
 }
 ```
@@ -125,4 +157,3 @@ idea {
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-

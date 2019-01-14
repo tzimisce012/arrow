@@ -4,11 +4,9 @@ title: Quick Start
 permalink: /docs/
 ---
 
-NOTE: The docs are currently at around 60% completion. They're the present priority project, and you can track the progress on the github issue [#311](https://github.com/arrow-kt/arrow/issues/311).
-
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.arrow-kt/arrow-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.arrow-kt/arrow-core)
 [![Build Status](https://travis-ci.org/arrow-kt/arrow.svg?branch=master)](https://travis-ci.org/arrow-kt/arrow/)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.0-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.3-blue.svg)](https://kotlinlang.org/docs/reference/whatsnew13.html)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Λrrow is a library for Typed Functional Programming in Kotlin.
@@ -18,7 +16,7 @@ For this, it includes the most popular data types, type classes and abstractions
 
 Use the list below to learn more about Λrrow's main features.
 
-- [Patterns](http://arrow-kt.io/docs/patterns/glossary/): tutorials and approaches to day-to-day challenges using FP 
+- [Patterns](http://arrow-kt.io/docs/patterns/glossary/): tutorials and approaches to day-to-day challenges using FP
 - [Libraries](http://arrow-kt.io/docs/quickstart/libraries/): all the libraries provided by Λrrow
 - [Type classes](http://arrow-kt.io/docs/typeclasses/intro/): defining behaviors for data
 - [Data types](http://arrow-kt.io/docs/datatypes/intro/): common abstractions
@@ -30,7 +28,8 @@ Use the list below to learn more about Λrrow's main features.
 - [Projects and Examples](http://arrow-kt.io/docs/quickstart/projects/)
 - [Blogs and Presentations](http://arrow-kt.io/docs/quickstart/blogs/)
 
-# Basic Setup
+# Gradle 
+## Basic Setup
 
 Make sure to have the latest version of JDK 1.8 installed.
 
@@ -44,32 +43,63 @@ allprojects {
 }
 ```
 
+# Dependency breakdown starting in Arrow 0.9.0 
+
+Starting in 0.9.0, Arrow follows the following convention for artifact publication.
+
+The arrow modules are Core, Effects, Optics, Recursion, etc.
+
+An Arrow module is composed of data types and type classes.
+Arrow modules are exported and published with the following semantics.
+
+If we take for example `arrow-core`. 
+
+Arrow core contains the basic arrow type classes and data types and it's composed of 3 main artifacts that may be used a la carte:
+
+Recomended for most use cases:
+
+- `arrow-core` (Depends on data and extensions modules and exports both)
+
+Trimmed down versions:
+
+- `arrow-core-data` (Only data types)
+- `arrow-core-extensions` (Only type class extensions)
+
+# Current stable version
+
 Add the dependencies into the project's `build.gradle`
 
 ```groovy
-def arrow_version = "0.7.2"
+def arrow_version = "0.8.2"
 dependencies {
-    compile "io.arrow-kt:arrow-core:$arrow_version"
+    compile "io.arrow-kt:arrow-core-data:$arrow_version"
     compile "io.arrow-kt:arrow-syntax:$arrow_version"
-    compile "io.arrow-kt:arrow-typeclasses:$arrow_version" 
-    compile "io.arrow-kt:arrow-data:$arrow_version" 
-    compile "io.arrow-kt:arrow-instances-core:$arrow_version"
-    compile "io.arrow-kt:arrow-instances-data:$arrow_version"
-    kapt    "io.arrow-kt:arrow-annotations-processor:$arrow_version" 
+    compile "io.arrow-kt:arrow-typeclasses:$arrow_version"
+    compile "io.arrow-kt:arrow-extras:$arrow_version"
+    compile "io.arrow-kt:arrow-core-extensions:$arrow_version"
+    compile "io.arrow-kt:arrow-extras-extensions:$arrow_version"
+    kapt    "io.arrow-kt:arrow-meta:$arrow_version"
 
     compile "io.arrow-kt:arrow-free:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-free-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-mtl:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-rx2:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-rx2-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-reactor:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-reactor-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-effects-kotlinx-coroutines-extensions:$arrow_version" //optional
     compile "io.arrow-kt:arrow-optics:$arrow_version" //optional
     compile "io.arrow-kt:arrow-generic:$arrow_version" //optional
     compile "io.arrow-kt:arrow-recursion:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-extensions-recursion:$arrow_version" //optional
+    compile "io.arrow-kt:arrow-integration-retrofit-adapter:$arrow_version" //optional
 }
 ```
 
-# Additional Setup
+## Additional Setup
 
 For projects that wish to use their own `@higherkind`, `@optics` and other meta programming facilities provided by Λrrow
 the setup below is also required:
@@ -80,10 +110,10 @@ Add the dependencies into the project's `build.gradle`
 apply plugin: 'kotlin-kapt' //optional
 apply from: rootProject.file('gradle/generated-kotlin-sources.gradle') //only for Android projects
 
-def arrow_version = "0.7.2"
+def arrow_version = "0.8.2"
 dependencies {
     ...
-    kapt    'io.arrow-kt:arrow-annotations-processor:$arrow_version' //optional
+    kapt    'io.arrow-kt:arrow-meta:$arrow_version' //optional
     ...
 }
 ```
@@ -112,4 +142,99 @@ idea {
                 'build/tmp/kapt/main/kotlinGenerated')
     }
 }
+```
+# Maven 
+## Basic Setup
+
+Make sure to have the at least the latest version of JDK 1.8 installed.
+Add to your pom.xml file the following properties:
+```
+<properties>
+    <kotlin.version>1.3.0</kotlin.version>
+    <arrow.version>0.8.2</arrow.version>
+</properties>
+```
+
+Add the dependencies that you want to use
+```
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-core</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-syntax</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-typeclasses</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-data</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-extensions-core</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.arrow-kt</groupId>
+    <artifactId>arrow-extensions-data</artifactId>
+    <version>${arrow.version}</version>
+</dependency>
+```
+
+## Enabling kapt
+
+Enable annotaton processing using kotlin plugin 
+```
+<plugin>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <version>${kotlin.version}</version>
+    <executions>
+        <execution>
+            <id>kapt</id>
+            <goals>
+                <goal>kapt</goal>
+            </goals>
+            <configuration>
+                <sourceDirs>
+                    <sourceDir>src/main/kotlin</sourceDir>
+                </sourceDirs>
+                <annotationProcessorPaths>
+                    <annotationProcessorPath>
+                        <groupId>io.arrow-kt</groupId>
+                        <artifactId>arrow-annotations-processor</artifactId>
+                        <version>${arrow.version}</version>
+                    </annotationProcessorPath>
+                </annotationProcessorPaths>
+            </configuration>
+        </execution>
+        <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+            <configuration>
+                <sourceDirs>
+                    <sourceDir>src/main/kotlin</sourceDir>
+                </sourceDirs>
+            </configuration>
+        </execution>
+        <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+                <goal>test-compile</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
 ```

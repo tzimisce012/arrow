@@ -3,7 +3,7 @@ package arrow.test.laws
 import arrow.Kind
 import arrow.core.Eval
 import arrow.core.Option
-import arrow.instances.monoid
+import arrow.core.extensions.monoid
 import arrow.test.generators.genConstructor
 import arrow.test.generators.genFunctionAAToA
 import arrow.test.generators.genFunctionAToB
@@ -13,7 +13,8 @@ import arrow.typeclasses.Reducible
 import io.kotlintest.properties.forAll
 
 object ReducibleLaws {
-  inline fun <F> laws(RF: Reducible<F>, noinline cf: (Int) -> Kind<F, Int>, EQ: Eq<Int>, EQOptionInt: Eq<Option<Int>>, EQLong: Eq<Long>): List<Law> =
+
+  fun <F> laws(RF: Reducible<F>, cf: (Int) -> Kind<F, Int>, EQ: Eq<Int>, EQOptionInt: Eq<Option<Int>>, EQLong: Eq<Long>): List<Law> =
     FoldableLaws.laws(RF, cf, EQ) + listOf(
       Law("Reducible Laws: reduceLeftTo consistent with reduceMap") { RF.reduceLeftToConsistentWithReduceMap(cf, EQ) },
       Law("Reducible Laws: reduceRightTo consistent with reduceMap") { RF.reduceRightToConsistentWithReduceMap(cf, EQ) },

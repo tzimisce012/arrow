@@ -2,6 +2,7 @@
 // -----------------------------------------------
 // -----------------------------------------------
 
+<<<<<<< HEAD
 p, ul, td {
     code {
         background: #DBDFF2 ;
@@ -10,14 +11,25 @@ p, ul, td {
         font-size: 0.8125rem;
         @include border-radius (3px);
     }
+=======
+p, ul {
+  code {
+    background: #fff;
+    font-family: $code-font-family;
+    padding: 0 $base-point-grid;
+    font-size: 0.8125rem;
+    font-size: 0.8rem;
+    @include border-radius (3px);
+  }
+>>>>>>> master
 }
 
-.hljs {
-    padding: ($base-point-grid * 3);
-    background: $white;
-    font-family: $code-font-family;
-    font-size: 0.875rem;
-    box-shadow: $box-shadow-item;
+.CodeMirror {
+  background: #fff !important;
+  font-family: $code-font-family !important;
+  font-size: 0.8rem !important;
+  @include border-radius (3px);
+  z-index: 0;
 }
 
 .hljs {
@@ -25,6 +37,10 @@ p, ul, td {
   overflow-x: auto;
   color: #383a42;
   background: #fafafa;
+  padding: ($base-point-grid * 1.5) 0 ($base-point-grid * 1.5) ($base-point-grid * 2);
+  font-family: $code-font-family;
+  font-size: 0.8rem;
+  box-shadow: $box-shadow-item;
 }
 
 .hljs-doctag,
@@ -36,4 +52,8 @@ p, ul, td {
 .hljs-built_in,
 .hljs-class .hljs-title {
   color: #F28B2D;
+}
+
+.language-kotlin {
+  display: none;
 }

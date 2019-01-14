@@ -1,12 +1,24 @@
 package arrow.test.laws
 
 import arrow.typeclasses.Eq
+import io.kotlintest.matchers.should
 import io.kotlintest.properties.Gen
+
+fun throwableEq() = Eq { a: Throwable, b ->
+  a::class == b::class && a.message == b.message
+}
 
 data class Law(val name: String, val test: () -> Unit)
 
-inline fun <A> A.equalUnderTheLaw(b: A, eq: Eq<A>): Boolean =
+fun <A> A.equalUnderTheLaw(b: A, eq: Eq<A>): Boolean =
   eq.run { eqv(b) }
+
+fun <A> A.shouldBe(b: A, eq: Eq<A>): Unit = eq.run {
+  this.should {
+    io.kotlintest.matchers.Result(eqv(b),
+      "Expected: $this but found: $b")
+  }
+}
 
 fun <A> forFew(amount: Int, gena: Gen<A>, fn: (a: A) -> Boolean): Unit {
   for (k in 0..amount) {

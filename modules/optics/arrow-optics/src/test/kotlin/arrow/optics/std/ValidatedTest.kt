@@ -2,6 +2,9 @@ package arrow.optics
 
 import arrow.core.*
 import arrow.data.Validated
+import arrow.core.extensions.`try`.applicative.applicative
+import arrow.core.extensions.either.applicative.applicative
+import arrow.core.extensions.either.applicative.map2
 import arrow.test.UnitSpec
 import arrow.test.generators.*
 import arrow.test.laws.IsoLaws

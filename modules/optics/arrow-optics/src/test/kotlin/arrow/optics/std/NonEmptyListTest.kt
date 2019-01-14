@@ -1,8 +1,7 @@
 package arrow.optics
 
-import arrow.data.ListK
 import arrow.data.NonEmptyList
-import arrow.instances.monoid
+import arrow.core.extensions.monoid
 import arrow.test.UnitSpec
 import arrow.test.generators.genFunctionAToB
 import arrow.test.generators.genNonEmptyList
@@ -36,7 +35,7 @@ class NonEmptyListTest : UnitSpec() {
       EQA = Eq.any(),
       EQB = Eq.any(),
       MB = object : Monoid<List<String>> {
-        override fun empty(): List<String> = ListK.empty<String>().list
+        override fun empty(): List<String> = emptyList()
         override fun List<String>.combine(b: List<String>): List<String> = this + b
       }
     ))

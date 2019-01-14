@@ -33,7 +33,7 @@ The largest quality of life improvement when using Flux streams in Arrow is the 
 To wrap any existing Flux in its Arrow Wrapper counterpart you can use the extension function `k()`.
 
 ```kotlin:ank
-import arrow.effects.*
+import arrow.effects.reactor.*
 import reactor.core.publisher.*
 
 val flux = Flux.just(1, 2, 3, 4, 5).k()
@@ -57,9 +57,9 @@ mono.value()
 
 ### Observable comprehensions
 
-The library provides instances of [`MonadError`]({{ '/docs/typeclasses/monaderror' | relative_url }}) and [`MonadDefer`]({{ '/docs/effects/monaddefer' | relative_url }}).
+The library provides instances of [`MonadError`]({{ '/docs/arrow/typeclasses/monaderror' | relative_url }}) and [`MonadDefer`]({{ '/docs/effects/monaddefer' | relative_url }}).
 
-[`MonadDefer`]({{ '/docs/effects/async' | relative_url }}) allows you to generify over datatypes that can run asynchronous code. You can use it with `FluxK` or `MonoK`.
+[`Async`]({{ '/docs/effects/async' | relative_url }}) allows you to generify over datatypes that can run asynchronous code. You can use it with `FluxK` or `MonoK`.
 
 ```kotlin
 fun <F> getSongUrlAsync(MS: MonadDefer<F>) =
@@ -69,7 +69,7 @@ val songFlux: FluxKOf<Url> = getSongUrlAsync(FluxK.monadDefer())
 val songMono: MonoKOf<Url> = getSongUrlAsync(MonoK.monadDefer())
 ```
 
-[`MonadError`]({{ '/docs/typeclasses/monaderror' | relative_url }}) can be used to start a [Monad Comprehension]({{ '/docs/patterns/monad_comprehensions' | relative_url }}) using the method `bindingCatch`, with all its benefits.
+[`MonadError`]({{ '/docs/arrow/typeclasses/monaderror' | relative_url }}) can be used to start a [Monad Comprehension]({{ '/docs/patterns/monad_comprehensions' | relative_url }}) using the method `bindingCatch`, with all its benefits.
 
 Let's take an example and convert it to a comprehension. We'll create an observable that loads a song from a remote location, and then reports the current play % every 100 milliseconds until the percentage reaches 100%:
 
@@ -90,26 +90,24 @@ getSongUrlAsync()
 When rewritten using `bindingCatch` it becomes:
 
 ```kotlin
-import arrow.effects.*
+import arrow.effects.reactor.*
 import arrow.typeclasses.*
+import arrow.effects.reactor.extensions.flux.monadThrow.bindingCatch
 
-ForFluxK extensions {
-  bindingCatch {
-    val songUrl = getSongUrlAsync().bind()
-    val musicPlayer = MediaPlayer.load(songUrl)
-    val totalTime = musicPlayer.getTotaltime()
+bindingCatch {
+  val songUrl = getSongUrlAsync().bind()
+  val musicPlayer = MediaPlayer.load(songUrl)
+  val totalTime = musicPlayer.getTotaltime()
     
-    val end = DirectProcessor.create<Unit>()
-    Flux.interval(Duration.ofMillis(100)).takeUntilOther(end).bind()
+  val end = DirectProcessor.create<Unit>()
+  Flux.interval(Duration.ofMillis(100)).takeUntilOther(end).bind()
     
-    val tick = musicPlayer.getCurrentTime().bind()
-    val percent = (tick / totalTime * 100).toInt()
-    if (percent >= 100) {
-      end.onNext(Unit)
-    }
-    
-    percent
-  }.fix()
+  val tick = musicPlayer.getCurrentTime().bind()
+  val percent = (tick / totalTime * 100).toInt()
+  if (percent >= 100) {
+    end.onNext(Unit)
+  }
+  percent
 }
 ```
 
@@ -130,8 +128,9 @@ Note that [`MonadDefer`]({{ '/docs/effects/monaddefer' | relative_url }}) provid
 Invoking this `Disposable` causes an `BindingCancellationException` in the chain which needs to be handled by the subscriber, similarly to what `Deferred` does.
 
 ```kotlin
+
 val (flux, disposable) =
-  FluxK.monadDefer().bindingCancellable {
+  bindingCancellable {
     val userProfile = Flux.create { getUserProfile("123") }
     val friendProfiles = userProfile.friends().map { friend ->
         bindDefer { getProfile(friend.id) }
@@ -146,15 +145,55 @@ disposable()
 // Boom! caused by BindingCancellationException
 ```
 
-## Available Instances
+### Stack safety
 
-* [Applicative]({{ '/docs/typeclasses/applicative' | relative_url }})
-* [ApplicativeError]({{ '/docs/typeclasses/applicativeerror' | relative_url }})
-* [Functor]({{ '/docs/typeclasses/functor' | relative_url }})
-* [Monad]({{ '/docs/typeclasses/monad' | relative_url }})
-* [MonadError]({{ '/docs/typeclasses/monaderror' | relative_url }})
-* [MonadDefer]({{ '/docs/effects/monaddefer' | relative_url }})
-* [Async]({{ '/docs/effects/async' | relative_url }})
-* [Effect]({{ '/docs/effects/effect' | relative_url }})
-* [Foldable]({{ '/docs/typeclasses/foldable' | relative_url }})
-* [Traverse]({{ '/docs/typeclasses/traverse' | relative_url }})
+While [`MonadDefer`]({{ '/docs/effects/monaddefer' | relative_url }}) usually guarantees stack safety, this does not apply for the reactor wrapper types. 
+This is a limitation on reactor's side. See the corresponding github [issue]({{ 'https://github.com/reactor/reactor-core/issues/1441' }}).
+
+To overcome this limitation and run code in a stack safe way, one can make use of `bindingStackSafe` which is provided for every instance of [`Monad`]({{ '/docs/typeclasses/monad' | relative_url }}) when you have `arrow-free` included.
+
+{: data-executable='true'}
+```kotlin:ank
+import arrow.Kind
+import arrow.effects.reactor.MonoK
+import arrow.effects.reactor.ForMonoK
+import arrow.effects.reactor.fix
+import arrow.effects.reactor.extensions.monok.monad.monad
+import arrow.effects.reactor.extensions.monok.applicativeError.attempt
+import arrow.free.bindingStackSafe
+import arrow.free.run
+
+fun main() {
+  //sampleStart
+  // This will not result in a stack overflow
+  val result = MonoK.monad().bindingStackSafe {
+    (1..50000).fold(just(0)) { acc: Kind<ForMonoK, Int>, x: Int ->
+      just(acc.bind() + 1)
+    }.bind()
+  }.run(MonoK.monad())
+  //sampleEnd
+  println(result.fix().mono.block()!!)
+}
+```
+
+```kotlin:ank
+import arrow.core.Try
+
+// This will result in a stack overflow
+Try {
+  MonoK.monad().binding {
+    (1..50000).fold(just(0)) { acc: Kind<ForMonoK, Int>, x: Int ->
+      just(acc.bind() + 1)
+    }.bind()
+  }.fix().mono.block()
+}
+```
+
+### Supported Type Classes
+
+```kotlin:ank:replace
+import arrow.reflect.*
+import arrow.effects.reactor.*
+
+DataType(FluxK::class).tcMarkdownList()
+```

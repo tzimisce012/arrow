@@ -1,8 +1,7 @@
 package arrow.optics
 
 import arrow.core.Id
-import arrow.instances.IntMonoidInstance
-import arrow.instances.monoid
+import arrow.core.extensions.monoid
 import arrow.test.UnitSpec
 import arrow.test.generators.genFunctionAToB
 import arrow.test.laws.IsoLaws

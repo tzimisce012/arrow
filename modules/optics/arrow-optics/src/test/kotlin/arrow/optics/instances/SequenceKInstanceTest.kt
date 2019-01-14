@@ -1,14 +1,18 @@
 package arrow.optics.instances
 
 import arrow.core.*
+import arrow.core.extensions.eq
 import arrow.data.*
-import arrow.instances.eq
-import arrow.optics.typeclasses.FilterIndex
+import arrow.data.extensions.listk.eq.eq
+import arrow.core.extensions.option.eq.eq
+import arrow.data.extensions.sequencek.eq.eq
+import arrow.optics.extensions.sequencek.each.each
+import arrow.optics.extensions.sequencek.filterIndex.filterIndex
+import arrow.optics.extensions.sequencek.index.index
 import arrow.test.UnitSpec
 import arrow.test.generators.*
 import arrow.test.laws.OptionalLaws
 import arrow.test.laws.TraversalLaws
-import arrow.typeclasses.Eq
 import io.kotlintest.KTestJUnitRunner
 import io.kotlintest.properties.Gen
 import org.junit.runner.RunWith

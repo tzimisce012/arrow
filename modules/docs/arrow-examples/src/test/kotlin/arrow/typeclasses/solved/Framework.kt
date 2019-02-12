@@ -57,7 +57,7 @@ interface NetworkOperationsSync<F> : ApplicativeError<F, Throwable> {
     } catch (t: Throwable) {
       raiseError(t)
     }
-  //catch { network.fetch(this, mapOf("1" to "2")) }
+  // catch { network.fetch(this, mapOf("1" to "2")) }
 }
 
 interface DaoOperationsSync<F> : ApplicativeError<F, Throwable> {

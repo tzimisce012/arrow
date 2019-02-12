@@ -20,7 +20,6 @@ interface StateTFunctor<F, S> : Functor<StateTPartialOf<F, S>> {
 
   override fun <A, B> StateTOf<F, S, A>.map(f: (A) -> B): StateT<F, S, B> =
     fix().map(FF(), f)
-
 }
 
 @extension
@@ -42,7 +41,6 @@ interface StateTApplicative<F, S> : Applicative<StateTPartialOf<F, S>>, StateTFu
 
   override fun <A, B> StateTOf<F, S, A>.product(fb: StateTOf<F, S, B>): StateT<F, S, Tuple2<A, B>> =
     fix().product(MF(), fb)
-
 }
 
 @extension
@@ -62,7 +60,6 @@ interface StateTMonad<F, S> : Monad<StateTPartialOf<F, S>>, StateTApplicative<F,
 
   override fun <A, B> StateTOf<F, S, A>.ap(ff: StateTOf<F, S, (A) -> B>): StateT<F, S, B> =
     ff.fix().map2(MF(), this) { f, a -> f(a) }
-
 }
 
 @extension
@@ -75,7 +72,6 @@ interface StateTSemigroupK<F, S> : SemigroupK<StateTPartialOf<F, S>> {
 
   override fun <A> StateTOf<F, S, A>.combineK(y: StateTOf<F, S, A>): StateT<F, S, A> =
     fix().combineK(FF(), SS(), y)
-
 }
 
 @extension
@@ -99,7 +95,6 @@ interface StateTApplicativeError<F, S, E> : ApplicativeError<StateTPartialOf<F, 
       }
     }
   }
-
 }
 
 @extension
@@ -109,7 +104,6 @@ interface StateTMonadError<F, S, E> : MonadError<StateTPartialOf<F, S>, E>, Stat
   override fun ME(): MonadError<F, E>
 
   override fun MF(): Monad<F> = ME()
-
 }
 
 @extension
@@ -137,11 +131,10 @@ fun <S> StateApi.monad(): Monad<StateTPartialOf<ForId, S>> = StateT.monad(Id.mon
 @undocumented
 interface StateTFx<F, S> : Fx<StateTPartialOf<F, S>> {
 
-  fun M() : Monad<F>
+  fun M(): Monad<F>
 
   override fun monad(): Monad<StateTPartialOf<F, S>> =
     StateT.monad(M())
-
 }
 
 @extension
@@ -150,5 +143,4 @@ interface StateFx<S> : StateTFx<ForId, S> {
 
   override fun M(): Monad<ForId> =
     Id.monad()
-
 }

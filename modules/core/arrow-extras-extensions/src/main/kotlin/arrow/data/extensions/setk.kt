@@ -32,7 +32,6 @@ interface SetKEq<A> : Eq<SetK<A>> {
       acc && bool
     }
     else false
-
 }
 
 @extension

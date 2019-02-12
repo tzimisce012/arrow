@@ -48,7 +48,6 @@ class MaybeKTests : UnitSpec() {
         }
         errA == errB
       }
-
   }
 
   init {
@@ -180,7 +179,5 @@ class MaybeKTests : UnitSpec() {
         .test()
         .assertError(ConnectionCancellationException)
     }
-
   }
-
 }

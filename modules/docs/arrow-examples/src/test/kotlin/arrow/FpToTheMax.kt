@@ -42,22 +42,19 @@ data class TestData(val input: List<String>, val output: List<String>, val nums:
     fun nextInt(@Suppress("UNUSED_PARAMETER") upper: Int): Tuple2<TestData, Int> = copy(nums = nums.drop(1)) toT nums[0]
 }
 
-
 typealias ForTestIO = StatePartialOf<TestData>
 
 // Helper to make it clearer.
 fun <A> TestIO(f: (TestData) -> Tuple2<TestData, A>) = State(f)
 
-class TestIORandom: FRandom<ForTestIO> {
+class TestIORandom : FRandom<ForTestIO> {
     override fun nextInt(upper: Int): Kind<ForTestIO, Int> = TestIO { it.nextInt(upper) }
 }
 
-class TestIOConsole: Console<ForTestIO> {
-    override fun putStrLn(s: String): Kind<ForTestIO, Unit> = TestIO { it.putStrLn(s)}
+class TestIOConsole : Console<ForTestIO> {
+    override fun putStrLn(s: String): Kind<ForTestIO, Unit> = TestIO { it.putStrLn(s) }
     override fun getStrLn(): Kind<ForTestIO, String> = TestIO { it.getStrLn() }
 }
-
-
 
 object FpToTheMax {
 
@@ -101,16 +98,12 @@ object FpToTheMax {
         r.fix().unsafeRunSync()
     }
 
-
-
     fun test(): List<String> = run {
         val testData: TestData = TestData(listOf("Plop", "4", "n"), listOf(), listOf(3))
 
         val m: Monad<ForTestIO> = StateT.monad(Id.monad())
-        val module: MonadAndConsoleRandom<ForTestIO> = MonadAndConsoleRandom(m, TestIOConsole(), TestIORandom() )
+        val module: MonadAndConsoleRandom<ForTestIO> = MonadAndConsoleRandom(m, TestIOConsole(), TestIORandom())
 
         module.fMain().fix().run(testData).a.output
     }
-
 }
-

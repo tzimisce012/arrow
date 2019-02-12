@@ -33,7 +33,6 @@ interface SequenceKEq<A> : Eq<SequenceK<A>> {
     zip(b) { aa, bb -> EQ().run { aa.eqv(bb) } }.fold(true) { acc, bool ->
       acc && bool
     }
-
 }
 
 @extension
@@ -139,5 +138,4 @@ interface SequenceKFx<F> : Fx<ForSequenceK> {
 
   override fun monad(): Monad<ForSequenceK> =
     SequenceK.monad()
-
 }

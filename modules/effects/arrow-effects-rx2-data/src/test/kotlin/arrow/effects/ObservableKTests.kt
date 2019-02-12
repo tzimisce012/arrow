@@ -155,6 +155,5 @@ class ObservableKTests : UnitSpec() {
         .test()
         .assertError(ConnectionCancellationException)
     }
-
   }
 }

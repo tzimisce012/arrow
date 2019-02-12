@@ -70,6 +70,5 @@ class FreeTest : UnitSpec() {
       val hugeProg = stackSafeTestProgram(0, n)
       hugeProg.foldMap(idInterpreter, IdMonad).value() shouldBe n
     }
-
   }
 }

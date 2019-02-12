@@ -167,8 +167,8 @@ data class MaybeK<A>(val maybe: Maybe<A>) : MaybeKOf<A>, MaybeKKindedJ<A> {
     fun <A> async(fa: MaybeKProc<A>): MaybeK<A> =
       Maybe.create<A> { emitter ->
         val conn = MaybeKConnection()
-        //On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
-        //on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
+        // On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
+        // on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
         conn.push(MaybeK { if (!emitter.isDisposed) emitter.onError(OnCancel.CancellationException) })
         emitter.setCancellable { conn.cancel().value().subscribe() }
 
@@ -178,15 +178,14 @@ data class MaybeK<A>(val maybe: Maybe<A>) : MaybeKOf<A>, MaybeKKindedJ<A> {
           }, {
             emitter.onSuccess(it)
           })
-
         }
       }.k()
 
     fun <A> asyncF(fa: MaybeKProcF<A>): MaybeK<A> =
       Maybe.create { emitter: MaybeEmitter<A> ->
         val conn = MaybeKConnection()
-        //On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
-        //on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
+        // On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
+        // on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
         conn.push(MaybeK { if (!emitter.isDisposed) emitter.onError(OnCancel.CancellationException) })
         emitter.setCancellable { conn.cancel().value().subscribe() }
 

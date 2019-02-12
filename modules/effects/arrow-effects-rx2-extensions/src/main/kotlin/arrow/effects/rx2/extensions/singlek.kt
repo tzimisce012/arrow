@@ -49,7 +49,7 @@ interface SingleKMonad : Monad<ForSingleK> {
 @extension
 interface SingleKApplicativeError :
   ApplicativeError<ForSingleK, Throwable>,
-  SingleKApplicative{
+  SingleKApplicative {
   override fun <A> raiseError(e: Throwable): SingleK<A> =
     SingleK.raiseError(e)
 
@@ -60,7 +60,7 @@ interface SingleKApplicativeError :
 @extension
 interface SingleKMonadError :
   MonadError<ForSingleK, Throwable>,
-  SingleKMonad{
+  SingleKMonad {
   override fun <A> raiseError(e: Throwable): SingleK<A> =
     SingleK.raiseError(e)
 
@@ -69,16 +69,16 @@ interface SingleKMonadError :
 }
 
 @extension
-interface SingleKMonadThrow: MonadThrow<ForSingleK>, SingleKMonadError
+interface SingleKMonadThrow : MonadThrow<ForSingleK>, SingleKMonadError
 
 @extension
-interface SingleKBracket: Bracket<ForSingleK, Throwable>, SingleKMonadThrow {
+interface SingleKBracket : Bracket<ForSingleK, Throwable>, SingleKMonadThrow {
   override fun <A, B> SingleKOf<A>.bracketCase(release: (A, ExitCase<Throwable>) -> SingleKOf<Unit>, use: (A) -> SingleKOf<B>): SingleK<B> =
     fix().bracketCase({ use(it) }, { a, e -> release(a, e) })
 }
 
 @extension
-interface SingleKMonadDefer: MonadDefer<ForSingleK>, SingleKBracket {
+interface SingleKMonadDefer : MonadDefer<ForSingleK>, SingleKBracket {
   override fun <A> defer(fa: () -> SingleKOf<A>): SingleK<A> =
     SingleK.defer(fa)
 }
@@ -86,7 +86,7 @@ interface SingleKMonadDefer: MonadDefer<ForSingleK>, SingleKBracket {
 @extension
 interface SingleKAsync :
   Async<ForSingleK>,
-  SingleKMonadDefer{
+  SingleKMonadDefer {
   override fun <A> async(fa: Proc<A>): SingleK<A> =
     SingleK.async { _, cb -> fa(cb) }
 
@@ -100,13 +100,13 @@ interface SingleKAsync :
 @extension
 interface SingleKEffect :
   Effect<ForSingleK>,
-  SingleKAsync{
+  SingleKAsync {
   override fun <A> SingleKOf<A>.runAsync(cb: (Either<Throwable, A>) -> SingleKOf<Unit>): SingleK<Unit> =
     fix().runAsync(cb)
 }
 
 @extension
-interface SingleKConcurrentEffect: ConcurrentEffect<ForSingleK>, SingleKEffect {
+interface SingleKConcurrentEffect : ConcurrentEffect<ForSingleK>, SingleKEffect {
   override fun <A> SingleKOf<A>.runAsyncCancellable(cb: (Either<Throwable, A>) -> SingleKOf<Unit>): SingleK<Disposable> =
     fix().runAsyncCancellable(cb)
 }

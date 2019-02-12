@@ -59,7 +59,6 @@ class DataTypeExamples : FreeSpec() { init {
       // Computing over independent values
       val tuple = Option.applicative().tupled(Option(1), Option("Hello"), Option(20.0))
       tuple shouldBe Some(Tuple3(a = 1, b = "Hello", c = 20.0))
-
     }
 
     "Monad" {
@@ -80,7 +79,6 @@ class DataTypeExamples : FreeSpec() { init {
       }
       none shouldBe None
     }
-
   }
 
   // http://arrow-kt.io/docs/arrow/core/try/
@@ -102,7 +100,6 @@ class DataTypeExamples : FreeSpec() { init {
       gain shouldBe aFailureOfType(AuthorizationException::class)
 
       gain.getOrElse { 0 } shouldBe 0
-
     }
 
     "filter" {
@@ -145,7 +142,6 @@ class DataTypeExamples : FreeSpec() { init {
         Try { "nope".toInt() }
       )
       tryHarder shouldBe aFailureOfType(NumberFormatException::class)
-
     }
   }
 
@@ -178,7 +174,6 @@ class DataTypeExamples : FreeSpec() { init {
       either.getOrElse { 0 } shouldBe 0
       either.map { it + 1 } shouldBe either
       either.flatMap { Left(somethingExploded) } shouldBe either
-
     }
 
     "Either rather than exception" {

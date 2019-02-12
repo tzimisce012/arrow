@@ -43,6 +43,5 @@ class ListKTest : UnitSpec() {
     "List exports a commutative Fx instance" {
       fx(listOf(1), listOf(2), ::identity) shouldBe listOf(1 toT 2)
     }
-
   }
 }

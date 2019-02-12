@@ -75,7 +75,6 @@ interface EitherTApplicativeError<F, L> : ApplicativeError<EitherTPartialOf<F, L
   override fun <A> raiseError(e: L): EitherT<F, L, A> = AE().run {
     EitherT.liftF(this, raiseError(e))
   }
-
 }
 
 @extension
@@ -195,5 +194,4 @@ interface EitherTFx<F> : arrow.typeclasses.suspended.monaderror.Fx<EitherTPartia
 
   override fun monadError(): MonadThrow<EitherTPartialOf<F, Throwable>> =
     EitherT.monadThrow(M(), M())
-
 }

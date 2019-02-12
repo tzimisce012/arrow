@@ -79,7 +79,6 @@ interface WriterTApplicativeError<F, W, E> : ApplicativeError<WriterTPartialOf<F
   override fun <A> WriterTOf<F, W, A>.handleErrorWith(f: (E) -> WriterTOf<F, W, A>): WriterT<F, W, A> = AE().run {
     WriterT(value().handleErrorWith { e -> f(e).value() })
   }
-
 }
 
 @extension
@@ -95,7 +94,6 @@ interface WriterTMonadError<F, W, E> : MonadError<WriterTPartialOf<F, W>, E>, Wr
   override fun AF(): Applicative<F> = ME()
 
   override fun AE(): ApplicativeError<F, E> = ME()
-
 }
 
 @extension
@@ -130,11 +128,10 @@ interface WriterTMonoidK<F, W> : MonoidK<WriterTPartialOf<F, W>>, WriterTSemigro
 @undocumented
 interface WriterTFx<F, W> : Fx<WriterTPartialOf<F, W>> {
 
-  fun M() : Monad<F>
+  fun M(): Monad<F>
 
   fun MW(): Monoid<W>
 
   override fun monad(): Monad<WriterTPartialOf<F, W>> =
     WriterT.monad(M(), MW())
-
 }

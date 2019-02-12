@@ -184,8 +184,8 @@ data class ObservableK<A>(val observable: Observable<A>) : ObservableKOf<A>, Obs
     fun <A> async(fa: ObservableKProc<A>): ObservableK<A> =
       Observable.create<A> { emitter ->
         val connection = ObservableKConnection()
-        //On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
-        //on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
+        // On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
+        // on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
         connection.push(ObservableK { if (!emitter.isDisposed) emitter.onError(OnCancel.CancellationException) })
         emitter.setCancellable { connection.cancel().value().subscribe({}, {}) }
 
@@ -202,8 +202,8 @@ data class ObservableK<A>(val observable: Observable<A>) : ObservableKOf<A>, Obs
     fun <A> asyncF(fa: ObservableKProcF<A>): ObservableK<A> =
       Observable.create { emitter: ObservableEmitter<A> ->
         val connection = ObservableKConnection()
-        //On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
-        //on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
+        // On disposing of the upstream stream this will be called by `setCancellable` so check if upstream is already disposed or not because
+        // on disposing the stream will already be in a terminated state at this point so calling onError, in a terminated state, will blow everything up.
         connection.push(ObservableK { if (!emitter.isDisposed) emitter.onError(OnCancel.CancellationException) })
         emitter.setCancellable { connection.cancel().value().subscribe({}, {}) }
 

@@ -68,5 +68,4 @@ class StateTTests : UnitSpec() {
         EQ_LIST)
     )
   }
-
 }

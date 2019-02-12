@@ -154,7 +154,6 @@ class CofreeTest : UnitSpec() {
         cataHundredOne shouldBe None
       }
     }
-
   }
 }
 

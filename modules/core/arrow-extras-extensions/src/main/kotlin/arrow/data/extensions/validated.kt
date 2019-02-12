@@ -25,7 +25,6 @@ interface ValidatedApplicative<E> : Applicative<ValidatedPartialOf<E>>, Validate
   override fun <A, B> Kind<ValidatedPartialOf<E>, A>.map(f: (A) -> B): Validated<E, B> = fix().map(f)
 
   override fun <A, B> Kind<ValidatedPartialOf<E>, A>.ap(ff: Kind<ValidatedPartialOf<E>, (A) -> B>): Validated<E, B> = fix().ap(SE(), ff.fix())
-
 }
 
 @extension
@@ -37,7 +36,6 @@ interface ValidatedApplicativeError<E> : ApplicativeError<ValidatedPartialOf<E>,
 
   override fun <A> Kind<ValidatedPartialOf<E>, A>.handleErrorWith(f: (E) -> Kind<ValidatedPartialOf<E>, A>): Validated<E, A> =
     fix().handleLeftWith(f)
-
 }
 
 @extension

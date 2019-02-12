@@ -46,7 +46,6 @@ class SingleKTests : UnitSpec() {
         }
         errA == errB
       }
-
   }
 
   init {
@@ -165,7 +164,5 @@ class SingleKTests : UnitSpec() {
         .test()
         .assertError(ConnectionCancellationException)
     }
-
   }
-
 }

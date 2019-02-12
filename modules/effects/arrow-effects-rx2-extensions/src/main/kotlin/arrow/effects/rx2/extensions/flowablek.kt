@@ -81,7 +81,7 @@ interface FlowableKTraverse : Traverse<ForFlowableK> {
 @extension
 interface FlowableKApplicativeError :
   ApplicativeError<ForFlowableK, Throwable>,
-  FlowableKApplicative{
+  FlowableKApplicative {
   override fun <A> raiseError(e: Throwable): FlowableK<A> =
     FlowableK.raiseError(e)
 
@@ -92,7 +92,7 @@ interface FlowableKApplicativeError :
 @extension
 interface FlowableKMonadError :
   MonadError<ForFlowableK, Throwable>,
-  FlowableKMonad{
+  FlowableKMonad {
   override fun <A> raiseError(e: Throwable): FlowableK<A> =
     FlowableK.raiseError(e)
 
@@ -101,16 +101,16 @@ interface FlowableKMonadError :
 }
 
 @extension
-interface FlowableKMonadThrow: MonadThrow<ForFlowableK>, FlowableKMonadError
+interface FlowableKMonadThrow : MonadThrow<ForFlowableK>, FlowableKMonadError
 
 @extension
-interface FlowableKBracket: Bracket<ForFlowableK, Throwable>, FlowableKMonadThrow {
+interface FlowableKBracket : Bracket<ForFlowableK, Throwable>, FlowableKMonadThrow {
   override fun <A, B> FlowableKOf<A>.bracketCase(release: (A, ExitCase<Throwable>) -> FlowableKOf<Unit>, use: (A) -> FlowableKOf<B>): FlowableK<B> =
     fix().bracketCase({ use(it) }, { a, e -> release(a, e) })
 }
 
 @extension
-interface FlowableKMonadDefer: MonadDefer<ForFlowableK>, FlowableKBracket {
+interface FlowableKMonadDefer : MonadDefer<ForFlowableK>, FlowableKBracket {
   override fun <A> defer(fa: () -> FlowableKOf<A>): FlowableK<A> =
     FlowableK.defer(fa)
 
@@ -120,7 +120,7 @@ interface FlowableKMonadDefer: MonadDefer<ForFlowableK>, FlowableKBracket {
 @extension
 interface FlowableKAsync :
   Async<ForFlowableK>,
-  FlowableKMonadDefer{
+  FlowableKMonadDefer {
   override fun <A> async(fa: Proc<A>): FlowableK<A> =
     FlowableK.async({ _, cb -> fa(cb) }, BS())
 
@@ -134,91 +134,91 @@ interface FlowableKAsync :
 @extension
 interface FlowableKEffect :
   Effect<ForFlowableK>,
-  FlowableKAsync{
+  FlowableKAsync {
   override fun <A> FlowableKOf<A>.runAsync(cb: (Either<Throwable, A>) -> FlowableKOf<Unit>): FlowableK<Unit> =
     fix().runAsync(cb)
 }
 
 @extension
-interface FlowableKConcurrentEffect: ConcurrentEffect<ForFlowableK>, FlowableKEffect {
+interface FlowableKConcurrentEffect : ConcurrentEffect<ForFlowableK>, FlowableKEffect {
   override fun <A> FlowableKOf<A>.runAsyncCancellable(cb: (Either<Throwable, A>) -> FlowableKOf<Unit>): FlowableK<Disposable> =
     fix().runAsyncCancellable(cb)
 }
 
 fun FlowableK.Companion.monadFlat(): FlowableKMonad = monad()
 
-fun FlowableK.Companion.monadConcat(): FlowableKMonad = object : FlowableKMonad{
+fun FlowableK.Companion.monadConcat(): FlowableKMonad = object : FlowableKMonad {
   override fun <A, B> FlowableKOf<A>.flatMap(f: (A) -> FlowableKOf<B>): FlowableK<B> =
     fix().concatMap { f(it).fix() }
 }
 
-fun FlowableK.Companion.monadSwitch(): FlowableKMonad = object : FlowableKMonad{
+fun FlowableK.Companion.monadSwitch(): FlowableKMonad = object : FlowableKMonad {
   override fun <A, B> FlowableKOf<A>.flatMap(f: (A) -> FlowableKOf<B>): FlowableK<B> =
     fix().switchMap { f(it).fix() }
 }
 
 fun FlowableK.Companion.monadErrorFlat(): FlowableKMonadError = monadError()
 
-fun FlowableK.Companion.monadErrorConcat(): FlowableKMonadError = object : FlowableKMonadError{
+fun FlowableK.Companion.monadErrorConcat(): FlowableKMonadError = object : FlowableKMonadError {
   override fun <A, B> FlowableKOf<A>.flatMap(f: (A) -> FlowableKOf<B>): FlowableK<B> =
     fix().concatMap { f(it).fix() }
 }
 
-fun FlowableK.Companion.monadErrorSwitch(): FlowableKMonadError = object : FlowableKMonadError{
+fun FlowableK.Companion.monadErrorSwitch(): FlowableKMonadError = object : FlowableKMonadError {
   override fun <A, B> FlowableKOf<A>.flatMap(f: (A) -> FlowableKOf<B>): FlowableK<B> =
     fix().switchMap { f(it).fix() }
 }
 
 fun FlowableK.Companion.monadSuspendBuffer(): FlowableKMonadDefer = monadDefer()
 
-fun FlowableK.Companion.monadSuspendDrop(): FlowableKMonadDefer = object : FlowableKMonadDefer{
+fun FlowableK.Companion.monadSuspendDrop(): FlowableKMonadDefer = object : FlowableKMonadDefer {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.DROP
 }
 
-fun FlowableK.Companion.monadSuspendError(): FlowableKMonadDefer = object : FlowableKMonadDefer{
+fun FlowableK.Companion.monadSuspendError(): FlowableKMonadDefer = object : FlowableKMonadDefer {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.ERROR
 }
 
-fun FlowableK.Companion.monadSuspendLatest(): FlowableKMonadDefer = object : FlowableKMonadDefer{
+fun FlowableK.Companion.monadSuspendLatest(): FlowableKMonadDefer = object : FlowableKMonadDefer {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.LATEST
 }
 
-fun FlowableK.Companion.monadSuspendMissing(): FlowableKMonadDefer = object : FlowableKMonadDefer{
+fun FlowableK.Companion.monadSuspendMissing(): FlowableKMonadDefer = object : FlowableKMonadDefer {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.MISSING
 }
 
 fun FlowableK.Companion.asyncBuffer(): FlowableKAsync = async()
 
-fun FlowableK.Companion.asyncDrop(): FlowableKAsync = object : FlowableKAsync{
+fun FlowableK.Companion.asyncDrop(): FlowableKAsync = object : FlowableKAsync {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.DROP
 }
 
-fun FlowableK.Companion.asyncError(): FlowableKAsync = object : FlowableKAsync{
+fun FlowableK.Companion.asyncError(): FlowableKAsync = object : FlowableKAsync {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.ERROR
 }
 
-fun FlowableK.Companion.asyncLatest(): FlowableKAsync = object : FlowableKAsync{
+fun FlowableK.Companion.asyncLatest(): FlowableKAsync = object : FlowableKAsync {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.LATEST
 }
 
-fun FlowableK.Companion.asyncMissing(): FlowableKAsync = object : FlowableKAsync{
+fun FlowableK.Companion.asyncMissing(): FlowableKAsync = object : FlowableKAsync {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.MISSING
 }
 
 fun FlowableK.Companion.effectBuffer(): FlowableKEffect = effect()
 
-fun FlowableK.Companion.effectDrop(): FlowableKEffect = object : FlowableKEffect{
+fun FlowableK.Companion.effectDrop(): FlowableKEffect = object : FlowableKEffect {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.DROP
 }
 
-fun FlowableK.Companion.effectError(): FlowableKEffect = object : FlowableKEffect{
+fun FlowableK.Companion.effectError(): FlowableKEffect = object : FlowableKEffect {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.ERROR
 }
 
-fun FlowableK.Companion.effectLatest(): FlowableKEffect = object : FlowableKEffect{
+fun FlowableK.Companion.effectLatest(): FlowableKEffect = object : FlowableKEffect {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.LATEST
 }
 
-fun FlowableK.Companion.effectMissing(): FlowableKEffect = object : FlowableKEffect{
+fun FlowableK.Companion.effectMissing(): FlowableKEffect = object : FlowableKEffect {
   override fun BS(): BackpressureStrategy = BackpressureStrategy.MISSING
 }

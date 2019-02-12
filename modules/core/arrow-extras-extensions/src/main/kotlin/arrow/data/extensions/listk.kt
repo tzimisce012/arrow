@@ -85,8 +85,6 @@ interface ListKMonad : Monad<ForListK> {
 
   override fun <A> just(a: A): ListK<A> =
     ListK.just(a)
-
-
 }
 
 @extension
@@ -151,5 +149,4 @@ interface ListKFx : Fx<ForListK> {
 
   override fun monad(): Monad<ForListK> =
     ListK.monad()
-
 }

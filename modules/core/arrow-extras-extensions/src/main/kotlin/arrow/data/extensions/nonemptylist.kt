@@ -162,5 +162,4 @@ interface NelFx : Fx<ForNonEmptyList> {
 
   override fun monad(): Monad<ForNonEmptyList> =
     Nel.monad()
-
 }

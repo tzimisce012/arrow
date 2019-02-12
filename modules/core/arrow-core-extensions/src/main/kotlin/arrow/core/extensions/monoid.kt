@@ -1,7 +1,11 @@
 package arrow.core.extensions
 
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.ForMonoid
+import arrow.typeclasses.Invariant
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.MonoidOf
+import arrow.typeclasses.fix
 
 @extension
 interface MonoidInvariant<A> : Invariant<ForMonoid> {

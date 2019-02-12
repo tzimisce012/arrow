@@ -2,9 +2,6 @@ package arrow.dagger.effects.extensions.rx2
 
 import arrow.effects.rx2.FlowableK
 import arrow.effects.rx2.ForFlowableK
-import arrow.effects.typeclasses.Async
-import arrow.effects.typeclasses.Effect
-import arrow.effects.typeclasses.MonadDefer
 import arrow.effects.rx2.extensions.flowablek.applicative.applicative
 import arrow.effects.rx2.extensions.flowablek.applicativeError.applicativeError
 import arrow.effects.rx2.extensions.flowablek.async.async
@@ -13,7 +10,14 @@ import arrow.effects.rx2.extensions.flowablek.functor.functor
 import arrow.effects.rx2.extensions.flowablek.monad.monad
 import arrow.effects.rx2.extensions.flowablek.monadDefer.monadDefer
 import arrow.effects.rx2.extensions.flowablek.monadError.monadError
-import arrow.typeclasses.*
+import arrow.effects.typeclasses.Async
+import arrow.effects.typeclasses.Effect
+import arrow.effects.typeclasses.MonadDefer
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
 import dagger.Module
 import dagger.Provides
 

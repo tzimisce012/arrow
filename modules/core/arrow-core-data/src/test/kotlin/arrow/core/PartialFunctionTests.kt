@@ -1,9 +1,11 @@
 package arrow.core
 
 import arrow.test.UnitSpec
-import io.kotlintest.*
 import io.kotlintest.matchers.startWith
 import io.kotlintest.runner.junit4.KotlinTestRunner
+import io.kotlintest.should
+import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import org.junit.runner.RunWith
 
 @RunWith(KotlinTestRunner::class)

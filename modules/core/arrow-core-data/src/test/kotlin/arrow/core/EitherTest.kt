@@ -2,7 +2,7 @@ package arrow.core
 
 import arrow.Kind
 import arrow.Kind2
-import arrow.core.extensions.*
+import arrow.core.extensions.combine
 import arrow.core.extensions.either.applicative.applicative
 import arrow.core.extensions.either.bifunctor.bifunctor
 import arrow.core.extensions.either.eq.eq
@@ -13,10 +13,21 @@ import arrow.core.extensions.either.semigroup.semigroup
 import arrow.core.extensions.either.semigroupK.semigroupK
 import arrow.core.extensions.either.show.show
 import arrow.core.extensions.either.traverse.traverse
+import arrow.core.extensions.eq
+import arrow.core.extensions.hash
+import arrow.core.extensions.monoid
+import arrow.core.extensions.semigroup
 import arrow.test.UnitSpec
 import arrow.test.generators.either
 import arrow.test.generators.intSmall
-import arrow.test.laws.*
+import arrow.test.laws.BifunctorLaws
+import arrow.test.laws.HashLaws
+import arrow.test.laws.MonadErrorLaws
+import arrow.test.laws.MonoidLaws
+import arrow.test.laws.SemigroupKLaws
+import arrow.test.laws.SemigroupLaws
+import arrow.test.laws.ShowLaws
+import arrow.test.laws.TraverseLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Hash
 import io.kotlintest.properties.Gen

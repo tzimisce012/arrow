@@ -1,11 +1,28 @@
 package arrow.core.extensions
 
 import arrow.Kind
-import arrow.core.*
-import arrow.core.extensions.function0.monad.monad
+import arrow.core.Either
+import arrow.core.ForFunction1
+import arrow.core.Function1
+import arrow.core.Function1Of
+import arrow.core.Function1PartialOf
+import arrow.core.compose
 import arrow.core.extensions.function1.monad.monad
+import arrow.core.fix
+import arrow.core.invoke
+import arrow.core.k
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Category
+import arrow.typeclasses.Conested
+import arrow.typeclasses.Contravariant
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.Profunctor
+import arrow.typeclasses.Semigroup
+import arrow.typeclasses.conest
+import arrow.typeclasses.counnest
 import arrow.typeclasses.suspended.monad.Fx
 
 @extension

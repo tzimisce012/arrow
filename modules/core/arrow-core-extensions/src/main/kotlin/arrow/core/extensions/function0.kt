@@ -1,10 +1,21 @@
 package arrow.core.extensions
 
-import arrow.core.*
-import arrow.core.extensions.eval.monad.monad
+import arrow.core.Either
+import arrow.core.ForFunction0
+import arrow.core.Function0
+import arrow.core.Function0Of
 import arrow.core.extensions.function0.monad.monad
+import arrow.core.fix
+import arrow.core.invoke
+import arrow.core.k
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Bimonad
+import arrow.typeclasses.Comonad
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.Semigroup
 import arrow.typeclasses.suspended.monad.Fx
 
 @extension

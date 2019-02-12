@@ -1,7 +1,14 @@
 package arrow.effects.typeclasses
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
+import arrow.core.Tuple2
+import arrow.core.Tuple3
+import arrow.core.left
+import arrow.core.right
+import arrow.core.toT
 import arrow.effects.CancelToken
 import arrow.effects.KindConnection
 import arrow.effects.data.internal.BindingCancellationException

@@ -1,7 +1,13 @@
 package arrow.effects
 
-import arrow.core.*
+import arrow.core.Either
 import arrow.core.Either.Left
+import arrow.core.Eval
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.andThen
+import arrow.core.identity
+import arrow.core.right
 import arrow.effects.OnCancel.Companion.CancellationException
 import arrow.effects.OnCancel.Silent
 import arrow.effects.OnCancel.ThrowCancellationException
@@ -9,7 +15,13 @@ import arrow.effects.internal.IOBracket
 import arrow.effects.internal.Platform.maxStackDepthSize
 import arrow.effects.internal.Platform.onceOnly
 import arrow.effects.internal.Platform.unsafeResync
-import arrow.effects.typeclasses.*
+import arrow.effects.typeclasses.Disposable
+import arrow.effects.typeclasses.Duration
+import arrow.effects.typeclasses.ExitCase
+import arrow.effects.typeclasses.Fiber
+import arrow.effects.typeclasses.Proc
+import arrow.effects.typeclasses.ProcF
+import arrow.effects.typeclasses.mapUnit
 import arrow.higherkind
 import kotlin.coroutines.CoroutineContext
 

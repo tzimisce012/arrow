@@ -1,10 +1,23 @@
 package arrow.effects.extensions
 
-import arrow.core.*
-import arrow.data.*
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.Tuple2
+import arrow.core.getOrElse
+import arrow.data.StateT
+import arrow.data.StateTOf
+import arrow.data.StateTPartialOf
 import arrow.data.extensions.StateTMonadThrow
+import arrow.data.fix
+import arrow.data.runM
 import arrow.effects.Ref
-import arrow.effects.typeclasses.*
+import arrow.effects.typeclasses.Async
+import arrow.effects.typeclasses.Bracket
+import arrow.effects.typeclasses.ExitCase
+import arrow.effects.typeclasses.MonadDefer
+import arrow.effects.typeclasses.Proc
+import arrow.effects.typeclasses.ProcF
 import arrow.extension
 import arrow.typeclasses.MonadError
 import arrow.undocumented

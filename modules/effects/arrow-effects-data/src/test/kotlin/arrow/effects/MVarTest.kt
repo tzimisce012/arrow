@@ -1,6 +1,11 @@
 package arrow.effects
 
-import arrow.core.*
+import arrow.core.None
+import arrow.core.Some
+import arrow.core.Tuple3
+import arrow.core.Tuple4
+import arrow.core.Tuple7
+import arrow.core.toT
 import arrow.effects.extensions.io.async.async
 import arrow.effects.extensions.io.concurrent.concurrent
 import arrow.effects.extensions.io.monad.binding

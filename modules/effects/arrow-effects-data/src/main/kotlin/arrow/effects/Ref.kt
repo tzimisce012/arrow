@@ -1,9 +1,12 @@
 package arrow.effects
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.Tuple2
+import arrow.core.invoke
 import arrow.effects.typeclasses.MonadDefer
-
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 

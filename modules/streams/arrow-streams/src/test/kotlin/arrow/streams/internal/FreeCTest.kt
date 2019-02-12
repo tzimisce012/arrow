@@ -1,9 +1,23 @@
 package arrow.streams.internal
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.EitherPartialOf
+import arrow.core.Failure
+import arrow.core.ForTry
+import arrow.core.FunctionK
+import arrow.core.Left
+import arrow.core.None
+import arrow.core.Right
+import arrow.core.Some
+import arrow.core.Success
+import arrow.core.Try
 import arrow.core.extensions.`try`.monadError.monadError
 import arrow.core.extensions.either.monadError.monadError
+import arrow.core.fix
+import arrow.core.identity
+import arrow.core.right
+import arrow.core.some
 import arrow.effects.ForIO
 import arrow.effects.IO
 import arrow.effects.extensions.io.monadError.monadError

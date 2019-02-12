@@ -11,8 +11,9 @@ import kotlin.coroutines.CoroutineContext
 
 typealias JavaCancellationException = java.util.concurrent.CancellationException
 
-class ArrowInternalException(override val message: String =
-    "Arrow-kt internal error. Please let us know and create a ticket at https://github.com/arrow-kt/arrow/issues/new/choose"
+class ArrowInternalException(
+  override val message: String =
+"Arrow-kt internal error. Please let us know and create a ticket at https://github.com/arrow-kt/arrow/issues/new/choose"
 ) : RuntimeException(message)
 
 object Platform {
@@ -102,7 +103,6 @@ object Platform {
     rest.forEach { if (it != first) first.addSuppressed(it) }
     return first
   }
-
 }
 
 private class OneShotLatch : AbstractQueuedSynchronizer() {
@@ -119,7 +119,6 @@ private class OneShotLatch : AbstractQueuedSynchronizer() {
   }
 }
 
-
 /**
  * [arrow.core.Continuation] to run coroutine on `ctx` and link result to callback [cc].
  * Use [asyncContinuation] to run suspended functions within a context `ctx` and pass the result to [cc].
@@ -135,5 +134,4 @@ internal fun <A> asyncContinuation(ctx: CoroutineContext, cc: (Either<Throwable,
     override fun resumeWithException(exception: Throwable) {
       cc(exception.left())
     }
-
   }

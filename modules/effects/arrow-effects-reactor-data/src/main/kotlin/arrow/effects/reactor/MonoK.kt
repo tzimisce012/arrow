@@ -169,7 +169,7 @@ data class MonoK<A>(val mono: Mono<A>) : MonoKOf<A>, MonoKKindedJ<A> {
     fun <A> async(fa: MonoKProc<A>): MonoK<A> =
       Mono.create<A> { sink ->
         val conn = MonoKConnection()
-        val isCancelled = AtomicBoolean(false) //Sink is missing isCancelled so we have to do book keeping.
+        val isCancelled = AtomicBoolean(false) // Sink is missing isCancelled so we have to do book keeping.
         conn.push(MonoK { if (!isCancelled.get()) sink.error(OnCancel.CancellationException) })
         sink.onCancel {
           isCancelled.compareAndSet(false, true)
@@ -188,7 +188,7 @@ data class MonoK<A>(val mono: Mono<A>) : MonoKOf<A>, MonoKKindedJ<A> {
     fun <A> asyncF(fa: MonoKProcF<A>): MonoK<A> =
       Mono.create { sink: MonoSink<A> ->
         val conn = MonoKConnection()
-        val isCancelled = AtomicBoolean(false) //Sink is missing isCancelled so we have to do book keeping.
+        val isCancelled = AtomicBoolean(false) // Sink is missing isCancelled so we have to do book keeping.
         conn.push(MonoK { if (!isCancelled.get()) sink.error(OnCancel.CancellationException) })
         sink.onCancel {
           isCancelled.compareAndSet(false, true)

@@ -8,5 +8,4 @@ interface MonadDeferSyntax<F> : BracketSyntax<F, Throwable>, MonadDefer<F>, Iter
 
   override fun <A> effect(fa: suspend () -> A): Kind<F, A> =
     super<BracketSyntax>.effect(fa)
-
 }

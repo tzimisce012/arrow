@@ -40,5 +40,4 @@ interface BracketSyntax<F, E> :
     finalizer: suspend (ExitCase<E>) -> Unit
   ): Kind<F, A> =
     bracketing { guaranteeCase(finalizer.flatLiftM()) }
-
 }

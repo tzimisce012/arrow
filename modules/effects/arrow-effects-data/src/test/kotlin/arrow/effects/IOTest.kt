@@ -106,7 +106,6 @@ class IOTest : UnitSpec() {
       }
     }
 
-
     "should complete when running a return value with unsafeRunAsync" {
       val expected = 0
       IO { expected }.unsafeRunAsync { either ->
@@ -199,7 +198,6 @@ class IOTest : UnitSpec() {
       }
     }
 
-
     "should map values correctly on success" {
       val run = IO.just(1).map { it + 1 }.unsafeRunSync()
 
@@ -246,8 +244,7 @@ class IOTest : UnitSpec() {
 
       val result =
         newSingleThreadContext("all").parMapN(
-          makePar(6), makePar(3), makePar(2), makePar(4), makePar(1), makePar(5))
-        { six, tree, two, four, one, five -> listOf(six, tree, two, four, one, five) }
+          makePar(6), makePar(3), makePar(2), makePar(4), makePar(1), makePar(5)) { six, tree, two, four, one, five -> listOf(six, tree, two, four, one, five) }
           .unsafeRunSync()
 
       result shouldBe listOf(6L, 3, 2, 4, 1, 5)
@@ -272,8 +269,7 @@ class IOTest : UnitSpec() {
 
       val result =
         newSingleThreadContext("all").parMapN(
-          makePar(6), IO.just(1L).order(), makePar(4), IO.defer { IO.just(2L) }.order(), makePar(5), IO { 3L }.order())
-        { six, one, four, two, five, three -> listOf(six, one, four, two, five, three) }
+          makePar(6), IO.just(1L).order(), makePar(4), IO.defer { IO.just(2L) }.order(), makePar(5), IO { 3L }.order()) { six, one, four, two, five, three -> listOf(six, one, four, two, five, three) }
           .unsafeRunSync()
 
       result shouldBe listOf(6L, 1, 4, 2, 5, 3)
@@ -290,8 +286,7 @@ class IOTest : UnitSpec() {
 
       val result =
         newSingleThreadContext("all").parMapN(
-          makePar(6), IO.just(1L), makePar(4), IO.defer { IO.just(2L) }, makePar(5), IO { 3L })
-        { _, _, _, _, _, _ ->
+          makePar(6), IO.just(1L), makePar(4), IO.defer { IO.just(2L) }, makePar(5), IO { 3L }) { _, _, _, _, _, _ ->
           Thread.currentThread().name
         }.unsafeRunSync()
 
@@ -341,7 +336,6 @@ class IOTest : UnitSpec() {
         override fun invoke(a: Any?) = just(a.toString())
 
         override fun recover(e: Throwable) = just(e.message ?: "")
-
       }
 
       forAll(Gen.string()) { message ->
@@ -380,7 +374,7 @@ class IOTest : UnitSpec() {
             release = { _, exitCase -> p.complete(exitCase) }
           )
           .unsafeRunAsyncCancellable { }
-          .invoke() //cancel immediately
+          .invoke() // cancel immediately
 
         p.get()
       }.unsafeRunSync() shouldBe ExitCase.Canceled
@@ -434,7 +428,6 @@ class IOTest : UnitSpec() {
         latch.get()
       }.unsafeRunSync()
     }
-
   }
 }
 

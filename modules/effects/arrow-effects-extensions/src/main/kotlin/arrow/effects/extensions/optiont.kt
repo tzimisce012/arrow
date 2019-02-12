@@ -48,7 +48,6 @@ interface OptionTBracket<F> : Bracket<OptionTPartialOf<F>, Throwable>, OptionTMo
       }
     })
   }
-
 }
 
 @extension
@@ -59,7 +58,6 @@ interface OptionTMonadDefer<F> : MonadDefer<OptionTPartialOf<F>>, OptionTBracket
 
   override fun <A> defer(fa: () -> OptionTOf<F, A>): OptionT<F, A> =
     OptionT(MD().defer { fa().value() })
-
 }
 
 @extension
@@ -81,5 +79,4 @@ interface OptionTAsync<F> : Async<OptionTPartialOf<F>>, OptionTMonadDefer<F> {
   override fun <A> OptionTOf<F, A>.continueOn(ctx: CoroutineContext): OptionT<F, A> = AS().run {
     OptionT(value().continueOn(ctx))
   }
-
 }

@@ -19,7 +19,7 @@ class MVarTest : UnitSpec() {
 
   init {
 
-    fun tests(label: String, mvar: MVarPartialOf<ForIO>): Unit {
+    fun tests(label: String, mvar: MVarPartialOf<ForIO>) {
       "$label - empty; put; isNotEmpty; take; put; take" {
         forAll(Gen.int(), Gen.int()) { a, b ->
           binding {
@@ -157,7 +157,5 @@ class MVarTest : UnitSpec() {
 
     tests("UncancelableMVar", MVar(IO.async()))
     tests("CancelableMVar", MVar(IO.concurrent()))
-
   }
-
 }

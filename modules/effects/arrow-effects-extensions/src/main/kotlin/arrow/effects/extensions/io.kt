@@ -139,7 +139,6 @@ interface IOConcurrent : Concurrent<ForIO>, IOAsync {
 
   override fun <A, B, C> CoroutineContext.raceTriple(fa: Kind<ForIO, A>, fb: Kind<ForIO, B>, fc: Kind<ForIO, C>): IO<RaceTriple<ForIO, A, B, C>> =
     IO.raceTriple(this, fa, fb, fc)
-
 }
 
 fun IO.Companion.concurrent(dispatchers: Dispatchers<ForIO>): Concurrent<ForIO> = object : IOConcurrent {
@@ -180,7 +179,6 @@ interface IOMonoid<A> : Monoid<IO<A>>, IOSemigroup<A> {
   fun SM(): Monoid<A>
 
   override fun empty(): IO<A> = IO.just(SM().empty())
-
 }
 
 @extension
@@ -190,5 +188,4 @@ interface IOUnsafeRun : UnsafeRun<ForIO> {
 
   override suspend fun <A> unsafe.runNonBlocking(fa: () -> Kind<ForIO, A>, cb: (Either<Throwable, A>) -> Unit) =
     fa().fix().unsafeRunAsync(cb)
-
 }

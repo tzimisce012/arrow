@@ -13,4 +13,3 @@ interface Fx<F> {
   fun <A> fxCancellable(f: suspend MonadDeferCancellableContinuation<F, *>.() -> A): Tuple2<Kind<F, A>, Disposable> =
     monadDefer().bindingCancellable(f)
 }
-

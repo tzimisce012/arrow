@@ -197,11 +197,12 @@ sealed class IO<out A> : IOOf<A> {
   internal data class ContextSwitch<A>(
     val source: IO<A>,
     val modify: (IOConnection) -> IOConnection,
-    val restore: ((Any?, Throwable?, IOConnection, IOConnection) -> IOConnection)?) : IO<A>() {
+    val restore: ((Any?, Throwable?, IOConnection, IOConnection) -> IOConnection)?
+  ) : IO<A>() {
     override fun unsafeRunTimedTotal(limit: Duration): Option<A> = throw AssertionError("Unreachable")
 
     companion object {
-      //Internal reusable reference.
+      // Internal reusable reference.
       internal val makeUncancelable: (IOConnection) -> IOConnection = { IOConnection.uncancelable }
 
       internal fun <A> disableUncancelable(): (A, Throwable?, IOConnection, IOConnection) -> IOConnection =

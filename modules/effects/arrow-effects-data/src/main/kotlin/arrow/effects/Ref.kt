@@ -177,11 +177,8 @@ interface Ref<F, A> {
 
         return MD.delay(::go)
       }
-
     }
-
   }
-
 }
 
 /**

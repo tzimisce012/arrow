@@ -170,6 +170,5 @@ class MonoKTest : UnitSpec() {
         .test()
         .expectError(ConnectionCancellationException::class)
     }
-
   }
 }

@@ -122,7 +122,6 @@ internal object IORunLoop {
           bFirst = null
         }
       }
-
     } while (true)
   }
 
@@ -133,7 +132,8 @@ internal object IORunLoop {
     currentIO: IO<A>,
     bFirst: BindF?,
     bRest: CallStack?,
-    register: IOProc<Any?>): IO<A> =
+    register: IOProc<Any?>
+  ): IO<A> =
   // Hitting an async boundary means we have to stop, however
   // if we had previous `flatMap` operations then we need to resume
   // the loop with the collected stack
@@ -153,7 +153,8 @@ internal object IORunLoop {
     cb: (Either<Throwable, Any?>) -> Unit,
     rcbRef: RestartCallback?,
     bFirstRef: BindF?,
-    bRestRef: CallStack?): Unit {
+    bRestRef: CallStack?
+  ) {
     var currentIO: Current? = source
     var conn: IOConnection = cancelable
     var bFirst: BindF? = bFirstRef
@@ -280,7 +281,6 @@ internal object IORunLoop {
           bFirst = null
         }
       }
-
     } while (true)
   }
 
@@ -347,17 +347,17 @@ internal object IORunLoop {
     private var bFirst: BindF? = null
     private var bRest: CallStack? = null
 
-    fun contextSwitch(conn: IOConnection): Unit {
+    fun contextSwitch(conn: IOConnection) {
       this.conn = conn
     }
 
-    fun prepare(bFirst: BindF?, bRest: CallStack?): Unit {
+    fun prepare(bFirst: BindF?, bRest: CallStack?) {
       canCall = true
       this.bFirst = bFirst
       this.bRest = bRest
     }
 
-    override operator fun invoke(either: Either<Throwable, Any?>): Unit {
+    override operator fun invoke(either: Either<Throwable, Any?>) {
       if (canCall) {
         canCall = false
         when (either) {
@@ -381,7 +381,6 @@ internal object IORunLoop {
         override fun resumeWithException(exception: Throwable) {
           this@asyncCallback(Either.left(exception))
         }
-
       }
 
       func.startCoroutine(normalResume)
@@ -389,7 +388,8 @@ internal object IORunLoop {
 
   private class RestoreContext(
     val old: IOConnection,
-    val restore: (Any?, Throwable?, IOConnection, IOConnection) -> IOConnection) : IOFrame<Any?, IO<Any?>> {
+    val restore: (Any?, Throwable?, IOConnection, IOConnection) -> IOConnection
+  ) : IOFrame<Any?, IO<Any?>> {
 
     override fun invoke(a: Any?): IO<Any?> = IO.ContextSwitch(IO.Pure(a), { current -> restore(a, null, old, current) }, null)
 

@@ -20,5 +20,4 @@ open class ConcurrentCancellableContinuation<F, A>(CF: Concurrent<F>, override v
 
   fun <A> delay(fa: suspend () -> A): Kind<F, A> =
     super<ConcurrentSyntax>.effect(fa)
-
 }

@@ -25,5 +25,4 @@ interface ConcurrentSyntax<F> : AsyncSyntax<F>, Concurrent<F> {
 
   fun <A> CoroutineContext.parSequence(effects: Iterable<Kind<F, A>>): Kind<F, List<A>> =
     parTraverse(effects, ::identity)
-
 }

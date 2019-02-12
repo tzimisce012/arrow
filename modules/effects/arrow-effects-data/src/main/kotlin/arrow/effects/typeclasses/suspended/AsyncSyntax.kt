@@ -23,7 +23,6 @@ interface AsyncSyntax<F> : MonadDeferSyntax<F>, Async<F> {
 
   fun <A> CoroutineContext.effect(f: suspend () -> A): Kind<F, A> =
     asyncOp { defer(this@effect) { f.effect() } }
-
 }
 
 internal open class AsyncContinuation<A>(val cb: (Either<Throwable, A>) -> Unit) : kotlin.coroutines.Continuation<A> {

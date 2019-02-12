@@ -27,7 +27,8 @@ interface EitherTBracket<F> : Bracket<EitherTPartialOf<F, Throwable>, Throwable>
 
   override fun <A, B> EitherTOf<F, Throwable, A>.bracketCase(
     release: (A, ExitCase<Throwable>) -> EitherTOf<F, Throwable, Unit>,
-    use: (A) -> EitherTOf<F, Throwable, B>): EitherT<F, Throwable, B> = MDF().run {
+    use: (A) -> EitherTOf<F, Throwable, B>
+  ): EitherT<F, Throwable, B> = MDF().run {
 
     EitherT.liftF<F, Throwable, Ref<F, Option<Throwable>>>(this, Ref.of(None, this)).flatMap(this) { ref ->
       EitherT(
@@ -63,7 +64,6 @@ interface EitherTBracket<F> : Bracket<EitherTPartialOf<F, Throwable>, Throwable>
         })
     }
   }
-
 }
 
 @extension
@@ -74,7 +74,6 @@ interface EitherTMonadDefer<F> : MonadDefer<EitherTPartialOf<F, Throwable>>, Eit
 
   override fun <A> defer(fa: () -> EitherTOf<F, Throwable, A>): EitherT<F, Throwable, A> =
     EitherT(MDF().defer { fa().value() })
-
 }
 
 @extension
@@ -96,7 +95,6 @@ interface EitherTAsync<F> : Async<EitherTPartialOf<F, Throwable>>, EitherTMonadD
   override fun <A> EitherTOf<F, Throwable, A>.continueOn(ctx: CoroutineContext): EitherT<F, Throwable, A> = ASF().run {
     EitherT(value().continueOn(ctx))
   }
-
 }
 
 @extension
@@ -114,7 +112,6 @@ interface EitherTEffect<F> : Effect<EitherTPartialOf<F, Throwable>>, EitherTAsyn
         .unit()
     }.attempt())
   }
-
 }
 
 @extension
@@ -132,5 +129,4 @@ interface EitherTConcurrentEffect<F> : ConcurrentEffect<EitherTPartialOf<F, Thro
         .unit()
     }.attempt())
   }
-
 }

@@ -354,11 +354,9 @@ class EffectsSuspendDSLTests : UnitSpec() {
       } shouldBe done
     }
   }
-
 }
 
 fun <A> fxTest(f: () -> IO<A>): A =
   unsafe { runBlocking(f) }
 
 object TestError : Throwable()
-

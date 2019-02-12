@@ -87,5 +87,4 @@ open class MonadDeferCancellableContinuation<F, A>(val SC: MonadDefer<F>, overri
 
   override fun <A> effect(fa: suspend () -> A): Kind<F, A> =
     super<MonadDeferSyntax>.effect(fa)
-
 }

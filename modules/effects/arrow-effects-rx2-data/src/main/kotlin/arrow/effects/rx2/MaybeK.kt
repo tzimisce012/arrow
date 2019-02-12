@@ -1,14 +1,18 @@
 package arrow.effects.rx2
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Eval
+import arrow.core.Left
+import arrow.core.Predicate
+import arrow.core.Right
 import arrow.effects.OnCancel
 import arrow.effects.internal.Platform
+import arrow.effects.rx2.CoroutineContextRx2Scheduler.asScheduler
 import arrow.effects.typeclasses.ExitCase
 import arrow.higherkind
 import io.reactivex.Maybe
 import io.reactivex.MaybeEmitter
 import kotlin.coroutines.CoroutineContext
-import arrow.effects.rx2.CoroutineContextRx2Scheduler.asScheduler
 
 fun <A> Maybe<A>.k(): MaybeK<A> = MaybeK(this)
 

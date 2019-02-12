@@ -7,7 +7,10 @@ import arrow.core.Right
 import arrow.effects.Promise
 import arrow.effects.typeclasses.Async
 import arrow.effects.typeclasses.ExitCase
-import arrow.test.generators.*
+import arrow.test.generators.applicativeError
+import arrow.test.generators.either
+import arrow.test.generators.intSmall
+import arrow.test.generators.throwable
 import arrow.typeclasses.Eq
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.forAll

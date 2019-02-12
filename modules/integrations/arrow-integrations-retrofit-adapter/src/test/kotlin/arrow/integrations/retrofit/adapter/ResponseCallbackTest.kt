@@ -1,13 +1,13 @@
 package arrow.integrations.retrofit.adapter
 
 import arrow.effects.IO
-import arrow.effects.fix
 import arrow.effects.extensions.io.async.async
+import arrow.effects.fix
 import arrow.integrations.retrofit.adapter.retrofit.ApiClientTest
 import arrow.integrations.retrofit.adapter.retrofit.retrofit
 import arrow.test.UnitSpec
-import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.fail
+import io.kotlintest.runner.junit4.KotlinTestRunner
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

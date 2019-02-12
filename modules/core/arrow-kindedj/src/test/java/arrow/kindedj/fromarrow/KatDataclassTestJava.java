@@ -1,14 +1,9 @@
 package arrow.kindedj.fromarrow;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-import arrow.kindedj.Convert;
-import arrow.kindedj.ForKatDataclass;
-import arrow.kindedj.KatDataclass1;
-import arrow.kindedj.KatDataclassArrowShow;
+import arrow.kindedj.*;
+import org.junit.*;
+import org.junit.runner.*;
+import org.junit.runners.*;
 
 @RunWith(JUnit4.class)
 public class KatDataclassTestJava {

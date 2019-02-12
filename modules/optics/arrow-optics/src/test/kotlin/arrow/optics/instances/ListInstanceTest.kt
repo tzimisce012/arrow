@@ -1,11 +1,13 @@
 package arrow.optics.instances
 
-import arrow.core.*
+import arrow.core.ListExtensions
+import arrow.core.Option
+import arrow.core.Tuple2
 import arrow.core.extensions.eq
-import arrow.data.*
-import arrow.data.extensions.listk.eq.eq
 import arrow.core.extensions.option.eq.eq
 import arrow.core.extensions.tuple2.eq.eq
+import arrow.data.ListK
+import arrow.data.extensions.listk.eq.eq
 import arrow.optics.extensions.each
 import arrow.optics.extensions.filterIndex
 import arrow.optics.extensions.index
@@ -15,8 +17,12 @@ import arrow.optics.extensions.listk.filterIndex.filterIndex
 import arrow.optics.extensions.listk.index.index
 import arrow.optics.extensions.listk.snoc.snoc
 import arrow.test.UnitSpec
-import arrow.test.generators.*
-import arrow.test.laws.*
+import arrow.test.generators.functionAToB
+import arrow.test.generators.listK
+import arrow.test.generators.tuple2
+import arrow.test.laws.OptionalLaws
+import arrow.test.laws.PrismLaws
+import arrow.test.laws.TraversalLaws
 import arrow.typeclasses.Eq
 import io.kotlintest.properties.Gen
 import io.kotlintest.runner.junit4.KotlinTestRunner

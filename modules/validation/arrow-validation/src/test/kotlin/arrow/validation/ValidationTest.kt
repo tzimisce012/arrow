@@ -1,8 +1,8 @@
 package arrow.validation
 
 import arrow.core.Either
-import io.kotlintest.runner.junit4.KotlinTestRunner
 import arrow.test.UnitSpec
+import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.shouldBe
 import org.junit.runner.RunWith
 

@@ -1,6 +1,6 @@
 package arrow.kindedj.fromkindedj;
 
-import io.kindedj.Hk;
+import io.kindedj.*;
 
 public class ForKJDataclass {
     private ForKJDataclass() {

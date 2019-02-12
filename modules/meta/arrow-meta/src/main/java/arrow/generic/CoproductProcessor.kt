@@ -1,8 +1,8 @@
 package arrow.generic
 
-import com.google.auto.service.AutoService
 import arrow.common.utils.AbstractProcessor
 import arrow.coproduct
+import com.google.auto.service.AutoService
 import java.io.File
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment

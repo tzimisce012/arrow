@@ -1,6 +1,11 @@
 package arrow.extensions
 
-import arrow.common.utils.*
+import arrow.common.utils.AbstractProcessor
+import arrow.common.utils.ClassOrPackageDataWrapper
+import arrow.common.utils.extractFullName
+import arrow.common.utils.fullName
+import arrow.common.utils.knownError
+import arrow.common.utils.removeBackticks
 import me.eugeniomarletti.kotlin.metadata.shadow.metadata.deserialization.TypeTable
 import java.io.File
 import javax.annotation.processing.RoundEnvironment

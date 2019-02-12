@@ -1,11 +1,17 @@
 package arrow.test.laws
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
+import arrow.core.Try
+import arrow.core.left
+import arrow.core.recover
+import arrow.core.right
+import arrow.data.extensions.list.foldable.foldLeft
 import arrow.data.k
 import arrow.effects.data.internal.BindingCancellationException
 import arrow.effects.typeclasses.MonadDefer
-import arrow.data.extensions.list.foldable.foldLeft
 import arrow.test.concurrency.SideEffect
 import arrow.test.generators.intSmall
 import arrow.test.generators.throwable

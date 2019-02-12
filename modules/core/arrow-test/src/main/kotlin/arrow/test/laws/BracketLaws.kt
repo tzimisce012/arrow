@@ -4,7 +4,9 @@ import arrow.Kind
 import arrow.core.Either
 import arrow.effects.typeclasses.Bracket
 import arrow.effects.typeclasses.ExitCase
-import arrow.test.generators.*
+import arrow.test.generators.applicativeError
+import arrow.test.generators.functionAToB
+import arrow.test.generators.throwable
 import arrow.typeclasses.Eq
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.forAll

@@ -3,12 +3,22 @@ package arrow.data.extensions
 import arrow.Kind
 import arrow.core.Either
 import arrow.core.toT
-import arrow.data.*
-import arrow.data.extensions.statet.monad.monad
+import arrow.data.WriterT
+import arrow.data.WriterTOf
+import arrow.data.WriterTPartialOf
 import arrow.data.extensions.writert.monad.monad
-
+import arrow.data.fix
+import arrow.data.value
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
+import arrow.typeclasses.MonadThrow
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.MonoidK
+import arrow.typeclasses.SemigroupK
 import arrow.typeclasses.suspended.monad.Fx
 import arrow.undocumented
 

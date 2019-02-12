@@ -2,8 +2,8 @@ package arrow.data
 
 import arrow.core.Id
 import arrow.core.Tuple2
-import arrow.core.toT
 import arrow.core.extensions.id.functor.functor
+import arrow.core.toT
 import arrow.test.UnitSpec
 import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.shouldBe

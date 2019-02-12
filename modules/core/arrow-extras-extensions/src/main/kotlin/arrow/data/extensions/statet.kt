@@ -1,14 +1,22 @@
 package arrow.data.extensions
 
-import arrow.core.*
-import arrow.data.*
-
-import arrow.extension
+import arrow.core.Either
+import arrow.core.ForId
+import arrow.core.Id
+import arrow.core.Tuple2
 import arrow.core.extensions.id.monad.monad
+import arrow.data.*
 import arrow.data.extensions.statet.applicative.applicative
 import arrow.data.extensions.statet.functor.functor
 import arrow.data.extensions.statet.monad.monad
-import arrow.typeclasses.*
+import arrow.extension
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
+import arrow.typeclasses.MonadThrow
+import arrow.typeclasses.SemigroupK
 import arrow.typeclasses.suspended.monad.commutative.safe.Fx
 import arrow.undocumented
 

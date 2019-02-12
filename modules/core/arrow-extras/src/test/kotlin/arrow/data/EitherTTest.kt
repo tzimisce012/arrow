@@ -1,13 +1,13 @@
 package arrow.data
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.ForId
+import arrow.core.Id
+import arrow.core.Left
+import arrow.core.Option
+import arrow.core.Right
 import arrow.core.extensions.id.functor.functor
-import arrow.effects.ForIO
-import arrow.effects.IO
-import arrow.effects.extensions.eithert.async.async
-import arrow.effects.extensions.io.applicativeError.attempt
-import arrow.effects.extensions.io.async.async
 import arrow.core.extensions.id.monad.monad
 import arrow.core.extensions.id.traverse.traverse
 import arrow.core.extensions.option.functor.functor
@@ -15,14 +15,19 @@ import arrow.data.extensions.eithert.applicative.applicative
 import arrow.data.extensions.eithert.functor.functor
 import arrow.data.extensions.eithert.semigroupK.semigroupK
 import arrow.data.extensions.eithert.traverse.traverse
+import arrow.effects.ForIO
+import arrow.effects.IO
+import arrow.effects.extensions.eithert.async.async
+import arrow.effects.extensions.io.applicativeError.attempt
+import arrow.effects.extensions.io.async.async
 import arrow.effects.typeclasses.seconds
 import arrow.test.UnitSpec
 import arrow.test.laws.AsyncLaws
 import arrow.test.laws.SemigroupKLaws
 import arrow.test.laws.TraverseLaws
 import arrow.typeclasses.Eq
-import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.properties.forAll
+import io.kotlintest.runner.junit4.KotlinTestRunner
 import org.junit.runner.RunWith
 
 @RunWith(KotlinTestRunner::class)

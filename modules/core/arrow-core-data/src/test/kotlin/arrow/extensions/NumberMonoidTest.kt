@@ -2,8 +2,8 @@ package arrow.extensions
 
 import arrow.core.extensions.monoid
 import arrow.test.UnitSpec
-import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.properties.forAll
+import io.kotlintest.runner.junit4.KotlinTestRunner
 import org.junit.runner.RunWith
 
 @RunWith(KotlinTestRunner::class)

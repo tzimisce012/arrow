@@ -1,10 +1,15 @@
 package arrow.free
 
 import arrow.Kind
-import arrow.higherkind
-import arrow.typeclasses.*
 import arrow.core.FunctionK
 import arrow.core.extensions.const.applicative.applicative
+import arrow.higherkind
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Const
+import arrow.typeclasses.ConstPartialOf
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.fix
+import arrow.typeclasses.value
 
 fun <F, G, A> FreeApplicativeOf<F, A>.foldMapK(f: FunctionK<F, G>, GA: Applicative<G>): Kind<G, A> =
   (this as FreeApplicative<F, A>).foldMap(f, GA)

@@ -3,9 +3,9 @@ package arrow.aql
 import arrow.core.identity
 import arrow.data.ForListK
 import arrow.data.ListK
-import arrow.data.k
 import arrow.data.extensions.list.semigroupK.combineK
 import arrow.data.extensions.listk.monoid.monoid
+import arrow.data.k
 import arrow.typeclasses.Foldable
 
 interface Union<F> {

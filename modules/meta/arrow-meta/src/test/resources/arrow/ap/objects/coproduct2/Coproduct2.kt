@@ -2,8 +2,6 @@ package arrow.generic.coproduct2
 
 import arrow.core.Option
 import arrow.core.toOption
-import kotlin.Suppress
-import kotlin.Unit
 
 sealed class Coproduct2<A, B>
 

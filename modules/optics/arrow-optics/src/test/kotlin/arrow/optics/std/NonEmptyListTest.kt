@@ -1,7 +1,7 @@
 package arrow.optics
 
-import arrow.data.NonEmptyList
 import arrow.core.extensions.monoid
+import arrow.data.NonEmptyList
 import arrow.test.UnitSpec
 import arrow.test.generators.functionAToB
 import arrow.test.generators.nonEmptyList

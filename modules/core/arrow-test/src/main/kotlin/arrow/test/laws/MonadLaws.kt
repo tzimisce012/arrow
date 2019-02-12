@@ -7,7 +7,9 @@ import arrow.data.Kleisli
 import arrow.free.Free
 import arrow.free.bindingStackSafe
 import arrow.free.run
-import arrow.test.generators.*
+import arrow.test.generators.applicative
+import arrow.test.generators.functionAToB
+import arrow.test.generators.intSmall
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Monad
 import io.kotlintest.properties.Gen

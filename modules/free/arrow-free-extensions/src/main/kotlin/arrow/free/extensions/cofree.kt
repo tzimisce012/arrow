@@ -1,12 +1,11 @@
 package arrow.free.extensions
 
 import arrow.Kind
-
+import arrow.extension
 import arrow.free.Cofree
 import arrow.free.CofreeOf
 import arrow.free.CofreePartialOf
 import arrow.free.fix
-import arrow.extension
 import arrow.typeclasses.Comonad
 import arrow.typeclasses.Functor
 import arrow.undocumented

@@ -2,13 +2,13 @@ package arrow.streams.internal
 
 import arrow.Kind
 import arrow.core.*
-import arrow.effects.ForIO
-import arrow.effects.IO
-import arrow.effects.fix
-import arrow.effects.extensions.io.monadError.monadError
-import arrow.higherkind
 import arrow.core.extensions.`try`.monadError.monadError
 import arrow.core.extensions.either.monadError.monadError
+import arrow.effects.ForIO
+import arrow.effects.IO
+import arrow.effects.extensions.io.monadError.monadError
+import arrow.effects.fix
+import arrow.higherkind
 import arrow.streams.internal.freec.eq.eq
 import arrow.streams.internal.freec.monadDefer.monadDefer
 import arrow.test.UnitSpec
@@ -17,9 +17,9 @@ import arrow.test.generators.throwable
 import arrow.test.laws.EqLaws
 import arrow.test.laws.MonadDeferLaws
 import arrow.typeclasses.Eq
-import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.forAll
+import io.kotlintest.runner.junit4.KotlinTestRunner
 import io.kotlintest.shouldBe
 import org.junit.runner.RunWith
 

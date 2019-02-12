@@ -2,11 +2,10 @@ package arrow.free.extensions
 
 import arrow.Kind
 import arrow.core.FunctionK
-
+import arrow.extension
 import arrow.free.FreeApplicative
 import arrow.free.FreeApplicativePartialOf
 import arrow.free.fix
-import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Functor

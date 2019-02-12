@@ -1,9 +1,15 @@
 package arrow.data
 
-import arrow.core.*
+import arrow.core.Failure
+import arrow.core.Left
+import arrow.core.None
+import arrow.core.Right
+import arrow.core.Some
+import arrow.core.Success
 import arrow.core.extensions.eq
 import arrow.core.extensions.monoid
 import arrow.core.extensions.semigroup
+import arrow.core.identity
 import arrow.data.extensions.validated.applicative.applicative
 import arrow.data.extensions.validated.eq.eq
 import arrow.data.extensions.validated.functor.functor
@@ -11,7 +17,11 @@ import arrow.data.extensions.validated.semigroupK.semigroupK
 import arrow.data.extensions.validated.show.show
 import arrow.data.extensions.validated.traverse.traverse
 import arrow.test.UnitSpec
-import arrow.test.laws.*
+import arrow.test.laws.ApplicativeLaws
+import arrow.test.laws.EqLaws
+import arrow.test.laws.SemigroupKLaws
+import arrow.test.laws.ShowLaws
+import arrow.test.laws.TraverseLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Semigroup
 import io.kotlintest.fail

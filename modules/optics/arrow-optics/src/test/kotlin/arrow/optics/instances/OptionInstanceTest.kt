@@ -1,9 +1,9 @@
 package arrow.optics.instances
 
 import arrow.core.Option
+import arrow.core.extensions.option.eq.eq
 import arrow.data.ListK
 import arrow.data.extensions.listk.eq.eq
-import arrow.core.extensions.option.eq.eq
 import arrow.optics.extensions.option.each.each
 import arrow.test.UnitSpec
 import arrow.test.generators.functionAToB

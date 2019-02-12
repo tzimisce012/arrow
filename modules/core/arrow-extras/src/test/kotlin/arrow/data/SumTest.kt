@@ -5,11 +5,11 @@ import arrow.core.ForId
 import arrow.core.Id
 import arrow.core.extensions.eq
 import arrow.core.extensions.hash
-import arrow.core.fix
 import arrow.core.extensions.id.comonad.comonad
 import arrow.core.extensions.id.eq.eq
 import arrow.core.extensions.id.functor.functor
 import arrow.core.extensions.id.hash.hash
+import arrow.core.fix
 import arrow.data.extensions.sum.comonad.comonad
 import arrow.data.extensions.sum.eq.eq
 import arrow.data.extensions.sum.hash.hash

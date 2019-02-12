@@ -2,12 +2,25 @@ package arrow.data.extensions
 
 import arrow.Kind
 import arrow.core.Eval
-import arrow.data.*
-import arrow.extension
-import arrow.data.extensions.mapk.foldable.fold
+import arrow.data.MapK
+import arrow.data.MapKOf
+import arrow.data.MapKPartialOf
+import arrow.data.SetK
 import arrow.data.extensions.setk.eq.eq
 import arrow.data.extensions.setk.hash.hash
-import arrow.typeclasses.*
+import arrow.data.fix
+import arrow.data.k
+import arrow.data.updated
+import arrow.extension
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Hash
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.Semigroup
+import arrow.typeclasses.Show
+import arrow.typeclasses.Traverse
 import arrow.undocumented
 
 @extension

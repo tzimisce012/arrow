@@ -2,9 +2,9 @@ package arrow.optics.instances
 
 import arrow.core.Either
 import arrow.core.Option
+import arrow.core.extensions.option.eq.eq
 import arrow.data.ListK
 import arrow.data.extensions.listk.eq.eq
-import arrow.core.extensions.option.eq.eq
 import arrow.optics.extensions.either.each.each
 import arrow.test.UnitSpec
 import arrow.test.generators.either

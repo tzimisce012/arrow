@@ -4,10 +4,25 @@ import arrow.Kind
 import arrow.Kind2
 import arrow.core.Either
 import arrow.core.Eval
-import arrow.data.*
+import arrow.data.ForIor
+import arrow.data.Ior
+import arrow.data.IorOf
+import arrow.data.IorPartialOf
+import arrow.data.ap
 import arrow.data.extensions.ior.monad.monad
+import arrow.data.fix
+import arrow.data.flatMap
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Bifunctor
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Hash
+import arrow.typeclasses.Monad
+import arrow.typeclasses.Semigroup
+import arrow.typeclasses.Show
+import arrow.typeclasses.Traverse
 import arrow.typeclasses.suspended.monad.Fx
 import arrow.undocumented
 

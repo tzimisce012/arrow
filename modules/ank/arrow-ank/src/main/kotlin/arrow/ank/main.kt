@@ -3,8 +3,8 @@
 package arrow.ank
 
 import arrow.effects.IO
-import arrow.effects.fix
 import arrow.effects.extensions.io.monadDefer.monadDefer
+import arrow.effects.fix
 import java.nio.file.Paths
 
 fun main(vararg args: String) {

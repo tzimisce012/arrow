@@ -4,9 +4,9 @@ import arrow.aql.From
 import arrow.aql.Select
 import arrow.core.ForId
 import arrow.core.Id
-import arrow.extension
 import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.functor.functor
+import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Functor
 

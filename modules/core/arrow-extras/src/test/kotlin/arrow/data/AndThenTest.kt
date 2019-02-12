@@ -1,8 +1,10 @@
 package arrow.data
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.andThen
+import arrow.core.compose
 import arrow.core.extensions.monoid
+import arrow.core.identity
 import arrow.data.extensions.andthen.category.category
 import arrow.data.extensions.andthen.contravariant.contravariant
 import arrow.data.extensions.andthen.monad.monad
@@ -11,7 +13,11 @@ import arrow.data.extensions.andthen.profunctor.profunctor
 import arrow.data.extensions.list.foldable.foldLeft
 import arrow.test.UnitSpec
 import arrow.test.generators.functionAToB
-import arrow.test.laws.*
+import arrow.test.laws.CategoryLaws
+import arrow.test.laws.ContravariantLaws
+import arrow.test.laws.MonadLaws
+import arrow.test.laws.MonoidLaws
+import arrow.test.laws.ProfunctorLaws
 import arrow.typeclasses.Conested
 import arrow.typeclasses.Eq
 import arrow.typeclasses.conest

@@ -14,8 +14,8 @@ import arrow.generic.coproduct3.cop
 import arrow.generic.coproduct3.fold
 import arrow.generic.coproduct3.select
 import arrow.test.UnitSpec
-import io.kotlintest.shouldBe
 import io.kotlintest.runner.junit4.KotlinTestRunner
+import io.kotlintest.shouldBe
 import org.junit.runner.RunWith
 
 @RunWith(KotlinTestRunner::class)

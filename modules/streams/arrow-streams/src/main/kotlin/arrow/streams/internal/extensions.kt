@@ -1,13 +1,29 @@
 @file:Suppress("UnusedImports")
 package arrow.streams.internal
 
-import arrow.*
-import arrow.core.*
-import arrow.effects.typeclasses.*
-import arrow.typeclasses.*
+import arrow.Kind
+import arrow.core.Either
+import arrow.core.FunctionK
+import arrow.core.Option
+import arrow.effects.typeclasses.Bracket
+import arrow.effects.typeclasses.ExitCase
+import arrow.effects.typeclasses.MonadDefer
+import arrow.extension
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
+import arrow.undocumented
+import kotlin.Boolean
+import kotlin.Suppress
+import kotlin.Throwable
+import kotlin.Unit
+import kotlin.run
 import arrow.streams.internal.ap as apply
-import arrow.streams.internal.handleErrorWith as handleErrorW
 import arrow.streams.internal.bracketCase as bracketC
+import arrow.streams.internal.handleErrorWith as handleErrorW
 
 @extension
 @undocumented

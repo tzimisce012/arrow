@@ -1,7 +1,7 @@
 package arrow.kindedj.fromkindedj;
 
-import io.kindedj.Hk;
-import arrow.kindedj.KindedJShow;
+import arrow.kindedj.*;
+import io.kindedj.*;
 
 public class KJDataclassKindedJShow implements KindedJShow<ForKJDataclass> {
     public static KJDataclassKindedJShow INSTANCE = new KJDataclassKindedJShow();

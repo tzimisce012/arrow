@@ -1,9 +1,14 @@
 package arrow.generic
 
-import arrow.core.*
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Try
+import arrow.core.Tuple3
 import arrow.core.extensions.`try`.applicative.applicative
 import arrow.core.extensions.option.applicative.applicative
 import arrow.core.extensions.option.monoid.monoid
+import arrow.core.some
+import arrow.core.toT
 import arrow.product
 import arrow.test.UnitSpec
 import arrow.test.generators.nonEmptyList
@@ -16,7 +21,6 @@ import arrow.typeclasses.Applicative
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.forAll
 import io.kotlintest.runner.junit4.KotlinTestRunner
-import io.kotlintest.shouldBe
 import org.junit.runner.RunWith
 
 @product

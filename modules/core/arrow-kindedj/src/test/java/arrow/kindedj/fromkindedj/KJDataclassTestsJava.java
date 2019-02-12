@@ -1,14 +1,12 @@
 package arrow.kindedj.fromkindedj;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import arrow.kindedj.*;
+import arrow.kindedj.fromkindedj.ForKJDataclass.*;
+import org.junit.*;
+import org.junit.runner.*;
+import org.junit.runners.*;
 
-import arrow.kindedj.Convert;
-import arrow.kindedj.KJDataclassArrowShow;
-import arrow.kindedj.fromkindedj.ForKJDataclass.KJDataclass1;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class KJDataclassTestsJava {

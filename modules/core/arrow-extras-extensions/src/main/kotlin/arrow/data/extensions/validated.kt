@@ -3,9 +3,17 @@ package arrow.data.extensions
 import arrow.Kind
 import arrow.core.Eval
 import arrow.data.*
-
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Hash
+import arrow.typeclasses.Semigroup
+import arrow.typeclasses.SemigroupK
+import arrow.typeclasses.Show
+import arrow.typeclasses.Traverse
 import arrow.undocumented
 import arrow.data.traverse as validatedTraverse
 

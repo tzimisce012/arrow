@@ -1,7 +1,11 @@
 package arrow.data
 
-import arrow.core.*
+import arrow.core.ForId
+import arrow.core.Id
+import arrow.core.IdOf
 import arrow.core.extensions.id.comonad.comonad
+import arrow.core.identity
+import arrow.core.value
 import arrow.test.UnitSpec
 import io.kotlintest.properties.forAll
 import io.kotlintest.runner.junit4.KotlinTestRunner

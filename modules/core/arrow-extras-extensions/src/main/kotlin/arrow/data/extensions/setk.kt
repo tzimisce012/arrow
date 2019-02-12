@@ -3,9 +3,19 @@ package arrow.data.extensions
 import arrow.Kind
 import arrow.core.Eval
 import arrow.data.*
-
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Hash
+import arrow.typeclasses.Monoid
+import arrow.typeclasses.MonoidK
+import arrow.typeclasses.Semigroup
+import arrow.typeclasses.SemigroupK
+import arrow.typeclasses.Show
+import kotlin.collections.emptySet
+import kotlin.collections.find
+import kotlin.collections.fold
+import kotlin.collections.map
 import arrow.data.combineK as setCombineK
 import kotlin.collections.plus as setPlus
 

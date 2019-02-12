@@ -1,8 +1,7 @@
 package arrow.kindedj;
 
-import org.jetbrains.annotations.NotNull;
-
-import arrow.Kind;
+import arrow.*;
+import org.jetbrains.annotations.*;
 
 public class Convert {
     @NotNull

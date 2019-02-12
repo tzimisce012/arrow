@@ -1,7 +1,15 @@
 package arrow.streams.internal
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.FunctionK
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Right
+import arrow.core.Some
+import arrow.core.flatMap
+import arrow.core.orElse
+import arrow.core.some
 import arrow.effects.typeclasses.ExitCase
 import arrow.streams.CompositeFailure
 import arrow.streams.internal.FreeC.Result

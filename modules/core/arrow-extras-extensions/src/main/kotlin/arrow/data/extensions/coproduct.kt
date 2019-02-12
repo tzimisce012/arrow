@@ -3,14 +3,21 @@ package arrow.data.extensions
 import arrow.Kind
 import arrow.core.Either
 import arrow.core.Eval
+import arrow.core.extensions.either.eq.eq
+import arrow.core.extensions.either.hash.hash
 import arrow.data.Coproduct
 import arrow.data.CoproductOf
 import arrow.data.CoproductPartialOf
 import arrow.data.fix
 import arrow.extension
-import arrow.core.extensions.either.eq.eq
-import arrow.core.extensions.either.hash.hash
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.Comonad
+import arrow.typeclasses.Contravariant
+import arrow.typeclasses.Eq
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Hash
+import arrow.typeclasses.Traverse
 import arrow.undocumented
 
 @extension

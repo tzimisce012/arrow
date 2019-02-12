@@ -1,15 +1,38 @@
 package arrow.data.extensions
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Eval
+import arrow.core.ForOption
+import arrow.core.None
+import arrow.core.Option
 import arrow.core.extensions.option.applicative.applicative
 import arrow.core.extensions.option.foldable.foldable
 import arrow.core.extensions.option.traverse.traverse
-import arrow.data.*
+import arrow.core.fix
+import arrow.core.identity
+import arrow.data.OptionT
+import arrow.data.OptionTOf
+import arrow.data.OptionTPartialOf
 import arrow.data.extensions.optiont.monad.monad
+import arrow.data.fix
+import arrow.data.value
 import arrow.extension
-import arrow.typeclasses.*
+import arrow.typeclasses.Applicative
+import arrow.typeclasses.ApplicativeError
+import arrow.typeclasses.ComposedTraverse
+import arrow.typeclasses.Foldable
+import arrow.typeclasses.Functor
+import arrow.typeclasses.Monad
+import arrow.typeclasses.MonadError
+import arrow.typeclasses.MonadThrow
+import arrow.typeclasses.MonoidK
+import arrow.typeclasses.Nested
+import arrow.typeclasses.SemigroupK
+import arrow.typeclasses.Traverse
+import arrow.typeclasses.compose
 import arrow.typeclasses.suspended.monad.Fx
+import arrow.typeclasses.unnest
 import arrow.undocumented
 
 @extension

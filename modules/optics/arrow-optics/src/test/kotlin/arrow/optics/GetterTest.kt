@@ -1,8 +1,16 @@
 package arrow.optics
 
-import arrow.core.*
+import arrow.core.Left
+import arrow.core.Right
+import arrow.core.Some
+import arrow.core.Tuple2
 import arrow.core.extensions.monoid
-import arrow.data.*
+import arrow.core.toT
+import arrow.data.State
+import arrow.data.k
+import arrow.data.map
+import arrow.data.run
+import arrow.data.runId
 import arrow.test.UnitSpec
 import arrow.test.generators.functionAToB
 import io.kotlintest.properties.Gen

@@ -1,7 +1,13 @@
 package arrow.typeclasses
 
 import arrow.Kind
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Left
+import arrow.core.OptionOf
+import arrow.core.Right
+import arrow.core.TryOf
+import arrow.core.fix
+import arrow.core.identity
 
 /**
  * ank_macro_hierarchy(arrow.typeclasses.ApplicativeError)

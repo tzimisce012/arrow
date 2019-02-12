@@ -1,9 +1,9 @@
 package arrow.aql
 
 import arrow.core.ForId
+import arrow.core.extensions.id.applicative.just
 import arrow.core.identity
 import arrow.core.value
-import arrow.core.extensions.id.applicative.just
 import arrow.typeclasses.Foldable
 import arrow.typeclasses.Order
 

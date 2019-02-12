@@ -1,21 +1,23 @@
 package arrow.free
 
-import arrow.core.*
+import arrow.core.ForId
+import arrow.core.Id
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.extensions.id.monad.monad
+import arrow.core.extensions.option.monad.monad
+import arrow.core.value
 import arrow.data.NonEmptyList
-import arrow.data.fix
+import arrow.data.extensions.nonemptylist.monad.monad
 import arrow.free.extensions.FreeEq
 import arrow.free.extensions.FreeMonad
 import arrow.free.extensions.free.eq.eq
 import arrow.free.extensions.free.monad.monad
 import arrow.higherkind
-import arrow.core.extensions.id.monad.monad
-import arrow.data.extensions.nonemptylist.monad.monad
-import arrow.core.extensions.option.monad.monad
 import arrow.test.UnitSpec
 import arrow.test.laws.EqLaws
 import arrow.test.laws.MonadLaws
 import io.kotlintest.runner.junit4.KotlinTestRunner
-import io.kotlintest.shouldBe
 import org.junit.runner.RunWith
 
 @higherkind

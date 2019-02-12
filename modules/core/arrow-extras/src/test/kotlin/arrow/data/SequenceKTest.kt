@@ -12,7 +12,12 @@ import arrow.data.extensions.sequencek.monoidK.monoidK
 import arrow.data.extensions.sequencek.traverse.traverse
 import arrow.test.UnitSpec
 import arrow.test.generators.sequenceK
-import arrow.test.laws.*
+import arrow.test.laws.HashLaws
+import arrow.test.laws.MonadLaws
+import arrow.test.laws.MonoidKLaws
+import arrow.test.laws.MonoidLaws
+import arrow.test.laws.ShowLaws
+import arrow.test.laws.TraverseLaws
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Show
 import io.kotlintest.properties.Gen

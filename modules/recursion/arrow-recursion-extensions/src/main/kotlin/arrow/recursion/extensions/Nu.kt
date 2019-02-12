@@ -4,7 +4,6 @@ import arrow.Kind
 import arrow.core.Eval
 import arrow.core.Eval.Now
 import arrow.extension
-import arrow.typeclasses.Functor
 import arrow.recursion.Coalgebra
 import arrow.recursion.data.ForNu
 import arrow.recursion.data.Nu
@@ -12,6 +11,7 @@ import arrow.recursion.data.fix
 import arrow.recursion.typeclasses.Birecursive
 import arrow.recursion.typeclasses.Corecursive
 import arrow.recursion.typeclasses.Recursive
+import arrow.typeclasses.Functor
 
 @extension
 interface NuBirecursive : Birecursive<ForNu> {

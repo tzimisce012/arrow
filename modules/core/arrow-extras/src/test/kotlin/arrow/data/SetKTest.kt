@@ -9,7 +9,11 @@ import arrow.data.extensions.setk.monoidK.monoidK
 import arrow.data.extensions.setk.semigroupK.semigroupK
 import arrow.data.extensions.setk.show.show
 import arrow.test.UnitSpec
-import arrow.test.laws.*
+import arrow.test.laws.FoldableLaws
+import arrow.test.laws.HashLaws
+import arrow.test.laws.MonoidKLaws
+import arrow.test.laws.SemigroupKLaws
+import arrow.test.laws.ShowLaws
 import arrow.typeclasses.Eq
 import io.kotlintest.runner.junit4.KotlinTestRunner
 import org.junit.runner.RunWith

@@ -9,7 +9,9 @@ import arrow.data.extensions.listk.monoid.monoid
 import arrow.data.extensions.nonemptylist.semigroup.semigroup
 import arrow.data.k
 import arrow.test.UnitSpec
-import arrow.test.generators.*
+import arrow.test.generators.functionAToB
+import arrow.test.generators.nonEmptyList
+import arrow.test.generators.option
 import arrow.test.laws.IsoLaws
 import arrow.test.laws.OptionalLaws
 import arrow.typeclasses.Eq

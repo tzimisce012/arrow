@@ -1,12 +1,19 @@
 package arrow.aql.extensions
 
-import arrow.aql.*
+import arrow.aql.Count
+import arrow.aql.From
+import arrow.aql.GroupBy
+import arrow.aql.OrderBy
+import arrow.aql.Select
+import arrow.aql.Sum
+import arrow.aql.Union
+import arrow.aql.Where
 import arrow.core.ForOption
 import arrow.core.Option
-import arrow.extension
 import arrow.core.extensions.option.applicative.applicative
 import arrow.core.extensions.option.foldable.foldable
 import arrow.core.extensions.option.functor.functor
+import arrow.extension
 import arrow.mtl.extensions.option.functorFilter.functorFilter
 import arrow.mtl.typeclasses.FunctorFilter
 import arrow.typeclasses.Applicative

@@ -3,7 +3,6 @@ package arrow.free
 import arrow.Kind
 import arrow.core.*
 import arrow.data.*
-import arrow.core.FunctionK
 
 val cofreeOptionToNel: FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> = object : FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> {
   override fun <A> invoke(fa: Kind<CofreePartialOf<ForOption>, A>): Kind<ForNonEmptyList, A> =

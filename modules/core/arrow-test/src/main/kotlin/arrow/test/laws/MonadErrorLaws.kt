@@ -2,7 +2,9 @@ package arrow.test.laws
 
 import arrow.Kind
 import arrow.core.Either
-import arrow.test.generators.*
+import arrow.test.generators.applicativeError
+import arrow.test.generators.functionAToB
+import arrow.test.generators.throwable
 import arrow.typeclasses.Eq
 import arrow.typeclasses.MonadError
 import io.kotlintest.properties.Gen

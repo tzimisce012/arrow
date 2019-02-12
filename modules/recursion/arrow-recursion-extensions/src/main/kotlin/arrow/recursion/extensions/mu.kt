@@ -4,7 +4,6 @@ import arrow.Kind
 import arrow.core.Eval
 import arrow.core.Eval.Now
 import arrow.extension
-import arrow.typeclasses.Functor
 import arrow.recursion.Algebra
 import arrow.recursion.data.ForMu
 import arrow.recursion.data.Mu
@@ -13,6 +12,7 @@ import arrow.recursion.data.fix
 import arrow.recursion.typeclasses.Birecursive
 import arrow.recursion.typeclasses.Corecursive
 import arrow.recursion.typeclasses.Recursive
+import arrow.typeclasses.Functor
 
 @extension
 interface MuBirecursive : Birecursive<ForMu> {

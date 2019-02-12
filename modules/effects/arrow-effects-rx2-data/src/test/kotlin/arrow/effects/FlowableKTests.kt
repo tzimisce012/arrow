@@ -1,6 +1,8 @@
 package arrow.effects
 
-import arrow.effects.rx2.*
+import arrow.effects.rx2.FlowableK
+import arrow.effects.rx2.FlowableKOf
+import arrow.effects.rx2.ForFlowableK
 import arrow.effects.rx2.extensions.asyncDrop
 import arrow.effects.rx2.extensions.asyncError
 import arrow.effects.rx2.extensions.asyncLatest
@@ -10,6 +12,8 @@ import arrow.effects.rx2.extensions.flowablek.functor.functor
 import arrow.effects.rx2.extensions.flowablek.monad.flatMap
 import arrow.effects.rx2.extensions.flowablek.monadThrow.bindingCatch
 import arrow.effects.rx2.extensions.flowablek.traverse.traverse
+import arrow.effects.rx2.k
+import arrow.effects.rx2.value
 import arrow.effects.typeclasses.ExitCase
 import arrow.test.UnitSpec
 import arrow.test.laws.AsyncLaws

@@ -1,10 +1,14 @@
 package arrow.data
 
-import arrow.core.*
-import arrow.data.extensions.day.applicative.applicative
-import arrow.data.extensions.day.comonad.comonad
+import arrow.core.ForId
+import arrow.core.Id
+import arrow.core.Tuple2
+import arrow.core.Tuple2Of
 import arrow.core.extensions.id.applicative.applicative
 import arrow.core.extensions.id.comonad.comonad
+import arrow.core.fix
+import arrow.data.extensions.day.applicative.applicative
+import arrow.data.extensions.day.comonad.comonad
 import arrow.test.UnitSpec
 import arrow.test.laws.ApplicativeLaws
 import arrow.test.laws.ComonadLaws

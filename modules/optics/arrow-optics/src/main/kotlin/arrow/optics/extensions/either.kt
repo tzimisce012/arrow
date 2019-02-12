@@ -2,9 +2,9 @@ package arrow.optics.extensions
 
 import arrow.Kind
 import arrow.core.Either
+import arrow.core.extensions.either.traverse.traverse
 import arrow.core.fix
 import arrow.extension
-import arrow.core.extensions.either.traverse.traverse
 import arrow.optics.Traversal
 import arrow.optics.typeclasses.Each
 import arrow.typeclasses.Applicative

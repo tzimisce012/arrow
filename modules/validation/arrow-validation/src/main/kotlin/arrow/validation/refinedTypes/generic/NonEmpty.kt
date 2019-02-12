@@ -3,13 +3,13 @@ package arrow.validation.refinedTypes.generic
 import arrow.Kind
 import arrow.core.Either
 import arrow.core.EitherPartialOf
+import arrow.core.extensions.either.applicativeError.applicativeError
 import arrow.data.Nel
 import arrow.data.Validated
 import arrow.data.ValidatedPartialOf
-import arrow.extension
-import arrow.core.extensions.either.applicativeError.applicativeError
 import arrow.data.extensions.nonemptylist.semigroup.semigroup
 import arrow.data.extensions.validated.applicativeError.applicativeError
+import arrow.extension
 import arrow.typeclasses.ApplicativeError
 import arrow.validation.RefinedPredicateException
 import arrow.validation.Refinement

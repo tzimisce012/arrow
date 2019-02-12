@@ -177,7 +177,7 @@ class ExtensionProcessor : MetaProcessor<extension>(extension::class), PolyTempl
               allArgs.size > 1 -> emptyList()
               func.receiverType == null -> emptyList()
               else -> func.modifiers
-            }, //remove infix and operator mods
+            }, // remove infix and operator mods
             typeVariables = typeVariables,
             annotations = listOf(
               JvmName(func.name + if (dummyArgsCount > 0) dummyArgsCount else ""),
@@ -198,8 +198,8 @@ class ExtensionProcessor : MetaProcessor<extension>(extension::class), PolyTempl
                     else Code(it.name)
                   }
                 } else func.parameters.codeNames()
-              //Const is a special case because it uses a phantom type arg and the Kotlin compiler chooses to
-              //recursively call the extension if you ascribe the call types
+              // Const is a special case because it uses a phantom type arg and the Kotlin compiler chooses to
+              // recursively call the extension if you ascribe the call types
               val typeVars =
                 if (instance.name.simpleName == "ConstFunctor") emptyList()
                 else func.typeVariables
@@ -213,7 +213,6 @@ class ExtensionProcessor : MetaProcessor<extension>(extension::class), PolyTempl
             })
       }
       .toList()
-
   }
 
   private fun TypeClassInstance.extensionTypeVariables(func: Func): List<TypeName.TypeVariable> = (instance.typeVariables + func.typeVariables)
@@ -266,6 +265,4 @@ class ExtensionProcessor : MetaProcessor<extension>(extension::class), PolyTempl
       PackageName("${instance.packageName.value}.${wrappedSimpleName.toLowerCase()}.${typeClass.name.simpleName.decapitalize()}")
     )
   } else projectedCompanion
-
 }
-

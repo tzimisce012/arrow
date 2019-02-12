@@ -85,6 +85,5 @@ class StringInstanceTest : UnitSpec() {
         EQOptionB = Option.eq(Tuple2.eq(String.eq(), Char.eq()))
       )
     )
-
   }
 }

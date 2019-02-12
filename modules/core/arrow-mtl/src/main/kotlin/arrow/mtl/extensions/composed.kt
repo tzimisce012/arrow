@@ -56,7 +56,8 @@ interface ComposedTraverseFilter<F, G> :
     operator fun <F, G> invoke(
       FF: Traverse<F>,
       GF: TraverseFilter<G>,
-      GA: Applicative<G>): ComposedTraverseFilter<F, G> =
+      GA: Applicative<G>
+    ): ComposedTraverseFilter<F, G> =
       object : ComposedTraverseFilter<F, G> {
         override fun FT(): Traverse<F> = FF
 

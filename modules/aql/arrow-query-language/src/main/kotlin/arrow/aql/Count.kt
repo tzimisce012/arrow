@@ -23,5 +23,4 @@ interface Count<F> {
 
   fun Query<ForListK, Long, Long>.value(): Long =
     this@value.from.fix().firstOrNone().getOrElse { 0L }
-
 }

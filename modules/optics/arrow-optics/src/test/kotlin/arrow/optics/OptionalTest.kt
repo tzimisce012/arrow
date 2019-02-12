@@ -205,7 +205,7 @@ class OptionalTest : UnitSpec() {
 
     "Checking satisfaction of predicate over the target should result in opposite result as predicate" {
       forAll(Gen.list(Gen.int()), Gen.bool()) { list, predicate ->
-        ListK.head<Int>().all(list) { predicate } == if(list.isEmpty()) true else predicate
+        ListK.head<Int>().all(list) { predicate } == if (list.isEmpty()) true else predicate
       }
     }
 
@@ -295,6 +295,5 @@ class OptionalTest : UnitSpec() {
           }.run(x)
       }
     }
-
   }
 }

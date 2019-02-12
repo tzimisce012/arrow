@@ -103,7 +103,5 @@ class FilterIndexInstanceTest : UnitSpec() {
       EQOptionB = Option.eq(Eq.any()),
       EQListB = ListK.eq(Eq.any())
     ))
-
   }
-
 }

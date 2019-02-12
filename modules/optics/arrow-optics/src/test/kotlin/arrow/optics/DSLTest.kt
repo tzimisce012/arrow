@@ -105,7 +105,5 @@ class BoundedTest : UnitSpec() {
         Db.content.every.modify(db, String::toUpperCase)
       } shouldBe (Db.content compose MapK.traversal()).modify(db, String::toUpperCase)
     }
-
   }
-
 }

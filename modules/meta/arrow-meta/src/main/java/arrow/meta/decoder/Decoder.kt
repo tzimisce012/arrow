@@ -272,5 +272,4 @@ interface TypeDecoder : MetaDecoder<Type> {
       is Parameter -> lyrics()
       else -> this
     }
-
 }

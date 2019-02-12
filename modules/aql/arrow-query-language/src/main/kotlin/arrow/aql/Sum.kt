@@ -24,5 +24,4 @@ interface Sum<F> {
     foldable().run {
       this@value.from.value()
     }
-
 }

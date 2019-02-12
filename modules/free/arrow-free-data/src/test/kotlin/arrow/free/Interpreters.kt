@@ -1,8 +1,18 @@
 package arrow.free
 
 import arrow.Kind
-import arrow.core.*
-import arrow.data.*
+import arrow.core.ForId
+import arrow.core.ForOption
+import arrow.core.FunctionK
+import arrow.core.Id
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.fix
+import arrow.data.ForListK
+import arrow.data.ForNonEmptyList
+import arrow.data.NonEmptyList
+import arrow.data.fix
+import arrow.data.k
 
 val cofreeOptionToNel: FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> = object : FunctionK<CofreePartialOf<ForOption>, ForNonEmptyList> {
   override fun <A> invoke(fa: Kind<CofreePartialOf<ForOption>, A>): Kind<ForNonEmptyList, A> =
@@ -15,7 +25,7 @@ val cofreeListToNel: FunctionK<CofreePartialOf<ForListK>, ForNonEmptyList> = obj
   override fun <A> invoke(fa: Kind<CofreePartialOf<ForListK>, A>): Kind<ForNonEmptyList, A> =
     fa.fix().let { c: Cofree<ForListK, A> ->
       val all: List<Cofree<ForListK, A>> = c.tailForced().fix()
-      val tail: List<A> = all.foldRight(listOf<A>()) { v, acc -> acc + invoke(v).fix().all }
+      val tail: List<A> = all.foldRight(listOf()) { v, acc -> acc + invoke(v).fix().all }
       val headL: List<A> = listOf(c.head)
       NonEmptyList.fromListUnsafe(headL + tail)
     }

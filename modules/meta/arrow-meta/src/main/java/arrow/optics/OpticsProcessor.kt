@@ -125,5 +125,4 @@ class OpticsProcessor : AbstractProcessor() {
       (kotlinMetadata as? KotlinClassMetadata)?.data?.classProto?.isSealed == true -> SEALED_CLASS
       else -> OTHER
     }
-
 }

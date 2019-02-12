@@ -28,5 +28,4 @@ class MapTest : UnitSpec() {
       bMonoid = SetK.monoid()
     ))
   }
-
 }

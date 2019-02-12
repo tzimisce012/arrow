@@ -225,7 +225,5 @@ class TupleTest : UnitSpec() {
         EQListB = ListK.eq(Eq.any())
       )
     )
-
   }
-
 }

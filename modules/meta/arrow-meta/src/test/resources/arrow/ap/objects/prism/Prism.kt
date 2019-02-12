@@ -4,7 +4,7 @@ import arrow.core.identity
 import arrow.core.left
 import arrow.core.right
 
-inline val `arrow`.`ap`.`objects`.`prism`.`Prism`.Companion.prismSealed1: arrow.optics.Prism<`arrow`.`ap`.`objects`.`prism`.`Prism`, arrow.ap.objects.prism.Prism.PrismSealed1> inline get()= arrow.optics.Prism(
+inline val `arrow`.`ap`.`objects`.`prism`.`Prism`.Companion.prismSealed1: arrow.optics.Prism<`arrow`.`ap`.`objects`.`prism`.`Prism`, arrow.ap.objects.prism.Prism.PrismSealed1> inline get() = arrow.optics.Prism(
   getOrModify = { prism: `arrow`.`ap`.`objects`.`prism`.`Prism` ->
     when (prism) {
       is arrow.ap.objects.prism.Prism.PrismSealed1 -> prism.right()
@@ -14,8 +14,7 @@ inline val `arrow`.`ap`.`objects`.`prism`.`Prism`.Companion.prismSealed1: arrow.
   reverseGet = ::identity
 )
 
-
-inline val `arrow`.`ap`.`objects`.`prism`.`Prism`.Companion.prismSealed2: arrow.optics.Prism<`arrow`.`ap`.`objects`.`prism`.`Prism`, arrow.ap.objects.prism.Prism.PrismSealed2> inline get()= arrow.optics.Prism(
+inline val `arrow`.`ap`.`objects`.`prism`.`Prism`.Companion.prismSealed2: arrow.optics.Prism<`arrow`.`ap`.`objects`.`prism`.`Prism`, arrow.ap.objects.prism.Prism.PrismSealed2> inline get() = arrow.optics.Prism(
   getOrModify = { prism: `arrow`.`ap`.`objects`.`prism`.`Prism` ->
     when (prism) {
       is arrow.ap.objects.prism.Prism.PrismSealed2 -> prism.right()

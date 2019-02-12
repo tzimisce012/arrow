@@ -129,6 +129,5 @@ class MapInstanceTest : UnitSpec() {
         MB = Option.monoid(Int.semigroup())
       )
     )
-
   }
 }

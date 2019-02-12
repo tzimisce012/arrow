@@ -131,7 +131,7 @@ class ProductTest : UnitSpec() {
       emptyPerson() shouldBe Person("", 0, None)
     }
 
-    val getPersonWithAge: (Int) -> Person = { age: Int -> Person("", age, None)}
+    val getPersonWithAge: (Int) -> Person = { age: Int -> Person("", age, None) }
 
     testLaws(
       EqLaws.laws(Person.eq(), getPersonWithAge),

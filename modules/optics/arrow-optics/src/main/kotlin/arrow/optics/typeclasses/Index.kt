@@ -165,7 +165,5 @@ interface Index<S, I, A> {
     fun <S, A, I, B> fromIso(ID: Index<A, I, B>, iso: Iso<S, A>): Index<S, I, B> = object : Index<S, I, B> {
       override fun index(i: I): Optional<S, B> = iso compose ID.index(i)
     }
-
   }
-
 }

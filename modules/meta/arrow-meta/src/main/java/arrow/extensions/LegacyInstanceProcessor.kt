@@ -86,5 +86,4 @@ class LegacyInstanceProcessor : AbstractProcessor() {
       )
     }
   }
-
 }

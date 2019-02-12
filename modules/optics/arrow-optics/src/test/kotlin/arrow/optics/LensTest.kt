@@ -301,7 +301,5 @@ class LensTest : UnitSpec() {
             }.run(generatedToken)
       }
     }
-
   }
-
 }

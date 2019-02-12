@@ -53,7 +53,5 @@ class ValidatedTest : UnitSpec() {
           override fun empty(): Try<Int> = Try.Success(0)
         })
     )
-
   }
-
 }

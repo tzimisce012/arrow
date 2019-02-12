@@ -70,5 +70,4 @@ interface Snoc<S, A> {
       override fun snoc(): Prism<S, Tuple2<S, A>> = prism
     }
   }
-
 }

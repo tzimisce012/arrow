@@ -61,7 +61,5 @@ class ListTest : UnitSpec() {
       EQB = Eq.any(),
       bMonoid = ListK.monoid())
     )
-
   }
-
 }

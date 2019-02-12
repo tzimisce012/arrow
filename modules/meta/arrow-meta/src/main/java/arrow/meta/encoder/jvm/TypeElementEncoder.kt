@@ -60,7 +60,7 @@ interface TypeElementEncoder : KotlinMetatadataEncoder, KotlinPoetEncoder, Proce
     when (this) {
       is PackageElement -> Either.Right(PackageName(qualifiedName.toString()))
       else -> Either.Left(
-        EncodingError.UnsupportedElementType("Unsupported ${this}, as ($kind) to PackageName", this)
+        EncodingError.UnsupportedElementType("Unsupported $this, as ($kind) to PackageName", this)
       )
     }
 
@@ -338,7 +338,7 @@ interface TypeElementEncoder : KotlinMetatadataEncoder, KotlinPoetEncoder, Proce
             } else function
           result.fixSuspendedParameters()
         } catch (e: IllegalArgumentException) {
-          //some public final functions can't be seen as overridden
+          // some public final functions can't be seen as overridden
           templateFunction?.second?.toMeta(templateFunction.first, member)
         }
       }.toList()
@@ -442,5 +442,4 @@ interface TypeElementEncoder : KotlinMetatadataEncoder, KotlinPoetEncoder, Proce
 
   fun TypeElement.asMetaType(): Type? =
     type().fold({ null }, { it })
-
 }

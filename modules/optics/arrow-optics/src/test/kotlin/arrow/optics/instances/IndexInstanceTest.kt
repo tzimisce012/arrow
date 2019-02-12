@@ -28,6 +28,5 @@ class IndexInstanceTest : UnitSpec() {
         EQA = SequenceK.eq(String.eq())
       )
     )
-
   }
 }

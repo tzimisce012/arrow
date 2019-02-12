@@ -4,8 +4,12 @@ import arrow.Kind
 import arrow.core.Either
 import arrow.core.Eval
 import arrow.core.Tuple2
-import arrow.data.*
+import arrow.data.ForSequenceK
+import arrow.data.SequenceK
+import arrow.data.SequenceKOf
 import arrow.data.extensions.sequencek.monad.monad
+import arrow.data.fix
+import arrow.data.k
 import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Eq

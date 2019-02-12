@@ -76,4 +76,3 @@ interface ListKMonadFilter : MonadFilter<ForListK> {
   override fun <A> just(a: A): ListK<A> =
     ListK.just(a)
 }
-

@@ -124,6 +124,5 @@ class ListInstanceTest : UnitSpec() {
         EQOptionB = Option.eq(Tuple2.eq(ListK.eq(Int.eq()), Int.eq()))
       )
     )
-
   }
 }

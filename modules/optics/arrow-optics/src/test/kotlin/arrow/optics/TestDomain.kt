@@ -20,7 +20,7 @@ val sumPrism: Prism<SumType, String> = Prism(
   {
     when (it) {
       is SumType.A -> Right(it.string)
-      else         -> Left(it)
+      else -> Left(it)
     }
   },
   SumType::A
@@ -62,11 +62,11 @@ internal data class Token(val value: String) {
   }
 }
 
-internal val genToken : Gen<Token> = Gen.string().map { Token(it) }
+internal val genToken: Gen<Token> = Gen.string().map { Token(it) }
 
 internal data class User(val token: Token)
 
-internal val genUser : Gen<User> = genToken.map { User(it) }
+internal val genUser: Gen<User> = genToken.map { User(it) }
 
 internal val tokenGetter: Getter<Token, String> = Getter(Token::value)
 

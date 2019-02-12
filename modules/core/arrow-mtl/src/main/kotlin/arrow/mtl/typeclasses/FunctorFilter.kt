@@ -39,5 +39,4 @@ interface FunctorFilter<F> : Functor<F> {
    */
   fun <A> Kind<F, A>.filter(f: (A) -> Boolean): Kind<F, A> =
     mapFilter { a -> if (f(a)) Some(a) else None }
-
 }

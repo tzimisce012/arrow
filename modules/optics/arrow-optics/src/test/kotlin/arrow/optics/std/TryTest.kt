@@ -86,6 +86,5 @@ class TryTest : UnitSpec() {
         override fun empty() = Valid(0)
       }
     ))
-
   }
 }

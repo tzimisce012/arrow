@@ -2,7 +2,14 @@ package arrow.data.extensions
 
 import arrow.Kind
 import arrow.core.Eval
-import arrow.data.*
+import arrow.data.Invalid
+import arrow.data.Valid
+import arrow.data.Validated
+import arrow.data.ValidatedPartialOf
+import arrow.data.ap
+import arrow.data.extensions.validated.semigroupK.combineK
+import arrow.data.fix
+import arrow.data.handleLeftWith
 import arrow.extension
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.ApplicativeError

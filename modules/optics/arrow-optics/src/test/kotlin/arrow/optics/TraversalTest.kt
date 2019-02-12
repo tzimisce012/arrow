@@ -223,9 +223,6 @@ class TraversalTest : UnitSpec() {
             }.run(ints)
         }
       }
-
     }
-
   }
-
 }

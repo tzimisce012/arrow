@@ -1,10 +1,12 @@
-package com.pacoworks.typeclasses.basics.solved.advanced
+package arrow.typeclasses.solved.advanced
 
 import arrow.Kind
 import arrow.effects.typeclasses.Async
 import arrow.typeclasses.Index
 import arrow.typeclasses.User
 import com.pacoworks.typeclasses.basics.solved.DomainMapperSync
+import com.pacoworks.typeclasses.basics.solved.advanced.DaoOperationsKAsync
+import com.pacoworks.typeclasses.basics.solved.advanced.NetworkOperationsKAsync
 import kotlin.coroutines.CoroutineContext
 
 // Have you already checked the changes to the Framework?

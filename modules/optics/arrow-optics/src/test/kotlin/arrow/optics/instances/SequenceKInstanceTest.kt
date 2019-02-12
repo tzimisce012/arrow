@@ -58,6 +58,5 @@ class SequenceKInstanceTest : UnitSpec() {
         EQA = SequenceK.eq(String.eq())
       )
     )
-
   }
 }

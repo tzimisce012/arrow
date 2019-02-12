@@ -37,7 +37,6 @@ class EitherTest : UnitSpec() {
             }
           }
         }
-
     }
     testLaws(IsoLaws.laws(
       iso = Either.toValidated(),
@@ -49,5 +48,4 @@ class EitherTest : UnitSpec() {
       bMonoid = VAL_MONOID
     ))
   }
-
 }

@@ -64,7 +64,5 @@ interface Cons<S, A> {
     operator fun <S, A> invoke(prism: Prism<S, Tuple2<A, S>>): Cons<S, A> = object : Cons<S, A> {
       override fun cons(): Prism<S, Tuple2<A, S>> = prism
     }
-
   }
-
 }

@@ -8,7 +8,6 @@ interface DerivingFunctor : arrow.typeclasses.Functor<ForDeriving> {
 fun arrow.ap.objects.deriving.Deriving.Companion.functor(): DerivingFunctor =
   object : DerivingFunctor, arrow.typeclasses.Functor<ForDeriving> {}
 
-
 interface DerivingApplicative : arrow.typeclasses.Applicative<ForDeriving> {
   override fun <A> just(a: A): arrow.ap.objects.deriving.Deriving<A> =
     arrow.ap.objects.deriving.Deriving.just(a)
@@ -19,7 +18,6 @@ interface DerivingApplicative : arrow.typeclasses.Applicative<ForDeriving> {
 
 fun arrow.ap.objects.deriving.Deriving.Companion.applicative(): DerivingApplicative =
   object : DerivingApplicative, arrow.typeclasses.Applicative<ForDeriving> {}
-
 
 interface DerivingMonad : arrow.typeclasses.Monad<ForDeriving> {
   override fun <A, B> tailRecM(a: A, f: kotlin.Function1<A, arrow.ap.objects.deriving.DerivingOf<arrow.core.Either<A, B>>>): arrow.ap.objects.deriving.Deriving<B> =

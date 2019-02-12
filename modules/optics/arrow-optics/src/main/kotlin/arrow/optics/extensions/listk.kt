@@ -98,5 +98,4 @@ interface ListKSnoc<A> : Snoc<ListK<A>, A> {
     override fun reverseGet(b: Tuple2<ListK<A>, A>): ListK<A> =
       ListK(b.a + b.b)
   }
-
 }

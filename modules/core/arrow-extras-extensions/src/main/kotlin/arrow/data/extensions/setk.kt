@@ -2,7 +2,10 @@ package arrow.data.extensions
 
 import arrow.Kind
 import arrow.core.Eval
-import arrow.data.*
+import arrow.data.ForSetK
+import arrow.data.SetK
+import arrow.data.fix
+import arrow.data.k
 import arrow.extension
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Foldable

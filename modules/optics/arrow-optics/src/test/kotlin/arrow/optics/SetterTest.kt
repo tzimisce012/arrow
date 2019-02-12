@@ -85,6 +85,5 @@ class SetterTest : UnitSpec() {
           }.run(generatedToken)
       }
     }
-
   }
 }

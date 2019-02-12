@@ -4,7 +4,11 @@ import arrow.Kind
 import arrow.core.Either
 import arrow.core.FunctionK
 import arrow.extension
-import arrow.free.*
+import arrow.free.Free
+import arrow.free.FreeOf
+import arrow.free.FreePartialOf
+import arrow.free.fix
+import arrow.free.foldMap
 import arrow.typeclasses.Applicative
 import arrow.typeclasses.Eq
 import arrow.typeclasses.Functor

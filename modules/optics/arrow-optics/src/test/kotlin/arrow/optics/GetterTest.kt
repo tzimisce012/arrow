@@ -175,7 +175,5 @@ class GetterTest : UnitSpec() {
         tokenGetter.extractMap(f).run(token) == tokenGetter.extract().map(f).run(token)
       }
     }
-
   }
-
 }

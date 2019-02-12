@@ -40,7 +40,7 @@ private val genericsToClassNames: Map<String, String> = mapOf(
         "V" to "TwentySecond"
 )
 
-fun generateCoproducts(destination: File): Unit {
+fun generateCoproducts(destination: File) {
     for (size in 2 until genericsToClassNames.size + 1) {
         val generics = genericsToClassNames.keys.toList().take(size)
 
@@ -57,7 +57,7 @@ fun generateCoproducts(destination: File): Unit {
     }
 }
 
-private fun FileSpec.Builder.addCoproductClassDeclaration(generics: List<String>): Unit {
+private fun FileSpec.Builder.addCoproductClassDeclaration(generics: List<String>) {
     addType(
             TypeSpec.classBuilder("Coproduct${generics.size}")
                     .addModifiers(KModifier.SEALED)
@@ -86,7 +86,7 @@ private fun FileSpec.Builder.addCoproductClassDeclaration(generics: List<String>
     }
 }
 
-private fun FileSpec.Builder.addCoproductOfConstructors(generics: List<String>): Unit {
+private fun FileSpec.Builder.addCoproductOfConstructors(generics: List<String>) {
     for (generic in generics) {
         val additionalParameterCount = generics.indexOf(generic)
 
@@ -103,7 +103,7 @@ private fun FileSpec.Builder.addCoproductOfConstructors(generics: List<String>):
     }
 }
 
-private fun FileSpec.Builder.addCopExtensionConstructors(generics: List<String>): Unit {
+private fun FileSpec.Builder.addCopExtensionConstructors(generics: List<String>) {
     for (generic in generics) {
         val additionalParameterCount = generics.indexOf(generic)
 
@@ -120,7 +120,7 @@ private fun FileSpec.Builder.addCopExtensionConstructors(generics: List<String>)
     }
 }
 
-private fun FileSpec.Builder.addSelectFunctions(generics: List<String>): Unit {
+private fun FileSpec.Builder.addSelectFunctions(generics: List<String>) {
     addImport("arrow.core", "Option")
     addImport("arrow.core", "toOption")
 
@@ -143,7 +143,7 @@ private fun FileSpec.Builder.addSelectFunctions(generics: List<String>): Unit {
     }
 }
 
-private fun FileSpec.Builder.addFoldFunction(generics: List<String>): Unit {
+private fun FileSpec.Builder.addFoldFunction(generics: List<String>) {
     addFunction(
             FunSpec.builder("fold")
                     .receiver(parameterizedCoproductNClassName(generics))

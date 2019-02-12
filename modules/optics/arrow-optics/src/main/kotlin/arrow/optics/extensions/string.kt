@@ -53,7 +53,7 @@ interface StringEach : Each<String, Char> {
      *
      * @return [FilterIndex] instance for [String]
      */
-    operator fun invoke(): Each<String, Char> = object : StringEach{}
+    operator fun invoke(): Each<String, Char> = object : StringEach {}
   }
 }
 
@@ -80,7 +80,7 @@ interface StringFilterIndex : FilterIndex<String, Int, Char> {
      *
      * @return [FilterIndex] instance for [String]
      */
-    operator fun invoke(): FilterIndex<String, Int, Char> = object : StringFilterIndex{}
+    operator fun invoke(): FilterIndex<String, Int, Char> = object : StringFilterIndex {}
   }
 }
 
@@ -109,9 +109,8 @@ interface StringIndex : Index<String, Int, Char> {
      *
      * @return [Index] instance for [String]
      */
-    operator fun invoke(): Index<String, Int, Char> = object : StringIndex{}
+    operator fun invoke(): Index<String, Int, Char> = object : StringIndex {}
   }
-
 }
 
 /**
@@ -132,9 +131,8 @@ interface StringCons : Cons<String, Char> {
      *
      * @return [Cons] instance for [String]
      */
-    operator fun invoke(): Cons<String, Char> = object : StringCons{}
+    operator fun invoke(): Cons<String, Char> = object : StringCons {}
   }
-
 }
 
 /**
@@ -155,8 +153,6 @@ interface StringSnoc : Snoc<String, Char> {
      *
      * @return [Cons] instance for [String]
      */
-    operator fun invoke(): Snoc<String, Char> = object : StringSnoc{}
+    operator fun invoke(): Snoc<String, Char> = object : StringSnoc {}
   }
-
 }
-

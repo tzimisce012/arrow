@@ -72,7 +72,5 @@ class ReflectionTests : UnitSpec() {
         TypeClass(Functor::class).extends(TypeClass(Invariant::class))
       )
     }
-
   }
-
 }

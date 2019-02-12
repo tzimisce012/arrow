@@ -15,5 +15,4 @@ interface IterableTraverseSyntax<F> : MonadSyntax<F> {
 
   fun <A> Iterable<Iterable<suspend () -> A>>.flatSequence(): Kind<F, List<A>> =
     flatten().sequence()
-
 }

@@ -40,7 +40,6 @@ interface FreeCApplicative<F> : Applicative<FreeCPartialOf<F>> {
 
   override fun <A, B> FreeCOf<F, A>.ap(ff: FreeCOf<F, (A) -> B>): FreeCOf<F, B> =
     apply(ff)
-
 }
 
 @extension
@@ -70,7 +69,6 @@ interface FreeCApplicativeError<F> : ApplicativeError<FreeCPartialOf<F>, Throwab
 
   override fun <A, B> FreeCOf<F, A>.ap(ff: FreeCOf<F, (A) -> B>): FreeCOf<F, B> =
     apply(ff)
-
 }
 
 @extension
@@ -90,7 +88,6 @@ interface FreeCMonadError<F> : MonadError<FreeCPartialOf<F>, Throwable> {
 
   override fun <A, B> tailRecM(a: A, f: (A) -> FreeCOf<F, Either<A, B>>): FreeCOf<F, B> =
     FreeC.tailRecM(a) { f(it).fix() }
-
 }
 
 @extension

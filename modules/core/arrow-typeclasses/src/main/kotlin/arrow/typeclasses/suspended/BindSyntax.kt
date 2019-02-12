@@ -33,5 +33,4 @@ interface BindSyntax<F> : Predef {
 
   fun <A, B, C, D> (suspend (A, B, C) -> D).flatLiftM(): (A, B, C) -> Kind<F, D> =
     { a, b, c -> suspend { this(a, b, c) }.effect() }
-
 }

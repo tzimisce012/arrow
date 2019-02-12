@@ -65,43 +65,43 @@ object MonadDeferLaws {
       emptyList()
     }
 
-  fun <F> MonadDefer<F>.delayConstantEqualsPure(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.delayConstantEqualsPure(EQ: Eq<Kind<F, Int>>) {
     forAll(Gen.intSmall()) { x ->
       delay { x }.equalUnderTheLaw(just(x), EQ)
     }
   }
 
-  fun <F> MonadDefer<F>.deferConstantEqualsPure(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.deferConstantEqualsPure(EQ: Eq<Kind<F, Int>>) {
     forAll(Gen.intSmall()) { x ->
       defer { just(x) }.equalUnderTheLaw(just(x), EQ)
     }
   }
 
-  fun <F> MonadDefer<F>.deferUnsafeConstantRightEqualsPure(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.deferUnsafeConstantRightEqualsPure(EQ: Eq<Kind<F, Int>>) {
     forAll(Gen.intSmall()) { x ->
       deferUnsafe { x.right() }.equalUnderTheLaw(just(x), EQ)
     }
   }
 
-  fun <F> MonadDefer<F>.deferUnsafeConstantLeftEqualsRaiseError(EQERR: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.deferUnsafeConstantLeftEqualsRaiseError(EQERR: Eq<Kind<F, Int>>) {
     forFew(5, Gen.throwable()) { t ->
       deferUnsafe { t.left() }.equalUnderTheLaw(raiseError(t), EQERR)
     }
   }
 
-  fun <F> MonadDefer<F>.delayThrowEqualsRaiseError(EQERR: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.delayThrowEqualsRaiseError(EQERR: Eq<Kind<F, Int>>) {
     forFew(5, Gen.throwable()) { t ->
       delay { throw t }.equalUnderTheLaw(raiseError(t), EQERR)
     }
   }
 
-  fun <F> MonadDefer<F>.propagateErrorsThroughBind(EQERR: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.propagateErrorsThroughBind(EQERR: Eq<Kind<F, Int>>) {
     forFew(5, Gen.throwable()) { t ->
       delay { throw t }.flatMap<Int, Int> { a: Int -> just(a) }.equalUnderTheLaw(raiseError(t), EQERR)
     }
   }
 
-  fun <F> MonadDefer<F>.deferSuspendsEvaluation(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.deferSuspendsEvaluation(EQ: Eq<Kind<F, Int>>) {
     val sideEffect = SideEffect(counter = 0)
     val df = defer { sideEffect.increment(); just(sideEffect.counter) }
 
@@ -111,7 +111,7 @@ object MonadDeferLaws {
     df.equalUnderTheLaw(just(1), EQ) shouldBe true
   }
 
-  fun <F> MonadDefer<F>.delaySuspendsEvaluation(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.delaySuspendsEvaluation(EQ: Eq<Kind<F, Int>>) {
     val sideEffect = SideEffect(counter = 0)
     val df = delay { sideEffect.increment(); sideEffect.counter }
 
@@ -121,7 +121,7 @@ object MonadDeferLaws {
     df.equalUnderTheLaw(just(1), EQ) shouldBe true
   }
 
-  fun <F> MonadDefer<F>.flatMapSuspendsEvaluation(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.flatMapSuspendsEvaluation(EQ: Eq<Kind<F, Int>>) {
     val sideEffect = SideEffect(counter = 0)
     val df = just(0).flatMap { sideEffect.increment(); just(sideEffect.counter) }
 
@@ -131,7 +131,7 @@ object MonadDeferLaws {
     df.equalUnderTheLaw(just(1), EQ) shouldBe true
   }
 
-  fun <F> MonadDefer<F>.mapSuspendsEvaluation(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.mapSuspendsEvaluation(EQ: Eq<Kind<F, Int>>) {
     val sideEffect = SideEffect(counter = 0)
     val df = just(0).map { sideEffect.increment(); sideEffect.counter }
 
@@ -141,7 +141,7 @@ object MonadDeferLaws {
     df.equalUnderTheLaw(just(1), EQ) shouldBe true
   }
 
-  fun <F> MonadDefer<F>.repeatedSyncEvaluationNotMemoized(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> MonadDefer<F>.repeatedSyncEvaluationNotMemoized(EQ: Eq<Kind<F, Int>>) {
     val sideEffect = SideEffect()
     val df = delay { sideEffect.increment(); sideEffect.counter }
 
@@ -247,8 +247,8 @@ object MonadDeferLaws {
         b
       }
       Try { Thread.sleep(10); dispose() }.recover { throw it }
-      binding.equalUnderTheLaw(raiseError(BindingCancellationException()), EQ)
-        && sideEffect.counter == 0
+      binding.equalUnderTheLaw(raiseError(BindingCancellationException()), EQ) &&
+        sideEffect.counter == 0
     }
 
   fun <F> MonadDefer<F>.inContextCancellationBefore(EQ: Eq<Kind<F, Int>>): Unit =
@@ -275,8 +275,8 @@ object MonadDeferLaws {
         b
       }
       Try { Thread.sleep(10); dispose() }.recover { throw it }
-      binding.equalUnderTheLaw(raiseError(BindingCancellationException()), EQ)
-        && sideEffect.counter == 0
+      binding.equalUnderTheLaw(raiseError(BindingCancellationException()), EQ) &&
+        sideEffect.counter == 0
     }
 
   @Suppress("UNREACHABLE_CODE")

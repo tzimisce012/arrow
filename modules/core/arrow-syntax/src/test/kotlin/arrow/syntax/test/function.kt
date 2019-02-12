@@ -99,7 +99,7 @@ class FunctionSyntaxTest : UnitSpec() {
       val sum2ints: (Int, Int) -> Int = { x, y -> x + y }
       val curried: (Int) -> (Int) -> Int = sum2ints.curried()
       curried(2)(4) shouldBe 6
-      //same type as sum2ints,
+      // same type as sum2ints,
       curried.uncurried()(2, 4) shouldBe 6
       sum2ints(2, 4) shouldBe 6
     }
@@ -111,13 +111,11 @@ class FunctionSyntaxTest : UnitSpec() {
       val a = { _: Int -> counterA++ }
       val b = { _: Int -> counterB++ }.memoize()
 
-
       repeat(5) { a(1) }
       repeat(5) { b(1) }
 
       counterA shouldBe 5
       counterB shouldBe 1 // calling several times a memoized function with the same parameter is computed just once
-
     }
 
     "memoizeEmpty" {
@@ -127,13 +125,11 @@ class FunctionSyntaxTest : UnitSpec() {
       val a = { counterA++ }
       val b = { counterB++ }.memoize()
 
-
       repeat(5) { a() }
       repeat(5) { b() }
 
       counterA shouldBe 5
       counterB shouldBe 1 // calling several times a memoized function with the same parameter is computed just once
-
     }
 
     "testPaired" {

@@ -14,7 +14,6 @@ interface MonadError<F, E> : ApplicativeError<F, E>, Monad<F> {
       if (predicate(it)) just(it)
       else raiseError(error())
     }
-
 }
 
 /**
@@ -140,5 +139,4 @@ interface MonadThrow<F> : MonadError<F, Throwable> {
 
   fun <A> fx(f: suspend MonadErrorContinuation<F, *>.() -> A, unit: Unit = Unit): Kind<F, A> =
     bindingCatch { f() }
-
 }

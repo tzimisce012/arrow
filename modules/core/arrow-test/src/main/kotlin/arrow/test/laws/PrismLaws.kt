@@ -71,5 +71,4 @@ object PrismLaws {
         override fun empty(): Option<B> = None
       }), a) { Const(Some(it)) }.value().equalUnderTheLaw(getOption(a), EQOptionB)
     }
-
 }

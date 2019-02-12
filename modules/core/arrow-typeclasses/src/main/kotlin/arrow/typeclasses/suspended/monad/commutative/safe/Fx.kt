@@ -32,6 +32,4 @@ interface Fx<F> {
     f: suspend MonadContinuation<F, *>.() -> A
   ): Kind<F, A> =
     monad().fx(f)
-
 }
-

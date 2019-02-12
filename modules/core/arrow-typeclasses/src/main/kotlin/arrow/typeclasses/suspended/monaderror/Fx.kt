@@ -9,4 +9,3 @@ interface Fx<F> {
   fun <A> fx(f: suspend MonadContinuation<F, *>.() -> A): Kind<F, A> =
     monadError().bindingCatch(f)
 }
-

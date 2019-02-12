@@ -82,7 +82,7 @@ object AsyncLaws {
       async(k).equalUnderTheLaw(asyncF { cb -> delay { k(cb) } }, EQ)
     }
 
-  fun <F> Async<F>.bracketReleaseIscalledOnCompletedOrError(EQ: Eq<Kind<F, Int>>): Unit {
+  fun <F> Async<F>.bracketReleaseIscalledOnCompletedOrError(EQ: Eq<Kind<F, Int>>) {
     forAll(Gen.string().applicativeError(this), Gen.int()) { fa, b ->
       Promise.uncancelable<F, Int>(this@bracketReleaseIscalledOnCompletedOrError).flatMap { promise ->
         val br = delay { promise }.bracketCase(use = { fa }, release = { r, exitCase ->
@@ -102,5 +102,4 @@ object AsyncLaws {
   // Turns out that kotlinx.coroutines decides to rewrite thread names
   private fun getCurrentThread() =
     Thread.currentThread().name.substringBefore(' ').toInt()
-
 }

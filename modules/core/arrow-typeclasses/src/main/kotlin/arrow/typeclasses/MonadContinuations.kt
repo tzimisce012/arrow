@@ -47,7 +47,6 @@ open class MonadContinuation<F, A>(M: Monad<F>, override val context: CoroutineC
         error = exception
         latch.countDown()
       }
-
     }
 
   protected lateinit var returnedMonad: Kind<F, A>
@@ -89,5 +88,4 @@ open class MonadContinuation<F, A>(M: Monad<F>, override val context: CoroutineC
     }
     COROUTINE_SUSPENDED
   }
-
 }

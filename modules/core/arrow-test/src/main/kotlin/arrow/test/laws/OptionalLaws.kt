@@ -132,7 +132,7 @@ object OptionalLaws {
     optionalGen: Gen<Optional<A, B>>,
     aGen: Gen<A>,
     EQOptionB: Eq<Option<B>>
-  ): Unit {
+  ) {
     val firstMonoid = object : Monoid<FirstOption<B>> {
       override fun empty(): FirstOption<B> = FirstOption(None)
       override fun FirstOption<B>.combine(b: FirstOption<B>): FirstOption<B> =
@@ -150,5 +150,4 @@ object OptionalLaws {
 
   @PublishedApi
   internal data class FirstOption<A>(val option: Option<A>)
-
 }

@@ -22,5 +22,4 @@ interface ApplicativeErrorSyntax<F, E> : ApplicativeError<F, E>, ApplicativeSynt
 
   suspend fun <A> attempt(fa: suspend () -> A): Kind<F, Either<E, A>> =
     run<ApplicativeError<F, E>, Kind<F, Either<E, A>>> { fa.effect().attempt() }
-
 }

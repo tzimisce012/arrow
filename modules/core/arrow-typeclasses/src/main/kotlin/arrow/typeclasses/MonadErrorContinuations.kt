@@ -20,5 +20,4 @@ open class MonadErrorContinuation<F, A>(ME: MonadError<F, Throwable>, override v
 
   override fun <B> binding(c: suspend MonadContinuation<F, *>.() -> B): Kind<F, B> =
     bindingCatch(c)
-
 }

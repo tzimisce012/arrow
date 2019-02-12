@@ -81,5 +81,4 @@ interface Monad<F> : Applicative<F> {
     wrapReturn.startCoroutine(continuation, continuation)
     return continuation.returnedMonad()
   }
-
 }

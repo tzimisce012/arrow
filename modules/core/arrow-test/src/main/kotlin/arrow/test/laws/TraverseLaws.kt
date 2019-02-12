@@ -89,7 +89,6 @@ object TraverseLaws {
           val (fm, fn) = ff.fix().ti
           return TIC(Id.applicative().run { fam.ap(fm) toT fan.ap(fn) })
         }
-
       }
 
       val TIEQ: Eq<TI<Kind<F, Int>>> = Eq { a, b ->

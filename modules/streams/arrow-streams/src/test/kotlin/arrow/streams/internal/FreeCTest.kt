@@ -117,7 +117,7 @@ class FreeCTest : UnitSpec() {
       forAll(Gen.string(), Gen.throwable()) { s, t ->
         FreeC.just<EitherPartialOf<Throwable>, String>(s)
           .map(::identity)
-          .flatMap<String> { throw  t }
+          .flatMap<String> { throw t }
           .run(Either.monadError()) == Left(t)
       }
     }
@@ -143,7 +143,7 @@ class FreeCTest : UnitSpec() {
       }
     }
 
-    "Running a deferred value"{
+    "Running a deferred value" {
       forAll(Gen.string()) { s ->
         FreeC.defer { FreeC.just<EitherPartialOf<Throwable>, String>(s) }
           .run(Either.monadError()) == Right(Some(s))
@@ -158,7 +158,7 @@ class FreeCTest : UnitSpec() {
       }
     }
 
-    "flatMap"{
+    "flatMap" {
       forAll(Gen.string(), Gen.functionAToB<String, String>(Gen.string())) { s, f ->
         FreeC.just<EitherPartialOf<Throwable>, String>(s)
           .flatMap { FreeC.just<EitherPartialOf<Throwable>, String>(f(it)) }
@@ -166,7 +166,7 @@ class FreeCTest : UnitSpec() {
       }
     }
 
-    "asHandler"{
+    "asHandler" {
       forAll(Gen.string(), Gen.throwable()) { s, t ->
         FreeC.just<EitherPartialOf<Throwable>, String>(s)
           .asHandler(t)
@@ -174,14 +174,14 @@ class FreeCTest : UnitSpec() {
       }
     }
 
-    "translate just value"{
+    "translate just value" {
       forAll(Gen.string()) { s ->
         FreeC.just<EitherPartialOf<Throwable>, String>(s)
           .foldMap(EitherToTry, Try.monadError()) == Success(Some(s))
       }
     }
 
-    "translate fail value"{
+    "translate fail value" {
       forAll(Gen.throwable()) { t ->
         FreeC.raiseError<EitherPartialOf<Throwable>, String>(t)
           .foldMap(EitherToTry, Try.monadError()) == Failure(t)
@@ -212,7 +212,7 @@ class FreeCTest : UnitSpec() {
       }
     }
 
-    "translate liftF value"{
+    "translate liftF value" {
       forAll(Gen.string()) { s ->
         FreeC.liftF<EitherPartialOf<Throwable>, String>(s.right())
           .foldMap(EitherToTry, Try.monadError()) == Success(Some(s))
@@ -223,7 +223,6 @@ class FreeCTest : UnitSpec() {
       forAll(Gen.string()) { s ->
         FreeC.FlatMapped(FreeC.just("")) { FreeC.just<EitherPartialOf<Throwable>, String>(s) }
           .run(Either.monadError()) == Right(Some(s))
-
       }
     }
 
@@ -233,7 +232,6 @@ class FreeCTest : UnitSpec() {
           .foldMap(EitherToTry, Try.monadError()) == Success(Some(s))
       }
     }
-
   }
 }
 

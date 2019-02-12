@@ -37,7 +37,8 @@ data class CompilationException(
   val path: Path,
   val snippet: Snippet,
   val underlying: Throwable,
-  val msg: String) : NoStackTrace(msg) {
+  val msg: String
+) : NoStackTrace(msg) {
   override fun toString(): String = msg
 }
 
@@ -125,7 +126,7 @@ fun <F> monadDeferInterpreter(MF: MonadDefer<F>): AnkOps<F> = object : AnkOps<F>
           when (state) {
             is SnippetParserState.Searching -> {
               val startMatch = fenceRegexStart.matchEntire(line)
-              if (startMatch != null) { //found a fence start
+              if (startMatch != null) { // found a fence start
                 val lang = startMatch.groupValues[1].trim()
                 val snippet = Snippet(line, lang, "")
                 Tuple3(SnippetParserState.CollectingCode(snippet), lines + line, snippets)
@@ -135,7 +136,7 @@ fun <F> monadDeferInterpreter(MF: MonadDefer<F>): AnkOps<F> = object : AnkOps<F>
               val endMatch = fenceRegexEnd.matchEntire(line)
               if (endMatch != null) { // found a fence end
                 Tuple3(SnippetParserState.Searching, lines + line, snippets + state.snippet.copy(fence = state.snippet.fence + "\n" + line))
-              } else { //accumulating code inside a fence
+              } else { // accumulating code inside a fence
                 val modifiedSnippet = state.snippet.copy(
                   fence = state.snippet.fence + "\n" + line,
                   code = state.snippet.code + "\n" + line
@@ -235,7 +236,7 @@ fun <F> monadDeferInterpreter(MF: MonadDefer<F>): AnkOps<F> = object : AnkOps<F>
 
   private fun getEngineCache(snippets: Sequence<Snippet>, compilerArgs: List<String>): Map<String, ScriptEngine> {
     val cache = engineCache[compilerArgs]
-    return if (cache == null) { //create a new engine
+    return if (cache == null) { // create a new engine
       val classLoader = URLClassLoader(compilerArgs.map { URL(it) }.toTypedArray())
       val seManager = ScriptEngineManager(classLoader)
       val langs = snippets.map { it.lang }.distinct()
@@ -243,7 +244,7 @@ fun <F> monadDeferInterpreter(MF: MonadDefer<F>): AnkOps<F> = object : AnkOps<F>
         it to seManager.getEngineByExtension(extensionMappings.getOrDefault(it, "kts"))
       }.toMap()
       engineCache.putIfAbsent(compilerArgs, engines) ?: engines
-    } else { //reset an engine. Non thread-safe
+    } else { // reset an engine. Non thread-safe
       cache.forEach { _, engine ->
         engine.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE)
       }
@@ -251,9 +252,9 @@ fun <F> monadDeferInterpreter(MF: MonadDefer<F>): AnkOps<F> = object : AnkOps<F>
     }
   }
 
-  //TODO Try by overriding dokka settings for packages so it does not create it's markdown package file, then for regular type classes pages we only check the first result with the comment but remove them all regardless
+  // TODO Try by overriding dokka settings for packages so it does not create it's markdown package file, then for regular type classes pages we only check the first result with the comment but remove them all regardless
   private fun generateMixedHierarchyDiagramCode(classes: List<String>): Sequence<String> {
-    //careful meta-meta-programming ahead
+    // careful meta-meta-programming ahead
     val hierarchyGraphsJoined =
       "listOf(" + classes
         .map { "TypeClass($it::class)" }

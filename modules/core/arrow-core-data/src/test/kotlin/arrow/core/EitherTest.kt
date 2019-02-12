@@ -74,35 +74,32 @@ class EitherTest : UnitSpec() {
 
     "getOrElse should return value" {
       forAll { a: Int, b: Int ->
-        Right(a).getOrElse { b } == a
-          && Left(a).getOrElse { b } == b
+        Right(a).getOrElse { b } == a &&
+          Left(a).getOrElse { b } == b
       }
-
     }
 
     "orNull should return value" {
       forAll { a: Int ->
         Either.Right(a).orNull() == a
       }
-
     }
 
     "getOrHandle should return value" {
       forAll { a: Int, b: Int ->
-        Right(a).getOrHandle { b } == a
-          && Left(a).getOrHandle { it + b } == a + b
+        Right(a).getOrHandle { b } == a &&
+          Left(a).getOrHandle { it + b } == a + b
       }
-
     }
 
     "filterOrElse should filter values" {
       forAll(Gen.intSmall(), Gen.intSmall()) { a: Int, b: Int ->
         val left: Either<Int, Int> = Left(a)
 
-        Right(a).filterOrElse({ it > a - 1 }, { b }) == Right(a)
-          && Right(a).filterOrElse({ it > a + 1 }, { b }) == Left(b)
-          && left.filterOrElse({ it > a - 1 }, { b }) == Left(a)
-          && left.filterOrElse({ it > a + 1 }, { b }) == Left(a)
+        Right(a).filterOrElse({ it > a - 1 }, { b }) == Right(a) &&
+          Right(a).filterOrElse({ it > a + 1 }, { b }) == Left(b) &&
+          left.filterOrElse({ it > a - 1 }, { b }) == Left(a) &&
+          left.filterOrElse({ it > a + 1 }, { b }) == Left(a)
       }
     }
 
@@ -110,47 +107,47 @@ class EitherTest : UnitSpec() {
       forAll(Gen.intSmall(), Gen.intSmall()) { a: Int, b: Int ->
         val left: Either<Int, Int> = Left(a)
 
-        Right(a).filterOrOther({ it > a - 1 }, { b + a }) == Right(a)
-          && Right(a).filterOrOther({ it > a + 1 }, { b + a }) == Left(b + a)
-          && left.filterOrOther({ it > a - 1 }, { b + a }) == Left(a)
-          && left.filterOrOther({ it > a + 1 }, { b + a }) == Left(a)
+        Right(a).filterOrOther({ it > a - 1 }, { b + a }) == Right(a) &&
+          Right(a).filterOrOther({ it > a + 1 }, { b + a }) == Left(b + a) &&
+          left.filterOrOther({ it > a - 1 }, { b + a }) == Left(a) &&
+          left.filterOrOther({ it > a + 1 }, { b + a }) == Left(a)
       }
     }
 
     "leftIfNull should return Left if Right value is null of if Either is Left" {
       forAll { a: Int, b: Int ->
-        Right(a).leftIfNull { b } == Right(a)
-          && Right(null).leftIfNull { b } == Left(b)
-          && Left(a).leftIfNull { b } == Left(a)
+        Right(a).leftIfNull { b } == Right(a) &&
+          Right(null).leftIfNull { b } == Left(b) &&
+          Left(a).leftIfNull { b } == Left(a)
       }
     }
 
     "rightIfNotNull should return Left if value is null or Right of value when not null" {
       forAll { a: Int, b: Int ->
-        null.rightIfNotNull { b } == Left(b)
-          && a.rightIfNotNull { b } == Right(a)
+        null.rightIfNotNull { b } == Left(b) &&
+          a.rightIfNotNull { b } == Right(a)
       }
     }
 
     "swap should interchange values" {
       forAll { a: Int ->
-        Left(a).swap() == Right(a)
-          && Right(a).swap() == Left(a)
+        Left(a).swap() == Right(a) &&
+          Right(a).swap() == Left(a)
       }
     }
 
     "toOption should convert" {
       forAll { a: Int ->
-        Right(a).toOption() == Some(a)
-          && Left(a).toOption() == None
+        Right(a).toOption() == Some(a) &&
+          Left(a).toOption() == None
       }
     }
 
     "contains should check value" {
       forAll(Gen.intSmall(), Gen.intSmall()) { a: Int, b: Int ->
-        Right(a).contains(a)
-          && !Right(a).contains(b)
-          && !Left(a).contains(a)
+        Right(a).contains(a) &&
+          !Right(a).contains(b) &&
+          !Left(a).contains(a)
       }
     }
 
@@ -168,6 +165,5 @@ class EitherTest : UnitSpec() {
         Either.cond(t, { i }, { s }) == expected
       }
     }
-
   }
 }

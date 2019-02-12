@@ -47,7 +47,6 @@ interface ConstFoldable<A> : Foldable<ConstPartialOf<A>> {
   override fun <T, U> ConstOf<A, T>.foldLeft(b: U, f: (U, T) -> U): U = b
 
   override fun <T, U> ConstOf<A, T>.foldRight(lb: Eval<U>, f: (T, Eval<U>) -> Eval<U>): Eval<U> = lb
-
 }
 
 @extension
@@ -76,7 +75,6 @@ interface ConstMonoid<A, T> : Monoid<ConstOf<A, T>>, ConstSemigroup<A, T> {
   override fun SA(): Semigroup<A> = MA()
 
   override fun empty(): Const<A, T> = Const(MA().empty())
-
 }
 
 @extension

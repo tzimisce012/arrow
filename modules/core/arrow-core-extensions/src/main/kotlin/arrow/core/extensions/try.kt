@@ -4,11 +4,7 @@ package arrow.core.extensions
 import arrow.Kind
 import arrow.core.*
 import arrow.core.Try.Failure
-import arrow.core.extensions.`try`.monad.monad
-import arrow.core.extensions.`try`.monadError.monadError
 import arrow.core.extensions.`try`.monadThrow.monadThrow
-import arrow.core.extensions.id.monad.monad
-import arrow.core.extensions.option.monadError.monadError
 import arrow.extension
 import arrow.typeclasses.*
 import arrow.typeclasses.suspended.monad.Fx
@@ -41,18 +37,8 @@ interface TryMonoid<A> : Monoid<Try<A>>, TrySemigroup<A> {
 }
 
 @extension
-interface TryApplicativeError: ApplicativeError<ForTry, Throwable>, TryApplicative {
+interface TryApplicativeError : ApplicativeError<ForTry, Throwable>, TryApplicative {
 
-  override fun <A> raiseError(e: Throwable): Try<A> =
-    Failure(e)
-
-  override fun <A> TryOf<A>.handleErrorWith(f: (Throwable) -> TryOf<A>): Try<A> =
-    fix().recoverWith { f(it).fix() }
-
-}
-
-@extension
-interface TryMonadError: MonadError<ForTry, Throwable>, TryMonad {
   override fun <A> raiseError(e: Throwable): Try<A> =
     Failure(e)
 
@@ -61,7 +47,16 @@ interface TryMonadError: MonadError<ForTry, Throwable>, TryMonad {
 }
 
 @extension
-interface TryMonadThrow: MonadThrow<ForTry>, TryMonadError
+interface TryMonadError : MonadError<ForTry, Throwable>, TryMonad {
+  override fun <A> raiseError(e: Throwable): Try<A> =
+    Failure(e)
+
+  override fun <A> TryOf<A>.handleErrorWith(f: (Throwable) -> TryOf<A>): Try<A> =
+    fix().recoverWith { f(it).fix() }
+}
+
+@extension
+interface TryMonadThrow : MonadThrow<ForTry>, TryMonadError
 
 @extension
 interface TryEq<A> : Eq<Try<A>> {
@@ -80,7 +75,6 @@ interface TryEq<A> : Eq<Try<A>> {
       is Success -> false
     }
   }
-
 }
 
 @extension

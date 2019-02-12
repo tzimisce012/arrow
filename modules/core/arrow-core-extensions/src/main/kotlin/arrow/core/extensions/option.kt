@@ -4,7 +4,6 @@ package arrow.core.extensions
 import arrow.Kind
 import arrow.core.*
 import arrow.core.extensions.option.monad.monad
-import arrow.core.extensions.option.monadError.monadError
 import arrow.extension
 import arrow.typeclasses.*
 import arrow.typeclasses.suspended.monad.Fx
@@ -58,7 +57,7 @@ interface OptionSemiring<A> : Semiring<Option<A>> {
 }
 
 @extension
-interface OptionApplicativeError: ApplicativeError<ForOption, Unit>, OptionApplicative {
+interface OptionApplicativeError : ApplicativeError<ForOption, Unit>, OptionApplicative {
   override fun <A> raiseError(e: Unit): Option<A> =
     None
 
@@ -67,7 +66,7 @@ interface OptionApplicativeError: ApplicativeError<ForOption, Unit>, OptionAppli
 }
 
 @extension
-interface OptionMonadError: MonadError<ForOption, Unit>, OptionMonad {
+interface OptionMonadError : MonadError<ForOption, Unit>, OptionMonad {
   override fun <A> raiseError(e: Unit): OptionOf<A> =
     None
 
@@ -90,7 +89,6 @@ interface OptionEq<A> : Eq<Option<A>> {
       is Some -> false
     }
   }
-
 }
 
 @extension

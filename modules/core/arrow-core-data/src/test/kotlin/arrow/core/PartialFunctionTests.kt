@@ -35,7 +35,7 @@ class PartialFunctionTests : UnitSpec() {
       isEven(2) shouldBe bodyContent
     }
 
-    "toPartialFunction"{
+    "toPartialFunction" {
       val isEven = body.toPartialFunction(definetAt)
       (isEven.isDefinedAt(2)) shouldBe true
       isEven(2) shouldBe bodyContent
@@ -60,6 +60,5 @@ class PartialFunctionTests : UnitSpec() {
       }
       iae.message!! should startWith("Value: (null)")
     }
-
   }
 }

@@ -30,7 +30,6 @@ sealed class Try<out A> : TryOf<A> {
           }
         }
       }
-
     }
 
     inline operator fun <A> invoke(f: () -> A): Try<A> =
@@ -41,7 +40,6 @@ sealed class Try<out A> : TryOf<A> {
       }
 
     fun <A> raise(e: Throwable): Try<A> = Failure(e)
-
   }
 
   fun <B> ap(ff: TryOf<(A) -> B>): Try<B> = ff.fix().flatMap { f -> map(f) }.fix()

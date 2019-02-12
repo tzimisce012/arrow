@@ -35,7 +35,7 @@ class OptionTest : UnitSpec() {
     testLaws(
       ShowLaws.laws(Option.show(), Option.eq(Int.eq())) { Some(it) },
       MonoidLaws.laws(Option.monoid(Int.monoid()), Gen.option(Gen.int()), Option.eq(Int.eq())),
-      //testLaws(MonadErrorLaws.laws(monadError<ForOption, Unit>(), Eq.any(), EQ_EITHER)) TODO reenable once the MonadErrorLaws are parametric to `E`
+      // testLaws(MonadErrorLaws.laws(monadError<ForOption, Unit>(), Eq.any(), EQ_EITHER)) TODO reenable once the MonadErrorLaws are parametric to `E`
       FunctorFilterLaws.laws(Option.traverseFilter(), { Option(it) }, Eq.any()),
       TraverseFilterLaws.laws(Option.traverseFilter(), Option.applicative(), ::Some, Eq.any()),
       MonadFilterLaws.laws(Option.monadFilter(), ::Some, Eq.any()),
@@ -127,7 +127,6 @@ class OptionTest : UnitSpec() {
       x and None shouldBe None
       None and x shouldBe None
       None and None shouldBe None
-
     }
 
     "or" {
@@ -137,7 +136,6 @@ class OptionTest : UnitSpec() {
       x or None shouldBe Some(2)
       None or x shouldBe Some(2)
       None or None shouldBe None
-
     }
 
     "fx can turn effects into pure kinded values" {
@@ -159,7 +157,5 @@ class OptionTest : UnitSpec() {
         }
       }
     }
-
   }
-
 }

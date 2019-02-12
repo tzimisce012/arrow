@@ -27,5 +27,4 @@ interface AnkOps<F> {
   fun generateFile(path: Path, newContent: Sequence<String>): Path
 
   fun printConsole(msg: String): Unit
-
 }

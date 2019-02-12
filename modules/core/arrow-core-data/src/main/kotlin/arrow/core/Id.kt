@@ -41,5 +41,4 @@ data class Id<out A>(private val value: A) : IdOf<A> {
     }
 
   override fun hashCode(): Int = value.hashCode()
-
 }

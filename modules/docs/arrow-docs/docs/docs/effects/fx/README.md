@@ -4,17 +4,6 @@ title: Fx
 permalink: /docs/effects/fx/
 ---
 
-- [Arrow Fx. Typed FP for the masses](#arrow-fx-typed-fp-for-the-masses)
-- [Pure Functions, Side Effects, and Program Execution](#pure-functions--side-effects--and-program-execution)
-  * [Pure & Referentially Transparent Functions](#pure---referentially-transparent-functions)
-  * [Side effects](#side-effects)
-      - [`suspend` composition](#-suspend--composition)
-      - [`fx` composition](#-fx--composition)
-      - [Turning side effects into pure values with `effect`](#turning-side-effects-into-pure-values-with--effect-)
-      - [Applying side effects with `!effect`](#applying-side-effects-with---effect-)
-  * [Executing effectful programs](#executing-effectful-programs)
-- [Conclusion](#conclusion)
-
 # Arrow Fx. Typed FP for the masses
 
 Arrow Fx is a next-generation Typed FP Effects Library that makes effectful and polymorphic programming first class in Kotlin and acts as an extension to the Kotlin native suspend system.
@@ -179,6 +168,27 @@ fun greet(): IO<Unit> =
 ```
 
 Arrow enforces usage to be explicit about effects application.
+
+#### Applying existing datatypes
+
+Composition using regular datatypes such as `IO` is still possible within `fx` blocks the same way as `effect` blocks. In addition to `!` you can also use the extension function `bind()` to execute them.
+
+```kotlin:ank:playground
+import arrow.effects.IO
+import arrow.effects.extensions.io.fx.fx
+//sampleStart
+fun sayInIO(s: String): IO<Unit> =
+  IO { println(s) }
+  
+fun greet(): IO<Unit> =
+  fx {
+    sayInIO("Hello World").bind()
+  }
+//sampleEnd 
+fun main() {
+  println(greet()) //greet is a pure IO program
+}
+```
 
 ## Executing effectful programs
 

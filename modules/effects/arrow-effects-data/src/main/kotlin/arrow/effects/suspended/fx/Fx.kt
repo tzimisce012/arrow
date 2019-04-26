@@ -19,6 +19,9 @@ import arrow.effects.typeclasses.ConnectedProcF
 import arrow.effects.typeclasses.Disposable
 import arrow.effects.typeclasses.Fiber
 import arrow.effects.typeclasses.mapUnit
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.RestrictsSuspension
@@ -52,6 +55,8 @@ const val AsyncTag = 7
 const val ModifyContextTag = 8
 const val ContinueOnTag = 9
 const val DeferTag = 10
+const val AsyncContinueTag = 11
+const val AsyncContextSwitchTag = 12
 
 sealed class FxImpossibleBugs(message: String) : RuntimeException(message) {
   object Fxfa : FxImpossibleBugs("Fx.fa bug, please contact support with this message! https://arrow-kt.io")
@@ -92,6 +97,7 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
         ContinueOnTag -> suspend { FxRunLoop(this) }
         ConnectionSwitchTag -> suspend { FxRunLoop(this) }
         AsyncTag -> suspend { FxRunLoop(this) }
+        AsyncContextSwitchTag -> suspend { FxRunLoop(this) }
         else -> throw FxImpossibleBugs.Fxfa
       }
 
@@ -151,6 +157,8 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
           unsafeRecast()
         }
       }
+      // We could default to FlatMap(this, f, 0) here but our tests should always catch this
+      // and we rather ensure exhaustiveness by tests instead.
       else -> throw FxImpossibleBugs.FxMap
     }
 
@@ -168,6 +176,9 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
       ModifyContextTag -> FxRunLoop(this)
       AsyncTag -> FxRunLoop(this)
       ContinueOnTag -> FxRunLoop(this)
+      AsyncContextSwitchTag -> FxRunLoop(this)
+      // We could default to FlatMap(this, f, 0) here but our tests should always catch this
+      // and we rather ensure exhaustiveness by tests instead.
       else -> throw FxImpossibleBugs.FxNot
     }
 
@@ -188,6 +199,7 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
       ModifyContextTag -> FlatMap(this, f, 0)
       AsyncTag -> FlatMap(this, f, 0)
       ContinueOnTag -> FlatMap(this, f, 0)
+      AsyncContextSwitchTag -> FlatMap(this, f, 0)
       MapTag -> {
         (this as Map<B, A>)
         FlatMap(source, { f(g(it)) }, 1)
@@ -212,6 +224,8 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
           }.fix()
         }, index + 1)
       }
+      // We could default to FlatMap(this, f, 0) here but our tests should always catch this
+      // and we rather ensure exhaustiveness by tests instead.
       else -> throw FxImpossibleBugs.FxFlatMap
     }
 
@@ -321,11 +335,7 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
   }
 
   @PublishedApi
-  internal class Async<A> internal constructor(
-    val ctx: CoroutineContext? = null,
-    val updateContext: ((CoroutineContext) -> CoroutineContext)? = null,
-    val proc: FxProc<A>
-  ) : Fx<A>(AsyncTag) {
+  internal class Async<A> internal constructor(val proc: FxProc<A>) : Fx<A>(AsyncTag) {
 
     companion object {
 
@@ -370,6 +380,20 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
     override fun toString(): String = "Fx.Async(..)"
   }
 
+  @PublishedApi
+  internal class AsyncContinueOn<A>(val source: Fx<A>, val ctx: CoroutineContext) : Fx<A>(AsyncContinueTag) {
+    override fun toString(): String = "Fx.AsyncContinueOn(..)"
+  }
+
+  @PublishedApi
+  internal class AsyncContextSwitch<A>(
+    val source: Fx<A>,
+    val modify: (CoroutineContext) -> CoroutineContext,
+    val restore: ((Any?, Throwable?, CoroutineContext, CoroutineContext) -> CoroutineContext)? = null
+  ) : Fx<A>(AsyncContextSwitchTag) {
+    override fun toString(): String = "Fx.AsyncContextSwitch(..)"
+  }
+
   suspend inline operator fun invoke(): A =
     !this
 
@@ -378,6 +402,9 @@ sealed class Fx<out A>(@JvmField var tag: Int = UnknownTag) : FxOf<A> {
 
   fun <B> ap(ff: FxOf<(A) -> B>): Fx<B> =
     ff.fix().flatMap { map(it) }
+
+  fun evalOn(ctx: CoroutineContext): Fx<A> =
+    Fx.AsyncContextSwitch(this, { ctx }, { _,_, old,_ -> old })
 
   fun ensure(
     error: () -> Throwable,

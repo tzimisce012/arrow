@@ -70,8 +70,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * }
  *  ```
  */
-fun <A, B> FxOf<A>
-  .bracketCase(release: (A, ExitCase<Throwable>) -> FxOf<Unit>, use: (A) -> FxOf<B>): Fx<B> =
+fun <A, B> FxOf<A>.bracketCase(release: (A, ExitCase<Throwable>) -> FxOf<Unit>, use: (A) -> FxOf<B>): Fx<B> =
   Fx.async { conn, cb ->
     val forwardCancel = FxForwardCancelable()
     conn.push(forwardCancel.cancel()) // Connect ForwardCancelable to existing connection.
@@ -108,7 +107,9 @@ internal class BracketStart<A, B>(
         // Registering our cancelable token ensures that in case cancellation is detected, release gets called
         forwardCancel.complete(frame.cancel)
         // Actual execution
-        FxRunLoop.startCancelable(Fx.FlatMap(fb, frame, 0), conn, cb = cb)
+        FxRunLoop.startCancelable(Fx.FlatMap(fb, frame, 0), conn) {
+          cb(it)
+        }
       }
       is Either.Left -> cb(ea)
     }

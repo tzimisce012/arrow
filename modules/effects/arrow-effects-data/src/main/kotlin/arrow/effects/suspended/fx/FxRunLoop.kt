@@ -111,22 +111,16 @@ object FxRunLoop {
           val next = source.source
 
           source = Fx.FlatMap(next, { a ->
-            // We need to schedule running the function because at this point we don't know what the correct CC will be to call modify with.
-            Fx.Async<Any?>(updateContext = modify) { _, cb ->
-              cb(Right(a))
-            }
+            Fx.AsyncContextSwitch(Fx.Pure<Any?>(a, 0), modify, null)
           }, 0)
         }
         ContinueOnTag -> {
           source as Fx.ContinueOn<Any?>
-
+          val prev = source.source
           val nextCC = source.ctx
-          val next = source.source
 
-          source = Fx.FlatMap(next, { a ->
-            Fx.Async<Any?>(ctx = nextCC) { _, cb ->
-              cb(Right(a))
-            }
+          source = Fx.FlatMap(prev, { a ->
+            Fx.AsyncContinueOn(Fx.Pure<Any?>(a, 0), nextCC)
           }, 0)
         }
         LazyTag -> {
@@ -174,7 +168,23 @@ object FxRunLoop {
             asyncBoundary = AsyncBoundary(conn, cb)
           }
 
-          asyncBoundary.start(source as Fx.Async<Any?>, source.ctx ?: ctx, bFirst, bRest)
+          asyncBoundary.start(source as Fx.Async<Any?>, bFirst, bRest)
+          return
+        }
+        AsyncContinueTag -> {
+          if (asyncBoundary == null) {
+            asyncBoundary = AsyncBoundary(conn, cb)
+          }
+
+          asyncBoundary.start(source as Fx.AsyncContinueOn<Any?>, bFirst, bRest)
+          return
+        }
+        AsyncContextSwitchTag -> {
+          if (asyncBoundary == null) {
+            asyncBoundary = AsyncBoundary(conn, cb)
+          }
+
+          asyncBoundary.start(source as Fx.AsyncContextSwitch<Any?>, bFirst, bRest)
           return
         }
         ConnectionSwitchTag -> {
@@ -191,7 +201,7 @@ object FxRunLoop {
             asyncBoundary?.contextSwitch(conn)
 
             if (restore != null) {
-              source = Fx.FlatMap(next, RestoreContext(old, restore), 0)
+              source = Fx.FlatMap(next, RestoreConnection(old, restore), 0)
             }
           }
         }
@@ -271,7 +281,7 @@ object FxRunLoop {
   /** Specialisation of [FxFrame] to restore the old context regardless of success or failure. */
   // TODO write law in ConcurrentLaws to check if is cancelable after bracket.
   @PublishedApi
-  internal class RestoreContext(
+  internal class RestoreConnection(
     val old: FxConnection,
     val restore: (Any?, Throwable?, FxConnection, FxConnection) -> FxConnection
   ) : FxFrame<Any?, Fx<Any?>> {
@@ -281,6 +291,20 @@ object FxRunLoop {
     })
 
     override fun recover(e: Throwable): Fx<Any?> = Fx.ConnectionSwitch(Fx.RaiseError(e), { current ->
+      restore(null, e, old, current)
+    })
+  }
+
+  @PublishedApi
+  internal class RestoreContext(
+    val old: CoroutineContext,
+    val restore: (Any?, Throwable?, CoroutineContext, CoroutineContext) -> CoroutineContext
+  ) : FxFrame<Any?, FxOf<Any?>> {
+    override fun invoke(a: Any?): FxOf<Any?> = Fx.AsyncContextSwitch(Fx.Pure(a, 0), { current ->
+      restore(a, null, old, current)
+    })
+
+    override fun recover(e: Throwable): FxOf<Any?> = Fx.AsyncContextSwitch(Fx.raiseError(e), { current ->
       restore(null, e, old, current)
     })
   }
@@ -333,47 +357,9 @@ object FxRunLoop {
     // async result
     private var result: Fx<Any?>? = null
 
-    private inline val shouldTrampoline inline get() = contIndex == Platform.maxStackDepthSize
-
-    fun contextSwitch(conn: FxConnection) {
-      this.conn = conn
-    }
-
-    fun prepare(
-      ctx: CoroutineContext?,
-      updateContext: ((CoroutineContext) -> CoroutineContext)?,
-      bFirst: ((Any?) -> Fx<Any?>)?,
-      bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?
-    ) {
-      _context = updateContext?.invoke(_context) ?: ctx ?: EmptyCoroutineContext // Swap or update the contexts.
-      canCall = true
-      this.bFirst = bFirst
-      this.bRest = bRest
-    }
-
-    fun start(fx: Fx.Async<Any?>, ctx: CoroutineContext, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
-      contIndex++
-      _context = fx.updateContext?.invoke(_context) ?: ctx // Swap or update the contexts.
-      canCall = true
-      this.bFirst = bFirst
-      this.bRest = bRest
-
-      conn.push(Fx { resumeWith(Result.failure(OnCancel.CancellationException)) })
-
-      // Run the users FFI function provided with the connection for cancellation support and [AsyncBoundary] as a generic callback.
-      fx.proc(conn, this)
-    }
-
-    fun start(fx: Fx.Single<Any?>, ctx: CoroutineContext, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
-      contIndex++
-      canCall = true
-      this.bFirst = bFirst
-      this.bRest = bRest
-      _context = ctx
-
-      // Run `suspend () -> A` with `AsyncBoundary` as `Continuation`
-      fx.source.startCoroutine(this)
-    }
+    private var contextSwitch = false
+    private var restore: ((Any?, Throwable?, CoroutineContext, CoroutineContext) -> CoroutineContext)? = null
+    private var oldContext: CoroutineContext? = null
 
     // NASTY TRICK!!!! Overwrite getter to var mutable backing field.
     // This allows us to reuse this instance across multiple context switches which allows us to stay more lightweight.
@@ -381,11 +367,64 @@ object FxRunLoop {
     override val context: CoroutineContext
       get() = _context
 
+    private inline val shouldTrampoline inline get() = contIndex == Platform.maxStackDepthSize
+
+    fun contextSwitch(conn: FxConnection) {
+      this.conn = conn
+    }
+
+    private fun prepare(bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
+      contIndex++
+      canCall = true
+      this.bFirst = bFirst
+      this.bRest = bRest
+    }
+
+    fun start(fx: Fx.Async<Any?>, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
+      prepare(bFirst, bRest)
+      conn.push(Fx { resumeWith(Result.failure(OnCancel.CancellationException)) }) //Short-circuit the `Continuation` on cancellation signal.
+      fx.proc(conn, this) // Run the users FFI function provided with the connection for cancellation support and [AsyncBoundary] as a generic callback.
+    }
+
+    fun start(fx: Fx.AsyncContinueOn<Any?>, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
+      prepare(bFirst, bRest)
+      this._context = fx.ctx
+      this.result = fx.source
+      this.contextSwitch = true
+      suspend { Unit }.startCoroutine(this)
+    }
+
+    fun start(fx: Fx.AsyncContextSwitch<Any?>, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
+      this.oldContext = _context          //Calculate new CC state
+      this._context = fx.modify(_context)
+
+      prepare(bFirst, bRest)
+
+      this.result = fx.source
+      this.restore = fx.restore
+      this.contextSwitch = true
+      suspend { Unit }.startCoroutine(this)
+    }
+
+    fun start(fx: Fx.Single<Any?>, ctx: CoroutineContext, bFirst: ((Any?) -> Fx<Any?>)?, bRest: (Platform.ArrayStack<(Any?) -> Fx<Any?>>)?) {
+      prepare(bFirst, bRest)
+      _context = ctx
+      fx.source.startCoroutine(this) // `suspend () -> A` needs to be run with `startCoroutine` or other code like kotlinx code wrapped in `Fx` will break.
+    }
+
     override fun resumeWith(a: Result<Any?>) {
-      result = a.fold(
-        onSuccess = { Fx.Pure(it, 0) },
-        onFailure = { Fx.RaiseError(it) }
-      )
+      if (contextSwitch) {
+        result = if (restore != null) Fx.FlatMap(result!!, RestoreContext(oldContext!!, restore!!), 0) else result
+
+        this.oldContext = null
+        this.restore = null
+        contextSwitch = false
+      } else {
+        result = a.fold(
+          onSuccess = { Fx.Pure(it, 0) },
+          onFailure = { Fx.RaiseError(it) }
+        )
+      }
 
       if (shouldTrampoline) {
         contIndex = 1
@@ -493,29 +532,30 @@ object FxRunLoop {
 
           current = Fx.FlatMap(next, { a ->
             // We need to schedule running the function because at this point we don't know what the correct CC will be to call modify with.
-            Fx.Async<Any?>(updateContext = modify) { _, cb ->
-              cb(Right(a))
-            }
+            Fx.AsyncContextSwitch<A>(Fx.Pure(a, 0), modify, null)
           }, 0)
         }
         ContinueOnTag -> {
           current as Fx.ContinueOn<Any?>
-
           val nextCC = current.ctx
-          val next = current.source
+          val prev = current.source
 
-          current = Fx.FlatMap(next, { a ->
-            Fx.Async<Any?>(ctx = nextCC) { _, cb ->
-              cb(Right(a))
-            }
+          current = Fx.FlatMap(prev, { a ->
+            Fx.AsyncContinueOn(Fx.Pure<Any?>(a, 0), nextCC)
           }, 0)
         }
         SingleTag -> {
-          return FxRunLoop.suspendInAsync(current as Fx.Single<A>, bFirst, bRest)
+          return suspendInSingle(current as Fx.Single<Any?>, bFirst, bRest) as Fx<A>
         }
         AsyncTag -> {
           // Return case for Async operations
-          return suspendInAsync(current as Fx.Async<A>, bFirst, bRest, current.proc)
+          return suspendInAsync(current as Fx.Async<Any?>, bFirst, bRest) as Fx<A>
+        }
+        AsyncContinueTag -> {
+          return suspendContinueOn(current as Fx.AsyncContinueOn<Any?>, bFirst, bRest) as Fx<A>
+        }
+        AsyncContextSwitchTag -> {
+          return suspendInAsyncContextSwitch(current as Fx.AsyncContextSwitch<Any?>, bFirst, bRest) as Fx<A>
         }
         else -> throw FxImpossibleBugs.FxStep
       }
@@ -540,26 +580,41 @@ object FxRunLoop {
   private fun <A> sanitizedCurrentFx(current: Current?, unboxed: Any?): Fx<A> =
     (current ?: Fx.Pure(unboxed, 0)) as Fx<A>
 
-  private fun <A> suspendInAsync(currentIO: Fx.Async<A>, bFirst: BindF?, bRest: CallStack?, register: FxProc<Any?>): Fx<A> =
+  private val suspendInAsync: (Fx.Async<Any?>, BindF?, CallStack?) -> Fx<Any?> = { source, bFirst, bRest ->
+    // Hitting an async boundary means we have to stop, however if we had previous `flatMap` operations then we need to resume the loop with the collected stack
+    when {
+      bFirst != null || (bRest != null && bRest.isNotEmpty()) ->
+        Fx.async { conn, cb ->
+          AsyncBoundary(conn, cb).start(source, bFirst, bRest)
+        }
+      else -> source
+    }
+  }
+
+  private val suspendContinueOn: (Fx.AsyncContinueOn<Any?>, BindF?, CallStack?) -> Fx<Any?> = { source, bFirst, bRest ->
+    Fx.async { conn, cb ->
+      AsyncBoundary(conn, cb).start(source, bFirst, bRest)
+    }
+  }
+
+  private val suspendInAsyncContextSwitch: (Fx.AsyncContextSwitch<Any?>, BindF?, CallStack?) -> Fx<Any?> = { source, bFirst, bRest ->
     // Hitting an async boundary means we have to stop, however
     // if we had previous `flatMap` operations then we need to resume
     // the loop with the collected stack
     when {
       bFirst != null || (bRest != null && bRest.isNotEmpty()) ->
         Fx.async { conn, cb ->
-          val rcb = AsyncBoundary(conn, cb as (Either<Throwable, Any?>) -> Unit)
-          rcb.prepare(currentIO.ctx, currentIO.updateContext, bFirst, bRest)
-          register(conn, rcb)
+          AsyncBoundary(conn, cb).start(source, bFirst, bRest)
         }
-      else -> currentIO
+      else -> source
     }
+  }
 
-  private fun <A> suspendInAsync(currentIO: Fx.Single<A>, bFirst: BindF?, bRest: CallStack?): Fx<A> =
+  private val suspendInSingle: (Fx.Single<Any?>, BindF?, CallStack?) -> Fx<Any?> = { source, bFirst, bRest ->
     Fx.async { conn, cb ->
-      val rcb = AsyncBoundary(conn, cb as (Either<Throwable, Any?>) -> Unit)
-      rcb.prepare(null, null, bFirst, bRest)
-      currentIO.source.startCoroutine(rcb)
+      AsyncBoundary(conn, cb).start(source, EmptyCoroutineContext, bFirst, bRest)  //This is the first CC we encounter so == EmptyCC.
     }
+  }
 }
 
 private typealias Current = FxOf<Any?>

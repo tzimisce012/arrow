@@ -77,16 +77,6 @@ class EffectsSuspendDSLTests : UnitSpec() {
       unsafe { runBlocking { program } } shouldBe helloWorld
     }
 
-    class CountingThreadFactory(val name: String) : ThreadFactory {
-      private val counter = AtomicInteger()
-      override fun newThread(r: Runnable): Thread =
-        Thread(r, "$name-${counter.getAndIncrement()}")
-    }
-
-    // Creates a ExecutorService that uses every thread only once, so every task is scheduled on a differently numbered Thread.
-    fun newTestingScheduler(name: String): ExecutorService =
-      ThreadPoolExecutor(0, 2, 0, TimeUnit.MILLISECONDS, SynchronousQueue<Runnable>(), CountingThreadFactory(name))
-
     "Fx stack safe on `!effect`" {
       val program = fx {
         val rs: List<Int> = (1..50000).toList()

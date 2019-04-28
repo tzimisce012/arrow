@@ -29,43 +29,64 @@ interface FxSyntax<F> : Concurrent<F>, BindSyntax<F> {
     effects: Iterable<Kind<F, A>>,
     f: (A) -> B
   ): Kind<F, List<B>> =
-    effects.fold(emptyList<Kind<F, Fiber<F, B>>>()) { acc, fa ->
-      acc + fork(fa.map(f))
+    effects.fold(mutableListOf<Kind<F, Fiber<F, B>>>()) { acc, fa ->
+      acc.add(fork(fa.map(f)))
+      acc
     }.traverse(this@FxSyntax) { kind ->
-      kind.flatMap { it.join() }
+      kind.flatMap { (join, _) -> join }
     }.map { it.fix() }
 
   fun <A> CoroutineContext.parSequence(effects: Iterable<Kind<F, A>>): Kind<F, List<A>> =
     parTraverse(effects, ::identity)
 
   fun <A> ensure(fa: suspend () -> A, error: () -> Throwable, predicate: (A) -> Boolean): Kind<F, A> =
-    fa.effect().ensure(error, predicate)
+    effect(fa).ensure(error, predicate)
 
   fun <A> CoroutineContext.effect(f: suspend () -> A): Kind<F, A> =
     defer(this@effect) { f.effect() }
 
   fun <A> (suspend () -> A).effect(unit: Unit = Unit): Kind<F, A> = effect(this)
 
-  fun <A, B> (suspend (A) -> B).effect(): (Kind<F, A>) -> Kind<F, B> =
-    { suspend { this(it.bind()) }.effect() }
+  fun <A, B> (suspend (A) -> B).effect(): (Kind<F, A>) -> Kind<F, B> = { fa ->
+    fa.flatMap { a ->
+      effect { this(a) }
+    }
+  }
 
   fun <A, B, C> (suspend (A, B) -> C).effect(): (Kind<F, A>, Kind<F, B>) -> Kind<F, C> =
-    { ka, kb -> suspend { this(ka.bind(), kb.bind()) }.effect() }
+    { ka, kb ->
+      ka.flatMap { a ->
+        kb.flatMap { b ->
+          effect { this(a, b) }
+        }
+      }
+    }
 
   fun <A, B, C, D> (suspend (A, B, C) -> D).effect(): (Kind<F, A>, Kind<F, B>, Kind<F, C>) -> Kind<F, D> =
-    { ka, kb, kc -> suspend { this(ka.bind(), kb.bind(), kc.bind()) }.effect() }
+    { fa, fb, fc ->
+      fa.flatMap { a ->
+        fb.flatMap { b ->
+          fc.flatMap { c ->
+            effect { this(a, b, c) }
+          }
+        }
+      }
+    }
 
-  fun <A, B> (suspend (A) -> B).flatLiftM(unit: Unit = Unit): (A) -> Kind<F, B> =
-    { suspend { this(it) }.effect() }
+  fun <A, B> (suspend (A) -> B).flatLiftM(unit: Unit = Unit): (A) -> Kind<F, B> = { a ->
+    effect { this(a) }
+  }
 
-  fun <A, B, C> (suspend (A, B) -> C).flatLiftM(): (A, B) -> Kind<F, C> =
-    { a, b -> suspend { this(a, b) }.effect() }
+  fun <A, B, C> (suspend (A, B) -> C).flatLiftM(): (A, B) -> Kind<F, C> = { a, b ->
+    effect { this(a, b) }
+  }
 
-  fun <A, B, C, D> (suspend (A, B, C) -> D).flatLiftM(): (A, B, C) -> Kind<F, D> =
-    { a, b, c -> suspend { this(a, b, c) }.effect() }
+  fun <A, B, C, D> (suspend (A, B, C) -> D).flatLiftM(): (A, B, C) -> Kind<F, D> = { a, b, c ->
+    effect { this(a, b, c) }
+  }
 
   suspend fun <A> handleError(fa: suspend () -> A, recover: suspend (Throwable) -> A): Kind<F, A> =
-    fa.effect().handleErrorWith(recover.flatLiftM())
+    effect(fa).handleErrorWith(recover.flatLiftM())
 
   suspend fun <A> OptionOf<A>.getOrRaiseError(f: () -> Throwable): Kind<F, A> =
     this@getOrRaiseError.fromOption(f)
@@ -77,24 +98,24 @@ interface FxSyntax<F> : Concurrent<F>, BindSyntax<F> {
     this@getOrRaiseError.fromTry(f)
 
   suspend fun <A> attempt(fa: suspend () -> A): Kind<F, Either<Throwable, A>> =
-    fa.effect().attempt()
+    effect(fa).attempt()
 
   fun <A, B> bracketCase(
     f: suspend () -> A,
     release: suspend (A, ExitCase<Throwable>) -> Unit,
     use: suspend (A) -> B
   ): Kind<F, B> =
-    f.effect().bracketCase(release.flatLiftM(), use.flatLiftM())
+    effect(f).bracketCase(release.flatLiftM(), use.flatLiftM())
 
   fun <A, B> bracket(
     f: suspend () -> A,
     release: suspend (A) -> Unit,
     use: suspend (A) -> B
   ): Kind<F, B> =
-    f.effect().bracket(release.flatLiftM(), use.flatLiftM())
+    effect(f).bracket(release.flatLiftM(), use.flatLiftM())
 
   fun <A> uncancelable(f: suspend () -> A): Kind<F, A> =
-    f.effect().uncancelable()
+    effect(f).uncancelable()
 
   fun <A> guarantee(
     f: suspend () -> A,

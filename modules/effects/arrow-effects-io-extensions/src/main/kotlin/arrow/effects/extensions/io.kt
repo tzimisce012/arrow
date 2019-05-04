@@ -2,6 +2,7 @@ package arrow.effects.extensions
 
 import arrow.effects.ForIO
 import arrow.effects.IO
+import arrow.effects.asCoroutineContext
 import arrow.effects.extensions.io.concurrent.concurrent
 import arrow.effects.extensions.io.dispatchers.dispatchers
 import arrow.effects.typeclasses.Concurrent
@@ -10,13 +11,15 @@ import arrow.effects.typeclasses.Dispatchers
 import arrow.effects.typeclasses.Environment
 import arrow.effects.typeclasses.suspended.concurrent.Fx
 import arrow.extension
+import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 import arrow.effects.IODispatchers as IOD
 
 @extension
 interface IODispatchers : Dispatchers<ForIO> {
-  override fun default(): CoroutineContext =
-    IOD.CommonPool
+  override fun default(): CoroutineContext = IOD.CommonPool
+  override fun main(): CoroutineContext = TODO("What is default main for jvm!?")
+  override fun newPool(n: Int): CoroutineContext = Executors.newFixedThreadPool(n).asCoroutineContext()
 }
 
 @extension

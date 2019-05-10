@@ -6,8 +6,6 @@ import arrow.core.None
 import arrow.core.Right
 import arrow.core.Some
 import arrow.core.Tuple3
-import arrow.core.fix
-import arrow.core.flatMap
 import arrow.core.right
 import arrow.effects.IO.Companion.just
 import arrow.effects.extensions.io.async.async

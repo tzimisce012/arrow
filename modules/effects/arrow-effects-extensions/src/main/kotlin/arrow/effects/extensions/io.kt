@@ -160,8 +160,8 @@ interface IOAsync : Async<ForIO>, IOMonadDefer {
 // FIXME default @extension are temporarily declared in arrow-effects-io-extensions due to multiplatform needs
 interface IOConcurrent : Concurrent<ForIO>, IOAsync {
 
-  override fun <A> CoroutineContext.startFiber(kind: IOOf<A>): IO<Fiber<ForIO, A>> =
-    kind.ioStart(this)
+  override fun <A> Kind<ForIO, A>.fork(ctx: CoroutineContext): IO<Fiber<ForIO, A>> =
+    ioStart(ctx)
 
   override fun <A> asyncF(fa: ConnectedProcF<ForIO, A>): IO<A> =
     IO.asyncF(fa)
@@ -175,11 +175,11 @@ interface IOConcurrent : Concurrent<ForIO>, IOAsync {
   override fun <A> async(fa: Proc<A>): IO<A> =
     IO.async { _, cb -> fa(cb) }
 
-  override fun <A, B> CoroutineContext.racePair(fa: Kind<ForIO, A>, fb: Kind<ForIO, B>): IO<RacePair<ForIO, A, B>> =
-    IO.racePair(this, fa, fb)
+  override fun <A, B> racePair(fa: Kind<ForIO, A>, fb: Kind<ForIO, B>, ctx: CoroutineContext): IO<RacePair<ForIO, A, B>> =
+    IO.racePair(ctx, fa, fb)
 
-  override fun <A, B, C> CoroutineContext.raceTriple(fa: Kind<ForIO, A>, fb: Kind<ForIO, B>, fc: Kind<ForIO, C>): IO<RaceTriple<ForIO, A, B, C>> =
-    IO.raceTriple(this, fa, fb, fc)
+  override fun <A, B, C> raceTriple(fa: Kind<ForIO, A>, fb: Kind<ForIO, B>, fc: Kind<ForIO, C>, ctx: CoroutineContext): IO<RaceTriple<ForIO, A, B, C>> =
+    IO.raceTriple(ctx, fa, fb, fc)
 }
 
 fun IO.Companion.concurrent(dispatchers: Dispatchers<ForIO>): Concurrent<ForIO> = object : IOConcurrent {

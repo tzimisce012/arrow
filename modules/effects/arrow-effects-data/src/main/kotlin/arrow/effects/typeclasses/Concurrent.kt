@@ -6,12 +6,20 @@ import arrow.core.Left
 import arrow.core.Right
 import arrow.core.Tuple2
 import arrow.core.Tuple3
+import arrow.core.Tuple4
+import arrow.core.Tuple5
+import arrow.core.Tuple6
+import arrow.core.Tuple7
+import arrow.core.Tuple8
+import arrow.core.Tuple9
 import arrow.core.left
 import arrow.core.right
 import arrow.core.toT
 import arrow.effects.CancelToken
 import arrow.effects.KindConnection
 import arrow.effects.MVar
+import arrow.effects.Promise
+import arrow.effects.Semaphore
 import arrow.effects.data.internal.BindingCancellationException
 import arrow.typeclasses.MonadContinuation
 import java.util.concurrent.atomic.AtomicReference
@@ -32,6 +40,8 @@ typealias ConnectedProc<F, A> = (KindConnection<F>, ((Either<Throwable, A>) -> U
 interface Concurrent<F> : Async<F> {
 
   fun dispatchers(): Dispatchers<F>
+
+  fun default(): CoroutineContext = dispatchers().default()
 
   /**
    * Creates a cancelable instance of [F] that executes an asynchronous process on evaluation.
@@ -165,7 +175,9 @@ interface Concurrent<F> : Async<F> {
    * @param this@startFiber [CoroutineContext] to execute the source [F] on.
    * @return [F] with suspended execution of source [F] on context [this@startFiber].
    */
-  fun <A> CoroutineContext.startFiber(kind: Kind<F, A>): Kind<F, Fiber<F, A>>
+  fun <A> Kind<F, A>.fork(ctx: CoroutineContext = dispatchers().default()): Kind<F, Fiber<F, A>>
+
+  fun shift(): Kind<F, Unit> = dispatchers().default().shift()
 
   /**
    * Race two tasks concurrently within a new [F].
@@ -201,7 +213,7 @@ interface Concurrent<F> : Async<F> {
    *
    * @see raceN for a simpler version that cancels loser.
    */
-  fun <A, B> CoroutineContext.racePair(fa: Kind<F, A>, fb: Kind<F, B>): Kind<F, RacePair<F, A, B>>
+  fun <A, B> racePair(fa: Kind<F, A>, fb: Kind<F, B>, ctx: CoroutineContext = dispatchers().default()): Kind<F, RacePair<F, A, B>>
 
   /**
    * Race three tasks concurrently within a new [F].
@@ -238,7 +250,7 @@ interface Concurrent<F> : Async<F> {
    *
    * @see [arrow.effects.typeclasses.Concurrent.raceN] for a simpler version that cancels losers.
    */
-  fun <A, B, C> CoroutineContext.raceTriple(fa: Kind<F, A>, fb: Kind<F, B>, fc: Kind<F, C>): Kind<F, RaceTriple<F, A, B, C>>
+  fun <A, B, C> raceTriple(fa: Kind<F, A>, fb: Kind<F, B>, fc: Kind<F, C>, ctx: CoroutineContext = dispatchers().default()): Kind<F, RaceTriple<F, A, B, C>>
 
   /**
    * Creates a cancelable [F] instance that executes an asynchronous process on evaluation.
@@ -389,12 +401,13 @@ interface Concurrent<F> : Async<F> {
    *
    * @see racePair for a version that does not await all results to be finished.
    */
-  fun <A, B, C> CoroutineContext.parMapN(
+  fun <A, B, C> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B) -> C
   ): Kind<F, C> =
-    racePair(fa, fb).flatMap {
+    racePair(fa, fb, ctx).flatMap {
       it.fold(
         { (a, fiberB) -> fiberB.join().map { b -> f(a, b) } },
         { (fiberA, b) -> fiberA.join().map { a -> f(a, b) } }
@@ -404,8 +417,13 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see parMapN
    */
-  fun <A, B, C, D> CoroutineContext.parMapN(fa: Kind<F, A>, fb: Kind<F, B>, fc: Kind<F, C>, f: (A, B, C) -> D): Kind<F, D> =
-    raceTriple(fa, fb, fc).flatMap {
+  fun <A, B, C, D> parMapN(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    ctx: CoroutineContext = dispatchers().default(),
+    f: (A, B, C) -> D): Kind<F, D> =
+    raceTriple(fa, fb, fc, ctx).flatMap {
       it.fold(
         { (a, fiberB, fiberC) -> fiberB.join().flatMap { b -> fiberC.join().map { c -> f(a, b, c) } } },
         { (fiberA, b, fiberC) -> fiberA.join().flatMap { a -> fiberC.join().map { c -> f(a, b, c) } } },
@@ -416,15 +434,17 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E> CoroutineContext.parMapN(
+  fun <A, B, C, D, E> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
     fd: Kind<F, D>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D) -> E
   ): Kind<F, E> =
-    parMapN(parMapN(fa, fb, ::Tuple2),
-      parMapN(fc, fd, ::Tuple2)
+    parMapN(parMapN(fa, fb, ctx, ::Tuple2),
+      parMapN(fc, fd, ctx, ::Tuple2),
+      ctx
     ) { (a, b), (c, d) ->
       f(a, b, c, d)
     }
@@ -432,16 +452,18 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E, G> CoroutineContext.parMapN(
+  fun <A, B, C, D, E, G> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
     fd: Kind<F, D>,
     fe: Kind<F, E>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D, E) -> G
   ): Kind<F, G> =
-    parMapN(parMapN(fa, fb, fc, ::Tuple3),
-      parMapN(fd, fe, ::Tuple2)
+    parMapN(parMapN(fa, fb, fc, ctx, ::Tuple3),
+      parMapN(fd, fe, ctx, ::Tuple2),
+      ctx
     ) { (a, b, c), (d, e) ->
       f(a, b, c, d, e)
     }
@@ -449,17 +471,19 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E, G, H> CoroutineContext.parMapN(
+  fun <A, B, C, D, E, G, H> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
     fd: Kind<F, D>,
     fe: Kind<F, E>,
     fg: Kind<F, G>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D, E, G) -> H
   ): Kind<F, H> =
-    parMapN(parMapN(fa, fb, fc, ::Tuple3),
-      parMapN(fd, fe, fg, ::Tuple3)
+    parMapN(parMapN(fa, fb, fc, ctx, ::Tuple3),
+      parMapN(fd, fe, fg, ctx, ::Tuple3),
+      ctx
     ) { (a, b, c), (d, e, g) ->
       f(a, b, c, d, e, g)
     }
@@ -467,7 +491,7 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E, G, H, I> CoroutineContext.parMapN(
+  fun <A, B, C, D, E, G, H, I> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
@@ -475,18 +499,20 @@ interface Concurrent<F> : Async<F> {
     fe: Kind<F, E>,
     fg: Kind<F, G>,
     fh: Kind<F, H>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D, E, G, H) -> I
   ): Kind<F, I> =
-    parMapN(parMapN(fa, fb, fc, ::Tuple3),
-      parMapN(fd, fe, ::Tuple2),
-      parMapN(fg, fh, ::Tuple2)) { (a, b, c), (d, e), (g, h) ->
+    parMapN(parMapN(fa, fb, fc, ctx, ::Tuple3),
+      parMapN(fd, fe, ctx, ::Tuple2),
+      parMapN(fg, fh, ctx, ::Tuple2),
+      ctx) { (a, b, c), (d, e), (g, h) ->
       f(a, b, c, d, e, g, h)
     }
 
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E, G, H, I, J> CoroutineContext.parMapN(
+  fun <A, B, C, D, E, G, H, I, J> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
@@ -495,18 +521,20 @@ interface Concurrent<F> : Async<F> {
     fg: Kind<F, G>,
     fh: Kind<F, H>,
     fi: Kind<F, I>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D, E, G, H, I) -> J
   ): Kind<F, J> =
-    parMapN(parMapN(fa, fb, fc, ::Tuple3),
-      parMapN(fd, fe, fg, ::Tuple3),
-      parMapN(fh, fi, ::Tuple2)) { (a, b, c), (d, e, g), (h, i) ->
+    parMapN(parMapN(fa, fb, fc, ctx, ::Tuple3),
+      parMapN(fd, fe, fg, ctx, ::Tuple3),
+      parMapN(fh, fi, ctx, ::Tuple2),
+      ctx) { (a, b, c), (d, e, g), (h, i) ->
       f(a, b, c, d, e, g, h, i)
     }
 
   /**
    * @see parMapN
    */
-  fun <A, B, C, D, E, G, H, I, J, K> CoroutineContext.parMapN(
+  fun <A, B, C, D, E, G, H, I, J, K> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
     fc: Kind<F, C>,
@@ -516,13 +544,91 @@ interface Concurrent<F> : Async<F> {
     fh: Kind<F, H>,
     fi: Kind<F, I>,
     fj: Kind<F, J>,
+    ctx: CoroutineContext = dispatchers().default(),
     f: (A, B, C, D, E, G, H, I, J) -> K
   ): Kind<F, K> =
-    parMapN(parMapN(fa, fb, fc, ::Tuple3),
-      parMapN(fd, fe, fg, ::Tuple3),
-      parMapN(fh, fi, fj, ::Tuple3)) { (a, b, c), (d, e, g), (h, i, j) ->
+    parMapN(parMapN(fa, fb, fc, ctx, ::Tuple3),
+      parMapN(fd, fe, fg, ctx, ::Tuple3),
+      parMapN(fh, fi, fj, ctx, ::Tuple3),
+      ctx) { (a, b, c), (d, e, g), (h, i, j) ->
       f(a, b, c, d, e, g, h, i, j)
     }
+
+  fun <A, B, C> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple2<A, B>> = parMapN(fa, fb, ctx, ::Tuple2)
+
+  fun <A, B, C, D> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple3<A, B, C>> = parMapN(fa, fb, fc, ctx, ::Tuple3)
+
+  fun <A, B, C, D, E> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple4<A, B, C, D>> = parMapN(fa, fb, fc, fd, ctx, ::Tuple4)
+
+  fun <A, B, C, D, E, G> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple5<A, B, C, D, E>> = parMapN(fa, fb, fc, fd, fe, ctx, ::Tuple5)
+
+  fun <A, B, C, D, E, G, H> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple6<A, B, C, D, E, G>> = parMapN(fa, fb, fc, fd, fe, fg, ctx, ::Tuple6)
+
+  fun <A, B, C, D, E, G, H, I> tupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple7<A, B, C, D, E, G, H>> = parMapN(fa, fb, fc, fd, fe, fg, fh, ctx, ::Tuple7)
+
+  fun <A, B, C, D, E, G, H, I, J> parMapN(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple8<A, B, C, D, E, G, H, I>> = parMapN(fa, fb, fc, fd, fe, fg, fh, fi, ctx, ::Tuple8)
+
+  fun <A, B, C, D, E, G, H, I, J, K> parMapN(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    fj: Kind<F, J>,
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Tuple9<A, B, C, D, E, G, H, I, J>> = parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, ctx, ::Tuple9)
 
   /**
    * Race two tasks concurrently within a new [F] on [this@raceN].
@@ -556,11 +662,12 @@ interface Concurrent<F> : Async<F> {
    *
    * @see racePair for a version that does not automatically cancel the loser.
    */
-  fun <A, B> CoroutineContext.raceN(
+  fun <A, B> raceN(
     fa: Kind<F, A>,
-    fb: Kind<F, B>
+    fb: Kind<F, B>,
+    ctx: CoroutineContext = dispatchers().default()
   ): Kind<F, Race2<A, B>> =
-    racePair(fa, fb).flatMap {
+    racePair(fa, fb, ctx).flatMap {
       it.fold({ (a, b) ->
         b.cancel().map { a.left() }
       }, { (a, b) ->
@@ -571,12 +678,13 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see raceN
    */
-  fun <A, B, C> CoroutineContext.raceN(
+  fun <A, B, C> raceN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>
+    fc: Kind<F, C>,
+    ctx: CoroutineContext = dispatchers().default()
   ): Kind<F, Race3<A, B, C>> =
-    raceTriple(fa, fb, fc).flatMap {
+    raceTriple(fa, fb, fc, ctx).flatMap {
       it.fold(
         { (a, fiberB, fiberC) -> fiberB.cancel().flatMap { fiberC.cancel().map { Left(Left(a)) } } },
         { (fiberA, b, fiberC) -> fiberA.cancel().flatMap { fiberC.cancel().map { Left(Right(b)) } } },
@@ -587,66 +695,55 @@ interface Concurrent<F> : Async<F> {
   /**
    * @see raceN
    */
-  fun <A, B, C, D> CoroutineContext.raceN(
-    a: Kind<F, A>,
-    b: Kind<F, B>,
-    c: Kind<F, C>,
-    d: Kind<F, D>
-  ): Kind<F, Race4<A, B, C, D>> =
-    raceN(raceN(a, b),
-      raceN(c, d)
-    )
-
-  /**
-   * @see raceN
-   */
-  fun <A, B, C, D, E> CoroutineContext.raceN(
+  fun <A, B, C, D> raceN(
     a: Kind<F, A>,
     b: Kind<F, B>,
     c: Kind<F, C>,
     d: Kind<F, D>,
-    e: Kind<F, E>
-  ): Kind<F, Race5<A, B, C, D, E>> =
-    raceN(raceN(a, b, c),
-      raceN(d, e)
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Race4<A, B, C, D>> =
+    raceN(raceN(a, b, ctx),
+      raceN(c, d, ctx),
+      ctx
     )
 
   /**
    * @see raceN
    */
-  fun <A, B, C, D, E, G> CoroutineContext.raceN(
+  fun <A, B, C, D, E> raceN(
     a: Kind<F, A>,
     b: Kind<F, B>,
     c: Kind<F, C>,
     d: Kind<F, D>,
     e: Kind<F, E>,
-    g: Kind<F, G>
-  ): Kind<F, Race6<A, B, C, D, E, G>> =
-    raceN(raceN(a, b, c),
-      raceN(d, e, g)
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Race5<A, B, C, D, E>> =
+    raceN(raceN(a, b, c, ctx),
+      raceN(d, e, ctx),
+      ctx
     )
 
   /**
    * @see raceN
    */
-  fun <A, B, C, D, E, G, H> CoroutineContext.raceN(
+  fun <A, B, C, D, E, G> raceN(
     a: Kind<F, A>,
     b: Kind<F, B>,
     c: Kind<F, C>,
     d: Kind<F, D>,
     e: Kind<F, E>,
     g: Kind<F, G>,
-    h: Kind<F, H>
-  ): Kind<F, Race7<A, B, C, D, E, G, H>> =
-    raceN(raceN(a, b, c),
-      raceN(d, e),
-      raceN(g, h)
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Race6<A, B, C, D, E, G>> =
+    raceN(raceN(a, b, c, ctx),
+      raceN(d, e, g, ctx),
+      ctx
     )
 
   /**
    * @see raceN
    */
-  fun <A, B, C, D, E, G, H, I> CoroutineContext.raceN(
+  fun <A, B, C, D, E, G, H> raceN(
     a: Kind<F, A>,
     b: Kind<F, B>,
     c: Kind<F, C>,
@@ -654,18 +751,18 @@ interface Concurrent<F> : Async<F> {
     e: Kind<F, E>,
     g: Kind<F, G>,
     h: Kind<F, H>,
-    i: Kind<F, I>
-  ): Kind<F, Race8<A, B, C, D, E, G, H, I>> =
-    raceN(raceN(a, b),
-      raceN(c, d),
-      raceN(e, g),
-      raceN(h, i)
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Race7<A, B, C, D, E, G, H>> =
+    raceN(raceN(a, b, c, ctx),
+      raceN(d, e, ctx),
+      raceN(g, h, ctx),
+      ctx
     )
 
   /**
    * @see raceN
    */
-  fun <A, B, C, D, E, G, H, I, J> CoroutineContext.raceN(
+  fun <A, B, C, D, E, G, H, I> raceN(
     a: Kind<F, A>,
     b: Kind<F, B>,
     c: Kind<F, C>,
@@ -674,18 +771,45 @@ interface Concurrent<F> : Async<F> {
     g: Kind<F, G>,
     h: Kind<F, H>,
     i: Kind<F, I>,
-    j: Kind<F, J>
+    ctx: CoroutineContext = dispatchers().default()
+  ): Kind<F, Race8<A, B, C, D, E, G, H, I>> =
+    raceN(raceN(a, b, ctx),
+      raceN(c, d, ctx),
+      raceN(e, g, ctx),
+      raceN(h, i, ctx),
+      ctx
+    )
+
+  /**
+   * @see raceN
+   */
+  fun <A, B, C, D, E, G, H, I, J> raceN(
+    a: Kind<F, A>,
+    b: Kind<F, B>,
+    c: Kind<F, C>,
+    d: Kind<F, D>,
+    e: Kind<F, E>,
+    g: Kind<F, G>,
+    h: Kind<F, H>,
+    i: Kind<F, I>,
+    j: Kind<F, J>,
+    ctx: CoroutineContext = dispatchers().default()
   ): Kind<F, Race9<A, B, C, D, E, G, H, I, J>> =
-    raceN(raceN(a, b, c),
-      raceN(d, e),
-      raceN(g, h),
-      raceN(i, j)
+    raceN(raceN(a, b, c, ctx),
+      raceN(d, e, ctx),
+      raceN(g, h, ctx),
+      raceN(i, j, ctx),
+      ctx
     )
 
   /**
    * Creates a variable [MVar] to be used for thread-sharing, initialized to a value [a]
    */
-  fun <A> mVar(a: A): Kind<F, MVar<F, A>> = MVar(a, this)
+  fun <A> MVar(a: A): Kind<F, MVar<F, A>> = MVar(a, this)
+
+  fun <A> Promise(): Kind<F, Promise<F, A>> = Promise(this)
+
+  fun Semaphore(n : Long): Kind<F, Semaphore<F>> = Semaphore(n, this)
 
   /**
    * Overload for [Async.asyncF]

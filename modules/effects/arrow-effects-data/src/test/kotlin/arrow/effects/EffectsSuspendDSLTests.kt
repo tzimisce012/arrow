@@ -72,10 +72,12 @@ class EffectsSuspendDSLTests : UnitSpec() {
       val program = fx {
         // note how the receiving value is typed in the environment and not inside IO despite being effectful and
         // non-blocking parallel computations
-        val result: List<String> = !NonBlocking.parMapN(
+        val result: List<String> = !parMapN(
           effect { getThreadName() },
-          effect { getThreadName() }
-        ) { a, b -> listOf(a, b) }
+          effect { getThreadName() },
+          NonBlocking,
+          { a, b -> listOf(a, b) }
+        )
         effect { println(result) }
         result
       }
@@ -251,7 +253,7 @@ class EffectsSuspendDSLTests : UnitSpec() {
       val const = 1
       fxTest {
         fx {
-          val fiber = !NonBlocking.startFiber(effect { const })
+          val fiber = !effect { const }.fork(NonBlocking)
           val (n) = fiber.join()
           n
         }

@@ -74,10 +74,8 @@ class EffectsSuspendDSLTests : UnitSpec() {
         // non-blocking parallel computations
         val result: List<String> = !parMapN(
           effect { getThreadName() },
-          effect { getThreadName() },
-          NonBlocking,
-          { a, b -> listOf(a, b) }
-        )
+          effect { getThreadName() }
+        ) { a, b -> listOf(a, b) }
         effect { println(result) }
         result
       }
@@ -253,7 +251,7 @@ class EffectsSuspendDSLTests : UnitSpec() {
       val const = 1
       fxTest {
         fx {
-          val fiber = !effect { const }.fork(NonBlocking)
+          val fiber = !effect { const }.fork()
           val (n) = fiber.join()
           n
         }

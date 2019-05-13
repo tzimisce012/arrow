@@ -1,4 +1,4 @@
-package arrow.effects.typeclasses.suspended
+package arrow.effects.typeclasses
 
 import arrow.Kind
 import arrow.core.Either
@@ -9,10 +9,7 @@ import arrow.core.fix
 import arrow.core.identity
 import arrow.data.extensions.list.traverse.traverse
 import arrow.data.fix
-import arrow.effects.typeclasses.Concurrent
-import arrow.effects.typeclasses.ExitCase
-import arrow.effects.typeclasses.Fiber
-import arrow.typeclasses.suspended.BindSyntax
+import arrow.typeclasses.internal.BindSyntax
 import kotlin.coroutines.CoroutineContext
 
 interface FxSyntax<F> : Concurrent<F>, BindSyntax<F> {

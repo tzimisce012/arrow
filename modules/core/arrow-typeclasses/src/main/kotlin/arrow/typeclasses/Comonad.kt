@@ -3,6 +3,7 @@ package arrow.typeclasses
 import arrow.Kind
 import arrow.core.Continuation
 import arrow.core.identity
+import arrow.typeclasses.internal.stateStack
 import java.io.Serializable
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

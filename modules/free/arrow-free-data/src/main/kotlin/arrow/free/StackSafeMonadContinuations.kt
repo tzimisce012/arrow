@@ -3,8 +3,8 @@ package arrow.free
 import arrow.Kind
 import arrow.core.Continuation
 import arrow.typeclasses.Monad
-import arrow.typeclasses.stateStack
-import arrow.typeclasses.suspended.BindSyntax
+import arrow.typeclasses.internal.stateStack
+import arrow.typeclasses.internal.BindSyntax
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.RestrictsSuspension

@@ -176,8 +176,3 @@ interface FxConcurrent : Concurrent<ForFx>, FxAsync {
   override fun <A> async(fa: Proc<A>): Fx<A> =
     Fx.async { _, cb -> fa(cb) }
 }
-
-@extension
-interface FxFx : arrow.effects.typeclasses.suspended.concurrent.Fx<ForFx> {
-  override fun concurrent(): Concurrent<ForFx> = object : FxConcurrent {}
-}

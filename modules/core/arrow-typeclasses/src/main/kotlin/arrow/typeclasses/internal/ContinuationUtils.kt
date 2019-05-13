@@ -1,4 +1,4 @@
-package arrow.typeclasses
+package arrow.typeclasses.internal
 
 import kotlin.coroutines.Continuation
 

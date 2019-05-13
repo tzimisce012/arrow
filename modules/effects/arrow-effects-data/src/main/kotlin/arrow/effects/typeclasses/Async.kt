@@ -4,8 +4,13 @@ import arrow.Kind
 import arrow.core.Either
 import arrow.core.Right
 import arrow.documented
-import arrow.typeclasses.MonadContinuation
+import arrow.effects.data.internal.BindingCancellationException
+import arrow.typeclasses.internal.MonadContinuation
+import arrow.typeclasses.MonadError
+import arrow.typeclasses.MonadThrow
+import arrow.typeclasses.PartiallyAppliedMonadThrowFx
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.startCoroutine
 
 /** A asynchronous computation that might fail. **/
 typealias ProcF<F, A> = ((Either<Throwable, A>) -> Unit) -> Kind<F, Unit>
@@ -21,6 +26,22 @@ typealias Proc<A> = ((Either<Throwable, A>) -> Unit) -> Unit
  **/
 @documented
 interface Async<F> : MonadDefer<F> {
+
+  /**
+   * Entry point for monad bindings which enables for comprehensions. The underlying impl is based on coroutines.
+   * A coroutines is initiated and inside [AsyncContinuation] suspended yielding to [Monad.flatMap]. Once all the flatMap binds are completed
+   * the underlying monad is returned from the act of executing the coroutine
+   *
+   * This one operates over [MonadError] instances that can support [Throwable] in their error type automatically lifting
+   * errors as failed computations in their monadic context and not letting exceptions thrown as the regular monad binding does.
+   *
+   * This operation is cancellable by calling invoke on the [Disposable] return.
+   * If [Disposable.invoke] is called the binding result will become a lifted [BindingCancellationException].
+   */
+  override val fx: PartiallyAppliedAsyncFx<F>
+    get() = object : PartiallyAppliedAsyncFx<F> {
+      override val async: Async<F> get() = this@Async
+    }
 
   /**
    * Creates an instance of [F] that executes an asynchronous process on evaluation.
@@ -259,3 +280,14 @@ val mapUnit0: () -> Unit = { Unit }
 val mapUnit: (Any?) -> Unit = { Unit }
 internal val rightUnit = Right(Unit)
 internal val unitCallback = { cb: (Either<Throwable, Unit>) -> Unit -> cb(rightUnit) }
+
+interface PartiallyAppliedAsyncFx<F> : PartiallyAppliedMonadThrowFx<F> {
+  val async: Async<F>
+  override val ME: MonadThrow<F> get() = async
+  fun <A> async(c: suspend AsyncContinuation<F, *>.() -> A): Kind<F, A> {
+    val continuation = AsyncContinuation<F, A>(async)
+    val wrapReturn: suspend AsyncContinuation<F, *>.() -> Kind<F, A> = { just(c()) }
+    wrapReturn.startCoroutine(continuation, continuation)
+    return continuation.returnedMonad()
+  }
+}

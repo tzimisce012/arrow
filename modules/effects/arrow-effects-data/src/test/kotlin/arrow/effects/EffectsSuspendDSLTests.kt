@@ -18,6 +18,11 @@ import arrow.core.identity
 import arrow.core.left
 import arrow.core.none
 import arrow.core.right
+import arrow.effects.extensions.io.concurrent.concurrent
+import arrow.effects.extensions.io.fx.fx
+import arrow.effects.extensions.io.unsafeRun.runBlocking
+import arrow.effects.extensions.io.unsafeRun.unsafeRun
+import arrow.effects.typeclasses.Concurrent
 import arrow.effects.typeclasses.UnsafeRun
 import arrow.test.UnitSpec
 import arrow.unsafe
@@ -397,13 +402,13 @@ class EffectsSuspendDSLTests : UnitSpec() {
       suspend fun sideEffect(): Int =
         const
 
-      fun <F> arrow.effects.typeclasses.suspended.concurrent.Fx<F>.program(): Kind<F, Int> =
-        fx { !effect { sideEffect() } }
+      fun <F> Concurrent<F>.program(): Kind<F, Int> =
+        fx.concurrent { !effect { sideEffect() } }
 
-      fun <F> UnsafeRun<F>.main(fx: arrow.effects.typeclasses.suspended.concurrent.Fx<F>): Int =
+      fun <F> UnsafeRun<F>.main(fx: Concurrent<F>): Int =
         unsafe { runBlocking { fx.program() } }
 
-      Fx.unsafeRun().main(Fx.fx()) shouldBe const
+      IO.unsafeRun().main(IO.concurrent()) shouldBe const
     }
 
     "(suspend () -> A) <-> Kind<F, A>" {

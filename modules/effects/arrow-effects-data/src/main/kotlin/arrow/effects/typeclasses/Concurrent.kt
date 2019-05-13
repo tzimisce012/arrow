@@ -8,11 +8,9 @@ import arrow.core.Tuple2
 import arrow.core.Tuple3
 import arrow.core.left
 import arrow.core.right
-import arrow.core.toT
 import arrow.effects.CancelToken
 import arrow.effects.KindConnection
 import arrow.effects.data.internal.BindingCancellationException
-import arrow.typeclasses.MonadContinuation
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.startCoroutine
@@ -33,6 +31,21 @@ interface Concurrent<F> : Async<F> {
   fun dispatchers(): Dispatchers<F>
 
   fun <A> effect(fa: suspend () -> A): Kind<F, A>
+
+  /**
+   * Entry point for monad bindings which enables for comprehensions. The underlying impl is based on coroutines.
+   * A coroutines is initiated and inside [ConcurrentContinuation] suspended yielding to [Monad.flatMap]. Once all the flatMap binds are completed
+   * the underlying monad is returned from the act of executing the coroutine
+   *
+   * This one operates over [Concurrent] instances
+   *
+   * This operation is cancellable by calling invoke on the [Disposable] return.
+   * If [Disposable.invoke] is called the binding result will become a lifted [BindingCancellationException].
+   */
+  override val fx: PartiallyAppliedConcurrentFx<F>
+    get() = object : PartiallyAppliedConcurrentFx<F> {
+      override val concurrent: Concurrent<F> = this@Concurrent
+    }
 
   /**
    * Creates a cancelable instance of [F] that executes an asynchronous process on evaluation.
@@ -699,25 +712,6 @@ interface Concurrent<F> : Async<F> {
   override fun <A> async(fa: Proc<A>): Kind<F, A> =
     async { _, cb -> fa(cb) }
 
-  /**
-   * Entry point for monad bindings which enables for comprehensions. The underlying impl is based on coroutines.
-   * A coroutines is initiated and inside [ConcurrentCancellableContinuation] suspended yielding to [Monad.flatMap]. Once all the flatMap binds are completed
-   * the underlying monad is returned from the act of executing the coroutine
-   *
-   * This one operates over [Concurrent] instances
-   *
-   * This operation is cancellable by calling invoke on the [Disposable] return.
-   * If [Disposable.invoke] is called the binding result will become a lifted [BindingCancellationException].
-   */
-  fun <B> bindingConcurrent(c: suspend ConcurrentCancellableContinuation<F, *>.() -> B): Tuple2<Kind<F, B>, Disposable> {
-    val continuation = ConcurrentCancellableContinuation<F, B>(this)
-    val wrapReturn: suspend ConcurrentCancellableContinuation<F, *>.() -> Kind<F, B> = { just(c()) }
-    wrapReturn.startCoroutine(continuation, continuation)
-    return continuation.returnedMonad() toT continuation.disposable()
-  }
-
-  override fun <B> binding(c: suspend MonadContinuation<F, *>.() -> B): Kind<F, B> =
-    bindingCancellable { c() }.a
 }
 
 /** Alias for `Either` structure to provide consistent signature for race methods. */
@@ -854,4 +848,18 @@ inline fun <A, B, C, D, E, G, H, I, J, K> Race9<A, B, C, D, E, G, H, I, J>.fold(
 ): K = when (this) {
   is Either.Left -> this.a.fold(ifA, ifB, ifC, ifD, ifE)
   is Either.Right -> this.b.fold(ifG, ifH, ifI, ifJ)
+}
+
+interface PartiallyAppliedConcurrentFx<F> : PartiallyAppliedAsyncFx<F> {
+  val concurrent: Concurrent<F>
+
+  override val async: Async<F>
+    get() = concurrent
+
+  fun <A> concurrent(c: suspend ConcurrentContinuation<F, *>.() -> A): Kind<F, A> {
+    val continuation = ConcurrentContinuation<F, A>(concurrent)
+    val wrapReturn: suspend ConcurrentContinuation<F, *>.() -> Kind<F, A> = { just(c()) }
+    wrapReturn.startCoroutine(continuation, continuation)
+    return continuation.returnedMonad()
+  }
 }

@@ -23,6 +23,7 @@ jmh {
 //            'arrow.benchmarks.DeepBind',
 //            'arrow.benchmarks.Defer',
 //            'arrow.benchmarks.Delay',
+            'arrow.benchmarks.DirectSyntax',
             'arrow.benchmarks.ForkFiber',
 //            'arrow.benchmarks.HandleNonRaised',
 //            'arrow.benchmarks.HandleRaisedError',

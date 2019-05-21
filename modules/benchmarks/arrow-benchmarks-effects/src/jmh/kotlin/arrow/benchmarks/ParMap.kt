@@ -35,7 +35,7 @@ open class ParMap {
   private val kotlinCtx = Dispatchers.Default
 
   private fun ioHelper(): IO<Int> = (0 until size).fold(IO.just(1)) { acc, i ->
-    IO.parMapN(arrowCtx, acc, IO.just(i)) { a, b -> a + b }
+    IO.parMapN(arrowCtx, acc, IO { i }) { a, b -> a + b }
   }
 
   private suspend fun kotlinxHelper(): Int = (0 until size).fold(1) { acc, i ->

@@ -32,7 +32,7 @@ open class ForkFiber {
 
   private fun ioStartLoop(i: Int): IO<Int> =
     if (i < size) {
-      IO.just(i + 1).startFiber(arrowCtx).flatMap { fiber ->
+      IO { i + 1 }.startFiber(arrowCtx).flatMap { fiber ->
         fiber.join().fix().flatMap { ioStartLoop(it) }
       }
     } else IO.just(i)

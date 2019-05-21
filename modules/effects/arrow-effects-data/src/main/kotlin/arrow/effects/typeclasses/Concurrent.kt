@@ -12,6 +12,8 @@ import arrow.core.toT
 import arrow.effects.CancelToken
 import arrow.effects.KindConnection
 import arrow.effects.MVar
+import arrow.effects.Promise
+import arrow.effects.Semaphore
 import arrow.effects.data.internal.BindingCancellationException
 import arrow.typeclasses.MonadContinuation
 import java.util.concurrent.atomic.AtomicReference
@@ -168,6 +170,8 @@ interface Concurrent<F> : Async<F> {
   fun <A> Kind<F, A>.fork(ctx: CoroutineContext): Kind<F, Fiber<F, A>>
 
   fun <A> Kind<F, A>.fork(): Kind<F, Fiber<F, A>> = fork(dispatchers().default())
+
+  fun shift(): Kind<F, Unit> = dispatchers().default().shift()
 
   /**
    * Race two tasks concurrently within a new [F].
@@ -442,7 +446,10 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, f: (A, B, C, D) -> E): Kind<F, E> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    f: (A, B, C, D) -> E
+  ): Kind<F, E> =
     dispatchers().default().parMapN(fa, fb, fc, fd, f)
 
   /**
@@ -465,7 +472,11 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E, G> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>, f: (A, B, C, D, E) -> G): Kind<F, G> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    f: (A, B, C, D, E) -> G
+  ): Kind<F, G> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, f)
 
   /**
@@ -489,7 +500,12 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E, G, H> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>, fg: Kind<F, G>, f: (A, B, C, D, E, G) -> H): Kind<F, H> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    f: (A, B, C, D, E, G) -> H
+  ): Kind<F, H> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, f)
 
   /**
@@ -514,7 +530,13 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E, G, H, I> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>, fg: Kind<F, G>, fh: Kind<F, H>, f: (A, B, C, D, E, G, H) -> I): Kind<F, I> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    f: (A, B, C, D, E, G, H) -> I
+  ): Kind<F, I> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, f)
 
   /**
@@ -540,7 +562,14 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E, G, H, I, J> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>, fg: Kind<F, G>, fh: Kind<F, H>, fi: Kind<F, I>, f: (A, B, C, D, E, G, H, I) -> J): Kind<F, J> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    f: (A, B, C, D, E, G, H, I) -> J
+  ): Kind<F, J> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, f)
 
   /**
@@ -567,7 +596,15 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E, G, H, I, J, K> parMapN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>, fg: Kind<F, G>, fh: Kind<F, H>, fi: Kind<F, I>, fj: Kind<F, J>, f: (A, B, C, D, E, G, H, I, J) -> K): Kind<F, K> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    fj: Kind<F, J>,
+    f: (A, B, C, D, E, G, H, I, J) -> K
+  ): Kind<F, K> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, f)
 
   /**
@@ -614,6 +651,12 @@ interface Concurrent<F> : Async<F> {
       })
     }
 
+  fun <A, B> raceN(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>
+  ): Kind<F, Race2<A, B>> =
+    dispatchers().default().raceN(fa, fb)
+
   /**
    * @see raceN
    */
@@ -633,7 +676,8 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C> raceN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>): Kind<F, Race3<A, B, C>> =
+    fc: Kind<F, C>
+  ): Kind<F, Race3<A, B, C>> =
     dispatchers().default().raceN(fa, fb, fc)
 
   /**
@@ -652,7 +696,9 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D> raceN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>): Kind<F, Race4<A, B, C, D>> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>
+  ): Kind<F, Race4<A, B, C, D>> =
     dispatchers().default().raceN(fa, fb, fc, fd)
 
   /**
@@ -672,7 +718,10 @@ interface Concurrent<F> : Async<F> {
   fun <A, B, C, D, E> raceN(
     fa: Kind<F, A>,
     fb: Kind<F, B>,
-    fc: Kind<F, C>, fd: Kind<F, D>, fe: Kind<F, E>): Kind<F, Race5<A, B, C, D, E>> =
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>
+  ): Kind<F, Race5<A, B, C, D, E>> =
     dispatchers().default().raceN(fa, fb, fc, fd, fe)
 
   /**
@@ -795,7 +844,11 @@ interface Concurrent<F> : Async<F> {
   /**
    * Creates a variable [MVar] to be used for thread-sharing, initialized to a value [a]
    */
-  fun <A> MVar(a: A): Kind<F, MVar<F, A>> = MVar(a, this)
+  override fun <A> MVar(a: A): Kind<F, MVar<F, A>> = MVar(a, this)
+
+  override fun <A> Promise(): Kind<F, Promise<F, A>> = Promise.invoke(this)
+
+  override fun Semaphore(n: Long): Kind<F, Semaphore<F>> = Semaphore.invoke(n, this)
 
   /**
    * Overload for [Async.asyncF]

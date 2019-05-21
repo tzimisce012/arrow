@@ -4,6 +4,9 @@ import arrow.Kind
 import arrow.core.Either
 import arrow.core.Right
 import arrow.documented
+import arrow.effects.MVar
+import arrow.effects.Promise
+import arrow.effects.Semaphore
 import arrow.typeclasses.MonadContinuation
 import kotlin.coroutines.CoroutineContext
 
@@ -247,6 +250,15 @@ interface Async<F> : MonadDefer<F> {
    */
   fun <A> never(): Kind<F, A> =
     async { }
+
+  /**
+   * Creates a variable [MVar] to be used for thread-sharing, initialized to a value [a]
+   */
+  fun <A> MVar(a: A): Kind<F, MVar<F, A>> = MVar.uncancelableOf(a, this)
+
+  fun <A> Promise(): Kind<F, Promise<F, A>> = Promise.uncancelable(this)
+
+  fun Semaphore(n: Long): Kind<F, Semaphore<F>> = Semaphore.uncancelable(n, this)
 }
 
 internal val mapUnit: (Any?) -> Unit = { Unit }

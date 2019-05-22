@@ -6,6 +6,12 @@ import arrow.core.Left
 import arrow.core.Right
 import arrow.core.Tuple2
 import arrow.core.Tuple3
+import arrow.core.Tuple4
+import arrow.core.Tuple5
+import arrow.core.Tuple6
+import arrow.core.Tuple7
+import arrow.core.Tuple8
+import arrow.core.Tuple9
 import arrow.core.left
 import arrow.core.right
 import arrow.core.toT
@@ -606,6 +612,158 @@ interface Concurrent<F> : Async<F> {
     f: (A, B, C, D, E, G, H, I, J) -> K
   ): Kind<F, K> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, f)
+
+  fun <A, B, C> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>
+  ): Kind<F, Tuple2<A, B>> =
+    this@parTupled.parMapN(fa, fb, ::Tuple2)
+
+  fun <A, B, C, D> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>
+  ): Kind<F, Tuple2<A, B>> =
+    dispatchers().default().parMapN(fa, fb, ::Tuple2)
+
+  fun <A, B, C> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>
+  ): Kind<F, Tuple3<A, B, C>> =
+    this@parTupled.parMapN(fa, fb, fc, ::Tuple3)
+
+  fun <A, B, C, D> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>
+  ): Kind<F, Tuple3<A, B, C>> =
+    dispatchers().default().parMapN(fa, fb, fc, ::Tuple3)
+
+  fun <A, B, C, D> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>
+  ): Kind<F, Tuple4<A, B, C, D>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, ::Tuple4)
+
+  fun <A, B, C, D, E> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>
+  ): Kind<F, Tuple4<A, B, C, D>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, ::Tuple4)
+
+  fun <A, B, C, D, E> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>
+  ): Kind<F, Tuple5<A, B, C, D, E>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, fe, ::Tuple5)
+
+  fun <A, B, C, D, E> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>
+  ): Kind<F, Tuple5<A, B, C, D, E>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, fe, ::Tuple5)
+
+  fun <A, B, C, D, E, G> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>
+  ): Kind<F, Tuple6<A, B, C, D, E, G>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, fe, fg, ::Tuple6)
+
+  fun <A, B, C, D, E, G> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>
+  ): Kind<F, Tuple6<A, B, C, D, E, G>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, ::Tuple6)
+
+  fun <A, B, C, D, E, G, H> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>
+  ): Kind<F, Tuple7<A, B, C, D, E, G, H>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, fe, fg, fh, ::Tuple7)
+
+  fun <A, B, C, D, E, G, H> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>
+  ): Kind<F, Tuple7<A, B, C, D, E, G, H>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, ::Tuple7)
+
+  fun <A, B, C, D, E, G, H, I> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>
+  ): Kind<F, Tuple8<A, B, C, D, E, G, H, I>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, fe, fg, fh, fi, ::Tuple8)
+
+  fun <A, B, C, D, E, G, H, I> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>
+  ): Kind<F, Tuple8<A, B, C, D, E, G, H, I>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, ::Tuple8)
+
+  fun <A, B, C, D, E, G, H, I, J> CoroutineContext.parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    fj: Kind<F, J>
+  ): Kind<F, Tuple9<A, B, C, D, E, G, H, I, J>> =
+    this@parTupled.parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, ::Tuple9)
+
+  fun <A, B, C, D, E, G, H, I, J> parTupled(
+    fa: Kind<F, A>,
+    fb: Kind<F, B>,
+    fc: Kind<F, C>,
+    fd: Kind<F, D>,
+    fe: Kind<F, E>,
+    fg: Kind<F, G>,
+    fh: Kind<F, H>,
+    fi: Kind<F, I>,
+    fj: Kind<F, J>
+  ): Kind<F, Tuple9<A, B, C, D, E, G, H, I, J>> =
+    dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, ::Tuple9)
 
   /**
    * Race two tasks concurrently within a new [F] on [this@raceN].

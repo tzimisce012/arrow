@@ -405,6 +405,7 @@ interface Concurrent<F> : Async<F> {
    * @param f function to map/combine value [A] and [B]
    * @return [F] with the result of function [f].
    *
+   * @see parTupled if you are only interested in the individual results.
    * @see racePair for a version that does not await all results to be finished.
    */
   fun <A, B, C> CoroutineContext.parMapN(fa: Kind<F, A>, fb: Kind<F, B>, f: (A, B) -> C): Kind<F, C> =
@@ -613,6 +614,39 @@ interface Concurrent<F> : Async<F> {
   ): Kind<F, K> =
     dispatchers().default().parMapN(fa, fb, fc, fd, fe, fg, fh, fi, fj, f)
 
+  /**
+   * Run two tasks in parallel within a new [F] on the specified [CoroutineContext].
+   *
+   * ```kotlin:ank:playground
+   * import arrow.effects.extensions.io.concurrent.parTupled
+   * import arrow.effects.extensions.io.concurrent.bindingConcurrent
+   * import arrow.effects.extensions.io.monadDefer.delay
+   * import kotlinx.coroutines.Dispatchers.Default
+   *
+   * fun main(args: Array<String>) {
+   *   bindingConcurrent {
+   *   //sampleStart
+   *     val (a, b) = !Default.parTupled(
+   *       delay { "First one is on ${Thread.currentThread().name}" },
+   *       delay { "Second one is on ${Thread.currentThread().name}" }
+   *     )
+   *
+   *     "$a $b"
+   *   //sampleEnd
+   *   }
+   *   println(result.fix().unsafeRunSync())
+   * }
+   * ```
+   *
+   * @param this@parMapN [CoroutineContext] to execute the source [F] on.
+   * @param fa value to parallel map
+   * @param fb value to parallel map
+   * @param f function to map/combine value [A] and [B]
+   * @return [F] with the result of function [f].
+   *
+   * @see parTupled if you are only interested in the individual results.
+   * @see racePair for a version that does not await all results to be finished.
+   */
   fun <A, B, C> CoroutineContext.parTupled(
     fa: Kind<F, A>,
     fb: Kind<F, B>

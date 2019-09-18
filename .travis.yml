@@ -41,4 +41,4 @@ jobs:
       bucket: second.fortysevendegrees.com
       skip_cleanup: true
       acl: public-read
-      local-dir: modules/docs/arrow-docs/build/site/*
+      local-dir: ./modules/docs/arrow-docs/build/site/*

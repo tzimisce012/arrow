@@ -42,3 +42,6 @@ jobs:
       skip_cleanup: true
       acl: public-read
       local-dir: modules/docs/arrow-docs/build/site
+      edge:
+        branch: gsc/parallel 
+        source: 47deg/dpl
